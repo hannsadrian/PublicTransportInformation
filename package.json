@@ -1,0 +1,39 @@
+{
+  "name": "vvo-monitor",
+  "version": "1.0.0",
+  "description": "",
+  "bin": "server.js",
+  "pkg": {
+    "assets": [
+      ".next/**/*"
+    ],
+    "scripts": [
+      ".next/dist/**/*.js"
+    ]
+  },
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adwirawien/vvo-monitor.git"
+  },
+  "author": "Adwirawien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Adwirawien/vvo-monitor/issues"
+  },
+  "homepage": "https://github.com/Adwirawien/vvo-monitor#readme",
+  "dependencies": {
+    "@zeit/next-sass": "^1.0.1",
+    "bulma": "^0.7.5",
+    "next": "^8.1.0",
+    "next-plugin-custom-babel-config": "^1.0.2",
+    "node-fetch": "^2.6.0",
+    "node-sass": "^4.12.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}
