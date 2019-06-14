@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vvo-monitor-deployment
+  name: vvo-monitor
   labels:
     app: vvo-monitor
 spec:
@@ -17,15 +17,7 @@ spec:
       containers:
         - name: vvo-monitor
           image: repo.treescale.com/adwirawien/vvo-monitor
+          ports:
+            - containerPort: 3000
       imagePullSecrets:
         - name: regcred
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: vvo-monitor-service
-spec:
-  selector:
-    app: vvo-monitor
-  ports:
-    - port: 3000

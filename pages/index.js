@@ -1,91 +1,135 @@
 import "react";
 import "bulma";
 import { randomBytes } from "crypto";
+import { geolocated } from "react-geolocated";
+import * as dvb from "dvbjs";
 
-const fetch = require("node-fetch");
-
-export default class Index extends React.Component {
+class Index extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       stopSuggestion: "",
       stopInput: "",
       departures: "",
-      stopName: ""
+      stopName: "",
+      locationSuggestions: "",
+      loading: false
     };
   }
 
-  getStops = event => {
-    this.setState({ stopInput: event.target.value });
+  componentDidMount = async () => {
+    this.getLocation();
+  };
 
-    if (event.target.value === "") {
-      this.setState({ stopSuggestion: "" });
+  getLocation = async () => {
+    if (!this.props.coords) {
+      setTimeout(this.getLocation, 100);
+      return;
+    }
+    if (this.props.isGeolocationAvailable && this.props.isGeolocationEnabled) {
+      var stops = await dvb.findAddress(
+        this.props.coords.longitude,
+        this.props.coords.latitude
+      );
+
+      var locationSuggestions = [];
+
+      stops.stops.forEach(stop => {
+        locationSuggestions.push(
+          <div key={stop.name} className="card" style={{ maxWidth: "800px" }}>
+            <header className="card-header">
+              <p
+                style={{ cursor: "pointer" }}
+                onClick={this.locationSuggestionClickEvent}
+                id={stop.name}
+                className="card-header-title"
+              >
+                {stop.name}, {stop.city}
+              </p>
+            </header>
+          </div>
+        );
+      });
+
+      this.setState({ locationSuggestions: locationSuggestions });
+    }
+  };
+
+  locationSuggestionClickEvent = async event => {
+    event.persist();
+    await this.setState({
+      stopSuggestion: ""
+    });
+    this.getDepartures(event.target.innerHTML);
+  };
+
+  suggestionClickEvent = async event => {
+    await this.setState({
+      stopSuggestion: ""
+    });
+    this.getDepartures(this.state.stopInput);
+  };
+
+  getStopEvent = async event => {
+    var value = await event.target.value;
+    await this.setState({ stopInput: value });
+
+    if (value.length > 2) {
+      await this.getStop(value).then(response => {
+        this.setState({ stopSuggestion: response });
+      });
       return;
     }
 
-    fetch(
-      "http://widgets.vvo-online.de/abfahrtsmonitor/Haltestelle.do?hst=" +
-        event.target.value,
-      {
-        method: "get",
-        mode: "cors"
-      }
-    )
-      .then(res => res.json())
-      .then(json => {
-        if (json.length > 0) {
-          this.setState({ stopSuggestion: json[1][0][0] });
-        }
-      });
+    this.setState({ stopSuggestion: "" });
   };
 
-  getDepartures = () => {
-    fetch(
-      "http://widgets.vvo-online.de/abfahrtsmonitor/Haltestelle.do?hst=" +
-        this.state.stopInput,
-      {
-        method: "get",
-        mode: "cors"
+  searchClickEvent = async event => {
+    if (this.state.stopInput !== "") {
+      this.getDepartures(this.state.stopInput);
+    }
+  };
+
+  getStop = async query => {
+    dvb.findStop(query).then(result => {
+      if (result.length > 0) {
+        this.setState({ stopSuggestion: result[0].name });
       }
-    )
-      .then(res => res.json())
-      .then(json => {
-        if (json.length > 0) {
-          this.setState({ stopName: json[1][0][0] + ", " + json[0][0][0] });
-        }
-      });
-    fetch(
-      "http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?hst=" +
-        this.state.stopInput.replace(/&nbsp;/g, "%20"),
-      { method: "get", mode: "cors" }
-    )
-      .then(res => res.json())
-      .then(json => {
-        if (json.length > 0) {
-          var departures = [];
-          this.setState({ stopInput: "" });
-          json.forEach(departure => {
-            departures.push(
-              <div className="card" key={randomBytes(234234)}>
-                <div className="card-content">
-                  <div className="content">
-                    <strong>{departure[0]}</strong> {departure[1]}
-                    <span className="is-pulled-right tag is-info">
-                      {departure[2] === "" ? "0" : departure[2]}
-                    </span>
-                  </div>
+    });
+  };
+
+  getDepartures = async stop => {
+    this.setState({ loading: true, departures: "" });
+
+    dvb.findStop(stop).then(result => {
+      dvb.monitor(result[0].id, 0, 10).then(fetched => {
+        this.setState({
+          stopInput: "",
+          stopName: result[0].name + ", " + result[0].city
+        });
+
+        var departures = [];
+
+        fetched.forEach(departure => {
+          departures.push(
+            <div className="card" key={randomBytes(234234)}>
+              <div className="card-content">
+                <div className="content">
+                  <strong>{departure.line}</strong> {departure.direction}
+                  <span className="is-pulled-right tag is-info">
+                    {departure.arrivalTimeRelative === ""
+                      ? "0"
+                      : departure.arrivalTimeRelative}
+                  </span>
                 </div>
               </div>
-            );
-          });
-          this.setState({ departures: departures });
-        }
-      });
-  };
+            </div>
+          );
+        });
 
-  suggestionClick = event => {
-    this.setState({ stopSuggestion: "", stopInput: event.target.innerHTML });
-    this.getDepartures();
+        this.setState({ departures: departures, loading: false });
+      });
+    });
   };
 
   render() {
@@ -94,7 +138,11 @@ export default class Index extends React.Component {
         <section className="section">
           <div className="container">
             <h1 className="title">
-              {this.state.stopName ? this.state.stopName : "VVO Monitor"}
+              {this.state.loading
+                ? "Loading"
+                : this.state.stopName
+                ? this.state.stopName
+                : "VVO Monitor"}
             </h1>
             {!this.state.stopName ? (
               <h2 className="subtitle">
@@ -112,22 +160,28 @@ export default class Index extends React.Component {
                       className="input"
                       type="text"
                       placeholder="Search for a stop"
-                      onChange={this.getStops}
+                      onChange={this.getStopEvent}
                       value={this.state.stopInput}
-                      onSubmit={this.getDepartures}
+                      onSubmit={this.searchClickEvent}
                     />
                   </div>
                   <div className="control is-expanded">
-                    <a className="button is-info" onClick={this.getDepartures}>
+                    <a
+                      className="button is-info"
+                      onClick={this.searchClickEvent}
+                    >
                       Search
                     </a>
                   </div>
                 </div>
               </div>
               <div className="dropdown-menu" id="dropdown-menu4" role="menu">
-                {this.state.stopSuggestion != "" ? (
+                {this.state.stopSuggestion !== "" ? (
                   <div className="dropdown-content">
-                    <a className="dropdown-item" onClick={this.suggestionClick}>
+                    <a
+                      className="dropdown-item"
+                      onClick={this.suggestionClickEvent}
+                    >
                       {this.state.stopSuggestion}
                     </a>
                   </div>
@@ -138,9 +192,20 @@ export default class Index extends React.Component {
             </div>
           </div>
           <hr />
+          <div className="container">
+            {!this.state.stopName ? (
+              <div>{this.state.locationSuggestions}</div>
+            ) : (
+              <div />
+            )}
+          </div>
           <div className="container">{this.state.departures}</div>
         </section>
       </div>
     );
   }
 }
+
+export default geolocated({
+  userDecisionTimeout: 5000
+})(Index);

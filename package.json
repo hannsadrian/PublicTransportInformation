@@ -29,11 +29,15 @@
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
     "bulma": "^0.7.5",
+    "dvbjs": "^5.1.0",
+    "gauss-krueger": "^1.0.1",
     "next": "^8.1.0",
     "next-plugin-custom-babel-config": "^1.0.2",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.12.0",
+    "proj4": "^2.5.0",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-geolocated": "^2.5.0"
   }
 }
