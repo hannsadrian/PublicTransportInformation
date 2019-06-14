@@ -3,6 +3,7 @@ import "bulma";
 import { randomBytes } from "crypto";
 import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
+import Router from "next/router";
 
 class Index extends React.Component {
   constructor(props) {
@@ -13,12 +14,17 @@ class Index extends React.Component {
       departures: "",
       stopName: "",
       locationSuggestions: "",
-      loading: false
+      loading: false,
+      error: ""
     };
   }
 
   componentDidMount = async () => {
-    this.getLocation();
+    if (this.props.url.query.stop) {
+      this.getDepartures(this.props.url.query.stop);
+      return;
+    }
+    await this.getLocation();
   };
 
   getLocation = async () => {
@@ -60,14 +66,14 @@ class Index extends React.Component {
     await this.setState({
       stopSuggestion: ""
     });
-    this.getDepartures(event.target.innerHTML);
+    this.prepareForDepartures(event.target.innerHTML);
   };
 
   suggestionClickEvent = async event => {
     await this.setState({
       stopSuggestion: ""
     });
-    this.getDepartures(this.state.stopInput);
+    this.prepareForDepartures(this.state.stopInput);
   };
 
   getStopEvent = async event => {
@@ -86,7 +92,7 @@ class Index extends React.Component {
 
   searchClickEvent = async event => {
     if (this.state.stopInput !== "") {
-      this.getDepartures(this.state.stopInput);
+      this.prepareForDepartures(this.state.stopInput);
     }
   };
 
@@ -98,10 +104,22 @@ class Index extends React.Component {
     });
   };
 
+  prepareForDepartures = async stop => {
+    dvb.findStop(stop).then(result => {
+      const href = "/stop/" + result[0].name;
+      const as = href;
+      Router.push(href, as, { shallow: true });
+    });
+  };
+
   getDepartures = async stop => {
     this.setState({ loading: true, departures: "" });
 
     dvb.findStop(stop).then(result => {
+      if (result.length < 1) {
+        this.setState({ error: "No valid stop found", loading: false });
+        return;
+      }
       dvb.monitor(result[0].id, 0, 10).then(fetched => {
         this.setState({
           stopInput: "",
@@ -144,13 +162,16 @@ class Index extends React.Component {
                 ? this.state.stopName
                 : "VVO Monitor"}
             </h1>
-            {!this.state.stopName ? (
+
+            {this.state.error ? (
+              <h2 className="subtitle">{this.state.error}</h2>
+            ) : !this.state.stopName ? (
               <h2 className="subtitle">
                 This is a simple web page to get departures of a stop which is
                 part of the Verkehrsverbund Oberelbe.
               </h2>
             ) : (
-              <h2 />
+              ""
             )}
             <div className="dropdown is-hoverable">
               <div className="dropdown-trigger">

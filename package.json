@@ -30,6 +30,7 @@
     "@zeit/next-sass": "^1.0.1",
     "bulma": "^0.7.5",
     "dvbjs": "^5.1.0",
+    "express": "^4.17.1",
     "gauss-krueger": "^1.0.1",
     "next": "^8.1.0",
     "next-plugin-custom-babel-config": "^1.0.2",
