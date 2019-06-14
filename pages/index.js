@@ -165,7 +165,7 @@ class Index extends React.Component {
 
             {this.state.error ? (
               <h2 className="subtitle">{this.state.error}</h2>
-            ) : !this.state.stopName ? (
+            ) : !this.state.loading && !this.state.stopName ? (
               <h2 className="subtitle">
                 This is a simple web page to get departures of a stop which is
                 part of the Verkehrsverbund Oberelbe.
