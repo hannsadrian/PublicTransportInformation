@@ -4,6 +4,8 @@ import { randomBytes } from "crypto";
 import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Router from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 class Index extends React.Component {
   constructor(props) {
@@ -14,7 +16,7 @@ class Index extends React.Component {
       departures: "",
       stopName: "",
       locationSuggestions: "",
-      loading: false,
+      loading: true,
       error: ""
     };
   }
@@ -25,6 +27,7 @@ class Index extends React.Component {
       return;
     }
     await this.getLocation();
+    this.setState({ loading: false });
   };
 
   getLocation = async () => {
@@ -40,7 +43,7 @@ class Index extends React.Component {
 
       var locationSuggestions = [];
 
-      stops.stops.forEach(stop => {
+      stops.stops.forEach((stop) => {
         locationSuggestions.push(
           <div key={stop.name} className="card" style={{ maxWidth: "800px" }}>
             <header className="card-header">
@@ -61,7 +64,7 @@ class Index extends React.Component {
     }
   };
 
-  locationSuggestionClickEvent = async event => {
+  locationSuggestionClickEvent = async (event) => {
     event.persist();
     await this.setState({
       stopSuggestion: ""
@@ -69,19 +72,19 @@ class Index extends React.Component {
     this.prepareForDepartures(event.target.innerHTML);
   };
 
-  suggestionClickEvent = async event => {
+  suggestionClickEvent = async (event) => {
     await this.setState({
       stopSuggestion: ""
     });
     this.prepareForDepartures(this.state.stopInput);
   };
 
-  getStopEvent = async event => {
+  getStopEvent = async (event) => {
     var value = await event.target.value;
     await this.setState({ stopInput: value });
 
     if (value.length > 2) {
-      await this.getStop(value).then(response => {
+      await this.getStop(value).then((response) => {
         this.setState({ stopSuggestion: response });
       });
       return;
@@ -90,37 +93,37 @@ class Index extends React.Component {
     this.setState({ stopSuggestion: "" });
   };
 
-  searchClickEvent = async event => {
+  searchClickEvent = async (event) => {
     if (this.state.stopInput !== "") {
       this.prepareForDepartures(this.state.stopInput);
     }
   };
 
-  getStop = async query => {
-    dvb.findStop(query).then(result => {
+  getStop = async (query) => {
+    dvb.findStop(query).then((result) => {
       if (result.length > 0) {
         this.setState({ stopSuggestion: result[0].name });
       }
     });
   };
 
-  prepareForDepartures = async stop => {
-    dvb.findStop(stop).then(result => {
-      const href = "/stop/" + result[0].name;
+  prepareForDepartures = async (stop) => {
+    dvb.findStop(stop).then((result) => {
+      const href = "/stop/" + encodeURI(result[0].name).replace("/", "%2F");
       const as = href;
       Router.push(href, as, { shallow: true });
     });
   };
 
-  getDepartures = async stop => {
+  getDepartures = async (stop) => {
     this.setState({ loading: true, departures: "" });
 
-    dvb.findStop(stop).then(result => {
-      if (result.length < 1) {
+    dvb.findStop(stop).then((result) => {
+      if (result.length < 1 || !result) {
         this.setState({ error: "No valid stop found", loading: false });
         return;
       }
-      dvb.monitor(result[0].id, 0, 10).then(fetched => {
+      dvb.monitor(result[0].id, 0, 10).then((fetched) => {
         this.setState({
           stopInput: "",
           stopName: result[0].name + ", " + result[0].city
@@ -128,7 +131,7 @@ class Index extends React.Component {
 
         var departures = [];
 
-        fetched.forEach(departure => {
+        fetched.forEach((departure) => {
           departures.push(
             <div className="card" key={randomBytes(234234)}>
               <div className="card-content">
@@ -157,61 +160,83 @@ class Index extends React.Component {
           <div className="container">
             <h1 className="title">
               {this.state.loading
-                ? "Loading"
+                ? ""
                 : this.state.stopName
                 ? this.state.stopName
-                : "VVO Monitor"}
+                : "Public Transport Monitor"}
             </h1>
 
             {this.state.error ? (
               <h2 className="subtitle">{this.state.error}</h2>
             ) : !this.state.loading && !this.state.stopName ? (
-              <h2 className="subtitle">
-                This is a simple web page to get departures of a stop which is
-                part of the Verkehrsverbund Oberelbe.
-              </h2>
+              <h2 className="subtitle">Find your departure</h2>
             ) : (
               ""
             )}
-            <div className="dropdown is-hoverable">
-              <div className="dropdown-trigger">
-                <div className="field has-addons">
-                  <div className="control is-expanded">
-                    <input
-                      className="input"
-                      type="text"
-                      placeholder="Search for a stop"
-                      onChange={this.getStopEvent}
-                      value={this.state.stopInput}
-                      onSubmit={this.searchClickEvent}
-                    />
-                  </div>
-                  <div className="control is-expanded">
-                    <a
-                      className="button is-info"
-                      onClick={this.searchClickEvent}
-                    >
-                      Search
+
+            {!this.state.loading ? (
+              <div className="field is-grouped">
+                {this.state.stopName ? (
+                  <p className="control">
+                    <a className="button" href="/">
+                      <span className="icon is-small">
+                        <FontAwesomeIcon icon={faHome} />
+                      </span>
                     </a>
+                  </p>
+                ) : (
+                  ""
+                )}
+                <div className="control is-expanded">
+                  <div className="dropdown is-hoverable">
+                    <div className="dropdown-trigger">
+                      <div className="field has-addons">
+                        <div className="control is-expanded">
+                          <input
+                            className="input"
+                            type="text"
+                            placeholder="Search for a stop"
+                            onChange={this.getStopEvent}
+                            value={this.state.stopInput}
+                            onSubmit={this.searchClickEvent}
+                          />
+                        </div>
+                        <div className="control is-expanded">
+                          <a
+                            className="button is-info"
+                            onClick={this.searchClickEvent}
+                          >
+                            Search
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="dropdown-menu"
+                      id="dropdown-menu4"
+                      role="menu"
+                    >
+                      {this.state.stopSuggestion !== "" ? (
+                        <div className="dropdown-content">
+                          <a
+                            className="dropdown-item"
+                            onClick={this.suggestionClickEvent}
+                          >
+                            {this.state.stopSuggestion}
+                          </a>
+                        </div>
+                      ) : (
+                        <div />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="dropdown-menu" id="dropdown-menu4" role="menu">
-                {this.state.stopSuggestion !== "" ? (
-                  <div className="dropdown-content">
-                    <a
-                      className="dropdown-item"
-                      onClick={this.suggestionClickEvent}
-                    >
-                      {this.state.stopSuggestion}
-                    </a>
-                  </div>
-                ) : (
-                  <div />
-                )}
-              </div>
-            </div>
+            ) : (
+              ""
+            )}
           </div>
+
           <hr />
           <div className="container">
             {!this.state.stopName ? (
