@@ -77,7 +77,7 @@ class Index extends React.Component {
     await this.setState({
       stopSuggestion: ""
     });
-    this.prepareForDepartures(event.target.innerHTML);
+    this.prepareForDepartures(event.target.innerHTML, false);
   };
 
   getStopEvent = async (event) => {
@@ -96,7 +96,7 @@ class Index extends React.Component {
 
   searchClickEvent = async (event) => {
     if (this.state.stopInput !== "") {
-      this.prepareForDepartures(this.state.stopInput);
+      this.prepareForDepartures(this.state.stopInput, true);
     }
   };
 
@@ -107,7 +107,11 @@ class Index extends React.Component {
         for (var i = 0; i < result.length; i++) {
           if (i < 3) {
             results.push(
-              <a className="dropdown-item" onClick={this.suggestionClickEvent}>
+              <a
+                key={result[i].name + ", " + result[i].city}
+                className="dropdown-item"
+                onClick={this.suggestionClickEvent}
+              >
                 {result[i].name + ", " + result[i].city}
               </a>
             );
@@ -120,12 +124,20 @@ class Index extends React.Component {
     });
   };
 
-  prepareForDepartures = async (stop) => {
-    dvb.findStop(stop).then((result) => {
-      const href = "/stop/" + encodeURI(result[0].name).replace("/", "%2F");
+  prepareForDepartures = async (stop, search) => {
+    if (search) {
+      dvb.findStop(stop).then((result) => {
+        const href =
+          "/stop/" +
+          encodeURI(result[0].name + result[0].city).replace("/", "%2F");
+        const as = href;
+        Router.push(href, as, { shallow: true });
+      });
+    } else {
+      const href = "/stop/" + encodeURI(stop).replace("/", "%2F");
       const as = href;
       Router.push(href, as, { shallow: true });
-    });
+    }
   };
 
   getDepartures = async (stop) => {
