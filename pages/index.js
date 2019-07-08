@@ -73,10 +73,11 @@ class Index extends React.Component {
   };
 
   suggestionClickEvent = async (event) => {
+    event.persist();
     await this.setState({
       stopSuggestion: ""
     });
-    this.prepareForDepartures(this.state.stopInput);
+    this.prepareForDepartures(event.target.innerHTML);
   };
 
   getStopEvent = async (event) => {
@@ -102,7 +103,19 @@ class Index extends React.Component {
   getStop = async (query) => {
     dvb.findStop(query).then((result) => {
       if (result.length > 0) {
-        this.setState({ stopSuggestion: result[0].name });
+        var results = [];
+        for (var i = 0; i < result.length; i++) {
+          if (i < 3) {
+            results.push(
+              <a className="dropdown-item" onClick={this.suggestionClickEvent}>
+                {result[i].name + ", " + result[i].city}
+              </a>
+            );
+          }
+        }
+        this.setState({ stopSuggestion: results });
+      } else {
+        this.setState({ stopSuggestion: "" });
       }
     });
   };
@@ -218,12 +231,7 @@ class Index extends React.Component {
                     >
                       {this.state.stopSuggestion !== "" ? (
                         <div className="dropdown-content">
-                          <a
-                            className="dropdown-item"
-                            onClick={this.suggestionClickEvent}
-                          >
-                            {this.state.stopSuggestion}
-                          </a>
+                          {this.state.stopSuggestion}
                         </div>
                       ) : (
                         <div />
