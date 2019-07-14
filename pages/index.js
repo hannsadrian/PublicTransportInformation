@@ -5,7 +5,7 @@ import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faRedoAlt } from "@fortawesome/free-solid-svg-icons";
 
 class Index extends React.Component {
   constructor(props) {
@@ -17,7 +17,10 @@ class Index extends React.Component {
       stopName: "",
       locationSuggestions: "",
       loading: true,
-      error: ""
+      error: "",
+      availableModes: 0,
+      modes: [],
+      modeButtons: []
     };
   }
 
@@ -140,15 +143,45 @@ class Index extends React.Component {
     }
   };
 
-  getDepartures = async (stop) => {
-    this.setState({ loading: true, departures: "" });
+  reloadDepartures = () => {
+    this.getDepartures(this.state.stopName, false);
+  };
+
+  toggleMode = async (event) => {
+    event.persist();
+    var modes = this.state.modes;
+    var toBeToggeled = event.target.innerHTML;
+    var newModes = [];
+
+    if (!event.target.classList.contains("is-link")) {
+      newModes = modes;
+      newModes.push(toBeToggeled);
+    } else {
+      newModes = modes;
+      newModes.splice(modes.indexOf(toBeToggeled), 1);
+    }
+    await this.setState({ modes: newModes });
+
+    event.target.classList.toggle("is-link");
+    event.target.blur();
+
+    this.getDepartures(this.state.stopName, false, false);
+  };
+
+  getDepartures = async (stop, loading = true, removeDepartures = true) => {
+    if (!removeDepartures) {
+      this.setState({ loading: loading });
+    } else {
+      this.setState({ loading: loading, departures: "" });
+    }
 
     dvb.findStop(stop).then((result) => {
       if (result.length < 1 || !result) {
         this.setState({ error: "No valid stop found", loading: false });
         return;
       }
-      dvb.monitor(result[0].id, 0, 10).then((fetched) => {
+      dvb.monitor(result[0].id, 0, 15).then((fetched) => {
+        console.log(fetched);
         this.setState({
           stopInput: "",
           stopName: result[0].name + ", " + result[0].city
@@ -156,22 +189,105 @@ class Index extends React.Component {
 
         var departures = [];
 
+        var availableModes = [];
+        var modeButtons = [];
         fetched.forEach((departure) => {
-          departures.push(
-            <div className="card" key={randomBytes(234234)}>
-              <div className="card-content">
-                <div className="content">
-                  <strong>{departure.line}</strong> {departure.direction}
-                  <span className="is-pulled-right tag is-info">
-                    {departure.arrivalTimeRelative === ""
-                      ? "0"
-                      : departure.arrivalTimeRelative}
-                  </span>
+          if (
+            departure.mode.icon_url &&
+            availableModes.indexOf(departure.mode.title) === -1
+          ) {
+            availableModes.push(departure.mode.title);
+            modeButtons.push(
+              <div class="control">
+                <button className="button is-link" onClick={this.toggleMode}>
+                  {departure.mode.title}
+                </button>
+              </div>
+            );
+          } else if (
+            departure.mode.title === "undefined" &&
+            availableModes.indexOf("U-Bahn") === -1
+          ) {
+            availableModes.push("U-Bahn");
+            modeButtons.push(
+              <div class="control">
+                <button className="button is-link" onClick={this.toggleMode}>
+                  U-Bahn
+                </button>
+              </div>
+            );
+          }
+        });
+        if (this.state.availableModes === 0) {
+          this.setState({
+            availableModes: availableModes.length,
+            modes: availableModes,
+            modeButtons: modeButtons
+          });
+        }
+
+        fetched.forEach((departure) => {
+          if (departure.arrivalTimeRelative >= 0) {
+            departures.push(
+              <div
+                className="card"
+                style={{
+                  display: departure.mode.icon_url
+                    ? this.state.modes.indexOf(departure.mode.title) !== -1
+                      ? ""
+                      : "none"
+                    : this.state.modes.indexOf("U-Bahn") !== -1
+                    ? ""
+                    : "none"
+                }}
+                key={randomBytes(234234)}
+              >
+                <div className="card-content">
+                  <div className="media">
+                    <div class="media-left">
+                      <figure class="image is-48x48">
+                        <img
+                          src={
+                            departure.mode.icon_url ||
+                            "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
+                          }
+                          alt="No image ._."
+                        />
+                      </figure>
+                    </div>
+                    <div className="media-content">
+                      <p className="title is-4">
+                        <strong>{departure.line}</strong>
+                      </p>
+                      <p className="subtitle is-6">{departure.direction}</p>
+                    </div>
+                    <div className="media-right">
+                      <figure
+                        style={{
+                          lineHeight: "46px"
+                        }}
+                        className="image is-42x42"
+                      >
+                        <span
+                          style={{
+                            verticalAlign: "middle"
+                          }}
+                          className="is-medium tag is-info"
+                        >
+                          {departure.arrivalTimeRelative === ""
+                            ? "0"
+                            : departure.arrivalTimeRelative}
+                        </span>
+                      </figure>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
+            );
+          }
         });
+
+        this.setState({ modeButtons: modeButtons });
 
         this.setState({ departures: departures, loading: false });
       });
@@ -194,7 +310,7 @@ class Index extends React.Component {
             {this.state.error ? (
               <h2 className="subtitle">{this.state.error}</h2>
             ) : !this.state.loading && !this.state.stopName ? (
-              <h2 className="subtitle">Find your departure</h2>
+              <h2 className="subtitle">Find your departure.</h2>
             ) : (
               ""
             )}
@@ -208,6 +324,17 @@ class Index extends React.Component {
                         <FontAwesomeIcon icon={faHome} />
                       </span>
                     </a>
+                  </p>
+                ) : (
+                  ""
+                )}
+                {this.state.stopName ? (
+                  <p className="control">
+                    <button className="button" onClick={this.reloadDepartures}>
+                      <span className="icon is-small">
+                        <FontAwesomeIcon icon={faRedoAlt} />
+                      </span>
+                    </button>
                   </p>
                 ) : (
                   ""
@@ -257,7 +384,20 @@ class Index extends React.Component {
             )}
           </div>
 
-          <hr />
+          {this.state.availableModes > 1 && !this.state.loading ? (
+            <div>
+              <hr />
+              <div className="container">
+                <div class="field is-grouped is-grouped-multiline">
+                  {this.state.modeButtons}
+                </div>
+              </div>
+              <hr />
+            </div>
+          ) : (
+            <hr />
+          )}
+
           <div className="container">
             {!this.state.stopName ? (
               <div>{this.state.locationSuggestions}</div>
