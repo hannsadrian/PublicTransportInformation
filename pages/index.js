@@ -1,5 +1,6 @@
 import "react";
 import "bulma";
+import "../scss/bulma.scss";
 import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Router from "next/router";
@@ -18,10 +19,7 @@ class Index extends React.Component {
       stopName: "",
       locationSuggestions: "",
       loading: true,
-      error: "",
-      availableModes: 0,
-      modes: [],
-      modeButtons: []
+      error: ""
     };
   }
 
@@ -138,6 +136,10 @@ class Index extends React.Component {
     this.departureCollection.current.updateLoading(loading);
   };
 
+  setError = (err) => {
+    this.setState({ error: err });
+  };
+
   reloadDepartures = () => {
     this.departureCollection.current.reloadDepartures();
   };
@@ -204,27 +206,25 @@ class Index extends React.Component {
                   ""
                 )}
                 <div className="control is-expanded">
-                  <div className="dropdown is-hoverable">
-                    <div className="dropdown-trigger">
-                      <div className="field has-addons">
-                        <div className="control is-expanded">
-                          <input
-                            className="input"
-                            type="text"
-                            placeholder="Search for a stop"
-                            onChange={this.getStopEvent}
-                            value={this.state.stopInput}
-                            onSubmit={this.searchClickEvent}
-                          />
-                        </div>
-                        <div className="control is-expanded">
-                          <a
-                            className="button is-info"
-                            onClick={this.searchClickEvent}
-                          >
-                            Search
-                          </a>
-                        </div>
+                  <div className="dropdown is-active">
+                    <div className="field has-addons">
+                      <div className="control is-expanded">
+                        <input
+                          className="input"
+                          type="text"
+                          placeholder="Search for a stop"
+                          onChange={this.getStopEvent}
+                          value={this.state.stopInput}
+                          onSubmit={this.searchClickEvent}
+                        />
+                      </div>
+                      <div className="control is-expanded">
+                        <a
+                          className="button is-info"
+                          onClick={this.searchClickEvent}
+                        >
+                          Search
+                        </a>
                       </div>
                     </div>
                     <div
@@ -256,6 +256,7 @@ class Index extends React.Component {
             loading={this.state.loading}
             updateLoading={this.updateLoading}
             updateStopName={this.updateStopName}
+            setError={this.setError}
           />
         </section>
       </div>
