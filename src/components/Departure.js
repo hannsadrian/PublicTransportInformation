@@ -1,11 +1,27 @@
 import "react";
 import { randomBytes } from "crypto";
+var moment = require("moment");
+var momentDuration = require("moment-duration-format");
 
 // Props: departure, img, modes
 export default class Departure extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      arrivalTimeRelative: ""
+    };
   }
+
+  componentDidMount = () => {
+    var time =
+      this.props.departure.arrivalTimeRelative === ""
+        ? "0"
+        : this.props.departure.arrivalTimeRelative;
+
+    var formatted = moment.duration(time, "minutes").format("d[d] h[h] m[m]");
+
+    this.setState({ arrivalTimeRelative: formatted });
+  };
 
   render() {
     return (
@@ -48,9 +64,7 @@ export default class Departure extends React.Component {
                   }}
                   className="is-medium tag is-info"
                 >
-                  {this.props.departure.arrivalTimeRelative === ""
-                    ? "0"
-                    : this.props.departure.arrivalTimeRelative}
+                  {this.state.arrivalTimeRelative}
                 </span>
               </figure>
             </div>
