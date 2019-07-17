@@ -7,6 +7,7 @@ import Router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faRedoAlt } from "@fortawesome/free-solid-svg-icons";
 import DepartureCollection from "../src/components/DepartureCollection";
+import DeparturePlaceholder from "../src/components/DeparturePlaceholder";
 
 class Index extends React.Component {
   constructor(props) {
@@ -19,7 +20,8 @@ class Index extends React.Component {
       stopName: "",
       locationSuggestions: "",
       loading: true,
-      error: ""
+      error: "",
+      placeholder: true
     };
   }
 
@@ -45,7 +47,7 @@ class Index extends React.Component {
 
       var locationSuggestions = [];
 
-      stops.stops.forEach((stop) => {
+      stops.stops.forEach(stop => {
         locationSuggestions.push(
           <div key={stop.name} className="card" style={{ maxWidth: "800px" }}>
             <header className="card-header">
@@ -66,7 +68,7 @@ class Index extends React.Component {
     }
   };
 
-  locationSuggestionClickEvent = async (event) => {
+  locationSuggestionClickEvent = async event => {
     event.persist();
     await this.setState({
       stopSuggestion: ""
@@ -74,7 +76,7 @@ class Index extends React.Component {
     this.prepareForDepartures(event.target.innerHTML);
   };
 
-  suggestionClickEvent = async (event) => {
+  suggestionClickEvent = async event => {
     event.persist();
     await this.setState({
       stopSuggestion: ""
@@ -82,12 +84,12 @@ class Index extends React.Component {
     this.prepareForDepartures(event.target.innerHTML, false);
   };
 
-  getStopEvent = async (event) => {
+  getStopEvent = async event => {
     var value = await event.target.value;
     await this.setState({ stopInput: value });
 
     if (value.length > 2) {
-      await this.getStop(value).then((response) => {
+      await this.getStop(value).then(response => {
         this.setState({ stopSuggestion: response });
       });
       return;
@@ -96,14 +98,14 @@ class Index extends React.Component {
     this.setState({ stopSuggestion: "" });
   };
 
-  searchClickEvent = async (event) => {
+  searchClickEvent = async event => {
     if (this.state.stopInput !== "") {
       this.prepareForDepartures(this.state.stopInput, true);
     }
   };
 
-  getStop = async (query) => {
-    dvb.findStop(query).then((result) => {
+  getStop = async query => {
+    dvb.findStop(query).then(result => {
       if (result.length > 0) {
         var results = [];
         for (var i = 0; i < result.length; i++) {
@@ -126,17 +128,21 @@ class Index extends React.Component {
     });
   };
 
-  updateStopName = (stopName) => {
+  updateStopName = stopName => {
     this.setState({ stopName: stopName });
     this.departureCollection.current.updateStopName(stopName);
   };
 
-  updateLoading = (loading) => {
+  setPlaceholder = placeholder => {
+    this.setState({ placeholder: placeholder });
+  };
+
+  updateLoading = loading => {
     this.setState({ loading: loading });
     this.departureCollection.current.updateLoading(loading);
   };
 
-  setError = (err) => {
+  setError = err => {
     this.setState({ error: err });
   };
 
@@ -146,7 +152,7 @@ class Index extends React.Component {
 
   prepareForDepartures = async (stop, search) => {
     if (search) {
-      dvb.findStop(stop).then((result) => {
+      dvb.findStop(stop).then(result => {
         const href =
           "/stop/" +
           encodeURI(result[0].name + result[0].city).replace("/", "%2F");
@@ -167,7 +173,7 @@ class Index extends React.Component {
           <div className="container">
             <h1 className="title">
               {this.state.loading
-                ? ""
+                ? "███████████"
                 : this.state.stopName
                 ? this.state.stopName
                 : "Public Transport Monitor"}
@@ -177,6 +183,8 @@ class Index extends React.Component {
               <h2 className="subtitle">{this.state.error}</h2>
             ) : !this.state.loading && !this.state.stopName ? (
               <h2 className="subtitle">Find your departure.</h2>
+            ) : this.state.loading ? (
+              "████████████"
             ) : (
               ""
             )}
@@ -259,8 +267,21 @@ class Index extends React.Component {
             loading={this.state.loading}
             updateLoading={this.updateLoading}
             updateStopName={this.updateStopName}
+            setPlaceholder={this.setPlaceholder}
             setError={this.setError}
           />
+          {this.state.loading ? (
+            <div className="container">
+              <hr />
+            </div>
+          ) : (
+            ""
+          )}
+          {this.state.placeholder && this.props.url.query.stop ? (
+            <DeparturePlaceholder />
+          ) : (
+            ""
+          )}
         </section>
       </div>
     );
