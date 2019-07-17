@@ -207,7 +207,10 @@ class Index extends React.Component {
                 )}
                 <div className="control is-expanded">
                   <div className="dropdown is-active">
-                    <div className="field has-addons">
+                    <div
+                      className="field has-addons"
+                      style={{ marginBottom: "0" }}
+                    >
                       <div className="control is-expanded">
                         <input
                           className="input"
