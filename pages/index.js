@@ -5,7 +5,11 @@ import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faRedoAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faRedoAlt,
+  faArrowLeft
+} from "@fortawesome/free-solid-svg-icons";
 import DepartureCollection from "../src/components/DepartureCollection";
 import DeparturePlaceholder from "../src/components/DeparturePlaceholder";
 
@@ -169,6 +173,38 @@ class Index extends React.Component {
   render() {
     return (
       <div>
+        {this.state.error ? (
+          <div class="modal is-active">
+            <div class="modal-background" />
+            <div class="modal-content">
+              <div className="box">
+                <p className="title">Error</p>
+                <p className="subtitle">{this.state.error}</p>
+                <div className="field is-grouped">
+                  <p className="control">
+                    <a className="button">
+                      <span
+                        className="icon is-small"
+                        onClick={() => Router.back()}
+                      >
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                      </span>
+                    </a>
+                  </p>
+                  <p className="control">
+                    <a className="button" href="/">
+                      <span className="icon is-small">
+                        <FontAwesomeIcon icon={faHome} />
+                      </span>
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
         <section className="section">
           <div className="container">
             <h1 className="title">
@@ -179,9 +215,7 @@ class Index extends React.Component {
                 : "Public Transport Monitor"}
             </h1>
 
-            {this.state.error ? (
-              <h2 className="subtitle">{this.state.error}</h2>
-            ) : !this.state.loading && !this.state.stopName ? (
+            {!this.state.loading && !this.state.stopName ? (
               <h2 className="subtitle">Find your departure.</h2>
             ) : this.state.loading ? (
               "████████████"

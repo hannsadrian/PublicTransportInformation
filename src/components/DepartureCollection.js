@@ -38,7 +38,7 @@ export default class DepartureCollection extends React.Component {
     event.target.classList.toggle("is-link");
     event.target.blur();
 
-    this.getDepartures(this.state.stopName, true, false);
+    this.getDepartures(this.state.stopName, false, false, false);
   };
 
   updateStopName = stopName => {
@@ -65,80 +65,91 @@ export default class DepartureCollection extends React.Component {
     }
 
     return new Promise(async (resolve, reject) => {
-      await dvb.findStop(stop).then(async result => {
-        if (result.length < 1 || !result) {
-          this.setState({ error: "No valid stop found", loading: false });
-          return;
-        }
-        await dvb.monitor(result[0].id, 0, 15).then(async fetched => {
-          this.setState({
-            stopInput: "",
-            stopName: result[0].name + ", " + result[0].city
-          });
-          this.props.updateStopName(this.state.stopName);
-
-          var departures = [];
-
-          var availableModes = [];
-          var modeButtons = [];
-          await fetched.forEach(departure => {
-            if (
-              departure.mode.icon_url &&
-              availableModes.indexOf(departure.mode.title) === -1
-            ) {
-              availableModes.push(departure.mode.title);
-              modeButtons.push(
-                <div className="control">
-                  <button className="button is-link" onClick={this.toggleMode}>
-                    {departure.mode.title}
-                  </button>
-                </div>
-              );
-            } else if (
-              departure.mode.title === "undefined" &&
-              availableModes.indexOf("U-Bahn") === -1
-            ) {
-              availableModes.push("U-Bahn");
-              modeButtons.push(
-                <div className="control">
-                  <button className="button is-link" onClick={this.toggleMode}>
-                    U-Bahn
-                  </button>
-                </div>
-              );
-            }
-          });
-          if (this.state.availableModes === 0) {
-            this.setState({
-              availableModes: availableModes.length,
-              modes: availableModes,
-              modeButtons: modeButtons
-            });
+      await dvb
+        .findStop(stop)
+        .then(async result => {
+          if (result.length < 1 || !result) {
+            this.setState({ error: "No valid stop found", loading: false });
+            return;
           }
+          await dvb.monitor(result[0].id, 0, 15).then(async fetched => {
+            this.setState({
+              stopInput: "",
+              stopName: result[0].name + ", " + result[0].city
+            });
+            this.props.updateStopName(this.state.stopName);
 
-          await fetched.forEach(departure => {
-            if (departure.arrivalTimeRelative >= 0) {
-              departures.push(
-                <Departure
-                  key={Math.random() * (+101010101 - +0) + +0}
-                  departure={departure}
-                  img={
-                    departure.mode.icon_url ||
-                    "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
-                  }
-                  modes={this.state.modes}
-                />
-              );
+            var departures = [];
+
+            var availableModes = [];
+            var modeButtons = [];
+            await fetched.forEach(departure => {
+              if (
+                departure.mode.icon_url &&
+                availableModes.indexOf(departure.mode.title) === -1
+              ) {
+                availableModes.push(departure.mode.title);
+                modeButtons.push(
+                  <div className="control">
+                    <button
+                      className="button is-link"
+                      onClick={this.toggleMode}
+                    >
+                      {departure.mode.title}
+                    </button>
+                  </div>
+                );
+              } else if (
+                departure.mode.title === "undefined" &&
+                availableModes.indexOf("U-Bahn") === -1
+              ) {
+                availableModes.push("U-Bahn");
+                modeButtons.push(
+                  <div className="control">
+                    <button
+                      className="button is-link"
+                      onClick={this.toggleMode}
+                    >
+                      U-Bahn
+                    </button>
+                  </div>
+                );
+              }
+            });
+            if (this.state.availableModes === 0) {
+              this.setState({
+                availableModes: availableModes.length,
+                modes: availableModes,
+                modeButtons: modeButtons
+              });
             }
+
+            await fetched.forEach(departure => {
+              if (departure.arrivalTimeRelative >= 0) {
+                departures.push(
+                  <Departure
+                    key={Math.random() * (+101010101 - +0) + +0}
+                    departure={departure}
+                    img={
+                      departure.mode.icon_url ||
+                      "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
+                    }
+                    modes={this.state.modes}
+                  />
+                );
+              }
+            });
+
+            this.setState({ modeButtons: modeButtons });
+
+            this.setState({ departures: departures, loading: false });
+            this.props.updateLoading(false);
+            this.props.setPlaceholder(false);
           });
-
-          this.setState({ modeButtons: modeButtons });
-
-          this.setState({ departures: departures, loading: false });
-          this.props.updateLoading(false);
-          this.props.setPlaceholder(false);
+        })
+        .catch(error => {
+          this.props.setError(error.message);
         });
-      });
       resolve();
     });
   };
