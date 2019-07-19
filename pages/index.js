@@ -8,7 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
   faRedoAlt,
-  faArrowLeft
+  faArrowLeft,
+  faMapMarkerAlt
 } from "@fortawesome/free-solid-svg-icons";
 import DepartureCollection from "../src/components/DepartureCollection";
 import DeparturePlaceholder from "../src/components/DeparturePlaceholder";
@@ -25,7 +26,9 @@ class Index extends React.Component {
       locationSuggestions: "",
       loading: true,
       error: "",
-      placeholder: true
+      placeholder: true,
+      latitude: "",
+      longitude: ""
     };
   }
 
@@ -150,6 +153,11 @@ class Index extends React.Component {
     this.setState({ error: err });
   };
 
+  setCoords = (latitude, longitude) => {
+    this.setState({ latitude: latitude, longitude: longitude });
+    //
+  };
+
   reloadDepartures = () => {
     this.departureCollection.current.reloadDepartures();
   };
@@ -208,11 +216,35 @@ class Index extends React.Component {
         <section className="section">
           <div className="container">
             <h1 className="title">
-              {this.state.loading
-                ? "███████████"
-                : this.state.stopName
-                ? this.state.stopName
-                : "Public Transport Monitor"}
+              {this.state.loading ? (
+                "███████████"
+              ) : this.state.stopName ? (
+                <div>
+                  <a
+                    href={
+                      "https://maps.apple.com/?dirflg=w&daddr=" +
+                      this.state.latitude +
+                      "," +
+                      this.state.longitude
+                    }
+                  >
+                    <FontAwesomeIcon icon={faMapMarkerAlt} />
+                  </a>{" "}
+                  <a
+                    style={{ color: "#363636" }}
+                    href={
+                      "https://maps.apple.com/?dirflg=w&daddr=" +
+                      this.state.latitude +
+                      "," +
+                      this.state.longitude
+                    }
+                  >
+                    {this.state.stopName}
+                  </a>
+                </div>
+              ) : (
+                "Public Transport Monitor"
+              )}
             </h1>
 
             {!this.state.loading && !this.state.stopName ? (
@@ -303,6 +335,7 @@ class Index extends React.Component {
             updateStopName={this.updateStopName}
             setPlaceholder={this.setPlaceholder}
             setError={this.setError}
+            setCoords={this.setCoords}
           />
           {this.state.loading ? (
             <div className="container">

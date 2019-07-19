@@ -72,6 +72,7 @@ export default class DepartureCollection extends React.Component {
             this.setState({ error: "No valid stop found", loading: false });
             return;
           }
+          this.props.setCoords(result[0].coords[1], result[0].coords[0]);
           await dvb.monitor(result[0].id, 0, 15).then(async fetched => {
             this.setState({
               stopInput: "",
