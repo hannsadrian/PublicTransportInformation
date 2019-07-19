@@ -18,7 +18,11 @@ export default class Departure extends React.Component {
         ? "0"
         : this.props.departure.arrivalTimeRelative;
 
-    var formatted = moment.duration(time, "minutes").format("d[d] h[h] m[m]");
+    if (this.props.modes.indexOf("placeholder") === -1) {
+      var formatted = moment.duration(time, "minutes").format("d[d] h[h] m[m]");
+    } else {
+      var formatted = "~";
+    }
 
     this.setState({ arrivalTimeRelative: formatted });
   };
