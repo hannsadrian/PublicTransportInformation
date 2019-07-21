@@ -51,7 +51,7 @@ export default class DepartureCollection extends React.Component {
 
   getDepartures = async (
     stop,
-    placeholder = true,
+    placeholder = false,
     loading = true,
     removeDepartures = true
   ) => {
@@ -125,7 +125,7 @@ export default class DepartureCollection extends React.Component {
               });
             }
 
-            await fetched.forEach(departure => {
+            fetched.forEach(departure => {
               if (departure.arrivalTimeRelative >= 0) {
                 departures.push(
                   <Departure
