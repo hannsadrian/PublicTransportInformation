@@ -9,7 +9,8 @@ import {
   faHome,
   faRedoAlt,
   faArrowLeft,
-  faMapMarkerAlt
+  faMapMarkerAlt,
+  faSearch
 } from "@fortawesome/free-solid-svg-icons";
 import DepartureCollection from "../src/components/DepartureCollection";
 import DeparturePlaceholder from "../src/components/DeparturePlaceholder";
@@ -26,7 +27,7 @@ class Index extends React.Component {
       locationSuggestions: "",
       loading: true,
       error: "",
-      placeholder: true,
+      placeholder: false,
       latitude: "",
       longitude: ""
     };
@@ -36,8 +37,9 @@ class Index extends React.Component {
     if (this.props.url.query.stop) {
       this.departureCollection.current.getDepartures(this.props.url.query.stop);
       return;
+    } else {
+      this.getLocation();
     }
-    await this.getLocation();
     this.setState({ loading: false });
   };
 
@@ -300,7 +302,7 @@ class Index extends React.Component {
                           className="button is-info"
                           onClick={this.searchClickEvent}
                         >
-                          Search
+                          <FontAwesomeIcon icon={faSearch} />
                         </a>
                       </div>
                     </div>
