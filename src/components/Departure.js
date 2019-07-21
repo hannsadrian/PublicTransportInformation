@@ -1,5 +1,6 @@
 import "react";
 import { randomBytes } from "crypto";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 var moment = require("moment");
 var momentDuration = require("moment-duration-format");
 
@@ -21,7 +22,7 @@ export default class Departure extends React.Component {
     if (this.props.modes.indexOf("placeholder") === -1) {
       var formatted = moment.duration(time, "minutes").format("d[d] h[h] m[m]");
     } else {
-      var formatted = "~";
+      var formatted = " ";
     }
 
     this.setState({ arrivalTimeRelative: formatted });
@@ -44,14 +45,30 @@ export default class Departure extends React.Component {
       >
         <div className="card-content">
           <div className="media">
-            <div className="media-left">
-              <figure className="image is-48x48">
-                <img src={this.props.img} alt="No image ._." />
-              </figure>
-            </div>
             <div className="media-content">
-              <p className="title is-4">
-                <strong>{this.props.departure.line}</strong>
+              <p
+                className="title is-4"
+                style={{
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+                {this.props.img ? (
+                  <img
+                    style={{ height: "26px", marginRight: "5px" }}
+                    src={this.props.img}
+                    alt="No image ._."
+                  />
+                ) : (
+                  ""
+                )}{" "}
+                <strong
+                  style={{
+                    fontSize: "26px"
+                  }}
+                >
+                  {this.props.departure.line}
+                </strong>
               </p>
               <p className="subtitle is-6">{this.props.departure.direction}</p>
             </div>
