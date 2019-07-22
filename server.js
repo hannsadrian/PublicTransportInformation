@@ -8,6 +8,7 @@ const app = next({ dev, dir: __dirname, conf: nextConfig });
 
 const express = require("express");
 const handle = app.getRequestHandler();
+var path = require("path");
 
 app
   .prepare()
@@ -18,6 +19,10 @@ app
       const actualPage = "/";
       const queryParams = { stop: req.params.stop };
       app.render(req, res, actualPage, queryParams);
+    });
+
+    server.get("/static/favicon.ico", (req, res) => {
+      res.sendFile(path.join(__dirname, "/favicon.ico"));
     });
 
     server.get("*", (req, res) => {

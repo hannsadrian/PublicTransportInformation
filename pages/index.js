@@ -216,15 +216,15 @@ class Index extends React.Component {
         ) : (
           ""
         )}
-        {this.state.stopName === "" ? (
-          <Head>
+
+        <Head>
+          {this.state.stopName === "" ? (
             <title>Public Transport Monitor</title>
-          </Head>
-        ) : (
-          <Head>
+          ) : (
             <title>{this.state.stopName}</title>
-          </Head>
-        )}
+          )}
+          <link rel="icon" href="/static/favicon.ico" />
+        </Head>
         <section className="section">
           <div className="container">
             <h1 className="title">
