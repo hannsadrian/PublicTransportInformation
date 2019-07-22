@@ -4,6 +4,7 @@ import "../scss/bulma.scss";
 import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Router from "next/router";
+import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -214,6 +215,15 @@ class Index extends React.Component {
           </div>
         ) : (
           ""
+        )}
+        {this.state.stopName === "" ? (
+          <Head>
+            <title>Public Transport Monitor</title>
+          </Head>
+        ) : (
+          <Head>
+            <title>{this.state.stopName}</title>
+          </Head>
         )}
         <section className="section">
           <div className="container">
