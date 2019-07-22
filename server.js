@@ -25,6 +25,39 @@ app
       res.sendFile(path.join(__dirname, "/static", "/favicon.ico"));
     });
 
+    server.get("/android-chrome-192x192.png", (req, res) => {
+      res.sendFile(
+        path.join(__dirname, "/static", "/android-chrome-192x192.png")
+      );
+    });
+
+    server.get("/android-chrome-512x512.png", (req, res) => {
+      res.sendFile(
+        path.join(__dirname, "/static", "/android-chrome-512x512.png")
+      );
+    });
+
+    server.get("/browserconfig.xml", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/browserconfig.xml"));
+    });
+
+    server.get("/mstile-70x70.png", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/mstile-70x70.png"));
+    });
+
+    server.get("/mstile-144x144.png", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/mstile-144x144.png"));
+    });
+    server.get("/mstile-150x150.png", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/mstile-150x150.png"));
+    });
+    server.get("/mstile-310x150.png", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/mstile-310x150.png"));
+    });
+    server.get("/mstile-310x310.png", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/mstile-310x310.png"));
+    });
+
     server.get("/apple-touch-icon.png", (req, res) => {
       res.sendFile(path.join(__dirname, "/static", "/apple-touch-icon.png"));
     });
