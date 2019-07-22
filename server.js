@@ -21,8 +21,28 @@ app
       app.render(req, res, actualPage, queryParams);
     });
 
-    server.get("/static/favicon.ico", (req, res) => {
-      res.sendFile(path.join(__dirname, "/favicon.ico"));
+    server.get("/favicon.ico", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/favicon.ico"));
+    });
+
+    server.get("/apple-touch-icon.png", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/apple-touch-icon.png"));
+    });
+
+    server.get("/favicon-32x32.png", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/favicon-32x32.png"));
+    });
+
+    server.get("/favicon-16x16.png", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/favicon-16x16.png"));
+    });
+
+    server.get("/site.webmanifest", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/site.webmanifest"));
+    });
+
+    server.get("/safari-pinned-tab.svg", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/safari-pinned-tab.svg"));
     });
 
     server.get("*", (req, res) => {
