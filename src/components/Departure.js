@@ -1,8 +1,9 @@
 import "react";
 import { randomBytes } from "crypto";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 var moment = require("moment");
 var momentDuration = require("moment-duration-format");
+import Router from "next/router";
+import * as dvb from "dvbjs";
 
 // Props: departure, img, modes
 export default class Departure extends React.Component {
@@ -70,7 +71,27 @@ export default class Departure extends React.Component {
                   {this.props.departure.line}
                 </strong>
               </p>
-              <p className="subtitle is-6">{this.props.departure.direction}</p>
+              <p className="subtitle is-6">
+                <u
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    dvb
+                      .findStop(this.props.departure.direction)
+                      .then(result => {
+                        const href =
+                          "/stop/" +
+                          encodeURI(result[0].name + result[0].city).replace(
+                            "/",
+                            "%2F"
+                          );
+                        const as = href;
+                        Router.push(href, as, { shallow: true });
+                      });
+                  }}
+                >
+                  {this.props.departure.direction}
+                </u>
+              </p>
             </div>
             <div className="media-right">
               <figure
