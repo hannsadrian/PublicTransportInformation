@@ -119,7 +119,7 @@ class Index extends React.Component {
       if (result.length > 0) {
         var results = [];
         for (var i = 0; i < result.length; i++) {
-          if (i < 3) {
+          if (i < 7) {
             results.push(
               <a
                 key={result[i].name + ", " + result[i].city}
@@ -260,7 +260,10 @@ class Index extends React.Component {
                       this.state.longitude
                     }
                   >
-                    <FontAwesomeIcon icon={faMapMarkerAlt} />
+                    <FontAwesomeIcon
+                      icon={faMapMarkerAlt}
+                      style={{ color: "#363636" }}
+                    />
                   </a>{" "}
                   <a
                     style={{ color: "#363636" }}
