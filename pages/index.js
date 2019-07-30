@@ -99,13 +99,11 @@ class Index extends React.Component {
     await this.setState({ stopInput: value });
 
     if (value.length > 2) {
-      await this.getStop(value).then(response => {
-        this.setState({ stopSuggestion: response });
-      });
+      await this.getStop(value);
       return;
+    } else {
+      this.setState({ stopSuggestion: "" });
     }
-
-    this.setState({ stopSuggestion: "" });
   };
 
   searchClickEvent = async event => {
@@ -115,12 +113,12 @@ class Index extends React.Component {
   };
 
   getStop = async query => {
-    dvb.findStop(query).then(result => {
+    dvb.findStop(query).then(async result => {
       if (result.length > 0) {
         var results = [];
         for (var i = 0; i < result.length; i++) {
           if (i < 7) {
-            results.push(
+            await results.push(
               <a
                 key={result[i].name + ", " + result[i].city}
                 className="dropdown-item"
@@ -158,7 +156,6 @@ class Index extends React.Component {
 
   setCoords = (latitude, longitude) => {
     this.setState({ latitude: latitude, longitude: longitude });
-    //
   };
 
   reloadDepartures = () => {
