@@ -58,7 +58,8 @@ export default class Departure extends React.Component {
                   <img
                     style={{ height: "26px", marginRight: "5px" }}
                     src={this.props.img}
-                    alt="No image ._."
+                    alt=""
+                    onerror="this.style.display='none'"
                   />
                 ) : (
                   ""
