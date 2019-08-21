@@ -41,6 +41,13 @@ class Index extends React.Component {
     } else {
       this.getLocation();
     }
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .catch(err => console.error("Service worker registration failed", err));
+    } else {
+      console.log("Service worker not supported");
+    }
     this.setState({ loading: false });
   };
 
@@ -220,6 +227,7 @@ class Index extends React.Component {
           ) : (
             <title>{this.state.stopName}</title>
           )}
+          <link rel="manifest" href="/manifest.json" />
           <link
             rel="apple-touch-icon"
             sizes="180x180"

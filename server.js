@@ -74,6 +74,14 @@ app
       res.sendFile(path.join(__dirname, "/static", "/site.webmanifest"));
     });
 
+    server.get("/sw.js", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/serviceWorker.js"));
+    });
+
+    server.get("/manifest.json", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/manifest.json"));
+    });
+
     server.get("/safari-pinned-tab.svg", (req, res) => {
       res.sendFile(path.join(__dirname, "/static", "/safari-pinned-tab.svg"));
     });
