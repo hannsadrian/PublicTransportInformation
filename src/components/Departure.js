@@ -10,7 +10,8 @@ export default class Departure extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      arrivalTimeRelative: ""
+      arrivalTimeRelative: "",
+      imageError: false
     };
   }
 
@@ -56,10 +57,16 @@ export default class Departure extends React.Component {
               >
                 {this.props.img ? (
                   <img
-                    style={{ height: "26px", marginRight: "5px" }}
+                    style={
+                      this.state.imageError
+                        ? { display: "hidden" }
+                        : { height: "26px", marginRight: "5px" }
+                    }
                     src={this.props.img}
                     alt=""
-                    onerror="this.style.display='none'"
+                    onError={() => {
+                      this.setState({ imageError: true });
+                    }}
                   />
                 ) : (
                   ""

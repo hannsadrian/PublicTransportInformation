@@ -45,6 +45,7 @@
     "node-sass": "^4.12.0",
     "proj4": "^2.5.0",
     "react": "^16.8.6",
+    "react-detect-offline": "^2.4.0",
     "react-dom": "^16.8.6",
     "react-geolocated": "^2.5.0"
   }

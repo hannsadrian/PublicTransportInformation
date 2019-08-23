@@ -1,6 +1,7 @@
 import "react";
 import * as dvb from "dvbjs";
 import Departure from "./Departure";
+import { Online, Offline } from "react-detect-offline";
 
 export default class DepartureCollection extends React.Component {
   constructor(props) {
@@ -158,33 +159,46 @@ export default class DepartureCollection extends React.Component {
   render() {
     return (
       <div>
-        <div className="container">
-          {this.state.availableModes > 1 && !this.props.loading ? (
-            <div>
-              <hr />
-              <div className="container">
-                <div className="field is-grouped is-grouped-multiline">
-                  {this.state.modeButtons}
+        <Online>
+          <div className="container">
+            {this.state.availableModes > 1 && !this.props.loading ? (
+              <div>
+                <hr />
+                <div className="container">
+                  <div className="field is-grouped is-grouped-multiline">
+                    {this.state.modeButtons}
+                  </div>
                 </div>
+                <hr />
               </div>
+            ) : !this.props.loading && this.props.stopName ? (
               <hr />
-            </div>
-          ) : !this.props.loading && this.props.stopName ? (
-            <hr />
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="container">
-          {!this.props.stopName && this.props.locationSuggestions ? (
-            <div>
+            ) : (
+              ""
+            )}
+          </div>
+        </Online>
+        <Offline>
+          {this.state.availableModes > 0 ? (
+            <div className="container">
               <hr />
-              {this.props.locationSuggestions}
             </div>
           ) : (
             <div />
           )}
-        </div>
+        </Offline>
+        <Online>
+          <div className="container">
+            {!this.props.stopName && this.props.locationSuggestions ? (
+              <div>
+                <hr />
+                {this.props.locationSuggestions}
+              </div>
+            ) : (
+              <div />
+            )}
+          </div>
+        </Online>
         <div className="container">{this.state.departures}</div>
       </div>
     );

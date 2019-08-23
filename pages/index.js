@@ -6,6 +6,7 @@ import * as dvb from "dvbjs";
 import Router from "next/router";
 import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Offline, Online } from "react-detect-offline";
 import {
   faHome,
   faRedoAlt,
@@ -35,12 +36,17 @@ class Index extends React.Component {
   }
 
   componentDidMount = async () => {
-    if (this.props.url.query.stop) {
+    if (this.props.url.query.stop && navigator.onLine) {
       this.departureCollection.current.getDepartures(this.props.url.query.stop);
       return;
     } else {
       this.getLocation();
     }
+
+    if (!navigator.onLine) {
+      Router.push("/");
+    }
+
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
@@ -188,38 +194,40 @@ class Index extends React.Component {
   render() {
     return (
       <div>
-        {this.state.error ? (
-          <div class="modal is-active">
-            <div class="modal-background" />
-            <div class="modal-content">
-              <div className="box">
-                <p className="title">Error</p>
-                <p className="subtitle">{this.state.error}</p>
-                <div className="field is-grouped">
-                  <p className="control">
-                    <a className="button">
-                      <span
-                        className="icon is-small"
-                        onClick={() => Router.back()}
-                      >
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                      </span>
-                    </a>
-                  </p>
-                  <p className="control">
-                    <a className="button" href="/">
-                      <span className="icon is-small">
-                        <FontAwesomeIcon icon={faHome} />
-                      </span>
-                    </a>
-                  </p>
+        <Online>
+          {this.state.error ? (
+            <div class="modal is-active">
+              <div class="modal-background" />
+              <div class="modal-content">
+                <div className="box">
+                  <p className="title">Error</p>
+                  <p className="subtitle">{this.state.error}</p>
+                  <div className="field is-grouped">
+                    <p className="control">
+                      <a className="button">
+                        <span
+                          className="icon is-small"
+                          onClick={() => Router.back()}
+                        >
+                          <FontAwesomeIcon icon={faArrowLeft} />
+                        </span>
+                      </a>
+                    </p>
+                    <p className="control">
+                      <a className="button" href="/">
+                        <span className="icon is-small">
+                          <FontAwesomeIcon icon={faHome} />
+                        </span>
+                      </a>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ) : (
-          ""
-        )}
+          ) : (
+            ""
+          )}
+        </Online>
 
         <Head>
           {this.state.stopName === "" ? (
@@ -300,69 +308,84 @@ class Index extends React.Component {
             )}
 
             {!this.state.loading ? (
-              <div className="field is-grouped">
-                {this.state.stopName ? (
-                  <p className="control">
-                    <a className="button" href="/">
-                      <span className="icon is-small">
-                        <FontAwesomeIcon icon={faHome} />
-                      </span>
-                    </a>
-                  </p>
-                ) : (
-                  ""
-                )}
-                {this.state.stopName ? (
-                  <p className="control">
-                    <button className="button" onClick={this.reloadDepartures}>
-                      <span className="icon is-small">
-                        <FontAwesomeIcon icon={faRedoAlt} />
-                      </span>
-                    </button>
-                  </p>
-                ) : (
-                  ""
-                )}
-                <div className="control is-expanded">
-                  <div className="dropdown is-active">
-                    <div
-                      className="field has-addons"
-                      style={{ marginBottom: "0" }}
-                    >
-                      <div className="control is-expanded">
-                        <input
-                          className="input"
-                          type="text"
-                          placeholder="Search for a stop"
-                          onChange={this.getStopEvent}
-                          value={this.state.stopInput}
-                          onSubmit={this.searchClickEvent}
-                        />
-                      </div>
-                      <div className="control is-expanded">
-                        <a
-                          className="button is-info"
-                          onClick={this.searchClickEvent}
-                        >
-                          <FontAwesomeIcon icon={faSearch} />
+              <div>
+                <Online>
+                  <div className="field is-grouped">
+                    {this.state.stopName ? (
+                      <p className="control">
+                        <a className="button" href="/">
+                          <span className="icon is-small">
+                            <FontAwesomeIcon icon={faHome} />
+                          </span>
                         </a>
-                      </div>
-                    </div>
-                    <div
-                      className="dropdown-menu"
-                      id="dropdown-menu4"
-                      role="menu"
-                    >
-                      {this.state.stopSuggestion !== "" ? (
-                        <div className="dropdown-content">
-                          {this.state.stopSuggestion}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                    {this.state.stopName ? (
+                      <p className="control">
+                        <button
+                          className="button"
+                          onClick={this.reloadDepartures}
+                        >
+                          <span className="icon is-small">
+                            <FontAwesomeIcon icon={faRedoAlt} />
+                          </span>
+                        </button>
+                      </p>
+                    ) : (
+                      ""
+                    )}
+
+                    <div className="control is-expanded">
+                      <div className="dropdown is-active">
+                        <div
+                          className="field has-addons"
+                          style={{ marginBottom: "0" }}
+                        >
+                          <div className="control is-expanded">
+                            <input
+                              className="input"
+                              type="text"
+                              placeholder="Search for a stop"
+                              onChange={this.getStopEvent}
+                              value={this.state.stopInput}
+                              onSubmit={this.searchClickEvent}
+                            />
+                          </div>
+                          <div className="control is-expanded">
+                            <a
+                              className="button is-info"
+                              onClick={this.searchClickEvent}
+                            >
+                              <FontAwesomeIcon icon={faSearch} />
+                            </a>
+                          </div>
                         </div>
-                      ) : (
-                        <div />
-                      )}
+                        <div
+                          className="dropdown-menu"
+                          id="dropdown-menu4"
+                          role="menu"
+                        >
+                          {this.state.stopSuggestion !== "" ? (
+                            <div className="dropdown-content">
+                              {this.state.stopSuggestion}
+                            </div>
+                          ) : (
+                            <div />
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Online>
+                <Offline>
+                  <article class="message is-danger">
+                    <div class="message-body">
+                      Seem's like you aren't connected to the Internet
+                    </div>
+                  </article>
+                </Offline>
               </div>
             ) : (
               ""
@@ -388,11 +411,13 @@ class Index extends React.Component {
           ) : (
             ""
           )}
-          {this.state.placeholder && this.props.url.query.stop ? (
-            <DeparturePlaceholder />
-          ) : (
-            ""
-          )}
+          <Online>
+            {this.state.placeholder && this.props.url.query.stop ? (
+              <DeparturePlaceholder />
+            ) : (
+              ""
+            )}
+          </Online>
         </section>
       </div>
     );
