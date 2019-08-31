@@ -1,6 +1,7 @@
 import "react";
 import "bulma";
 import "../scss/bulma.scss";
+import "../static/tailwind.css"
 import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Router from "next/router";
@@ -48,9 +49,9 @@ class Index extends React.Component {
     }
 
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .catch(err => console.error("Service worker registration failed", err));
+      //navigator.serviceWorker
+      //  .register("/sw.js")
+      //  .catch(err => console.error("Service worker registration failed", err));
     } else {
       console.log("Service worker not supported");
     }
