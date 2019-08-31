@@ -25,6 +25,10 @@ app
       res.sendFile(path.join(__dirname, "/static", "/favicon.ico"));
     });
 
+    server.get("/tailwind.css", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/tailwind.css"));
+    })
+
     server.get("/android-chrome-192x192.png", (req, res) => {
       res.sendFile(
         path.join(__dirname, "/static", "/android-chrome-192x192.png")
