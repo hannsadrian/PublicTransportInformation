@@ -1,0 +1,27 @@
+name: A workflow for vvo-monitor
+on: push
+jobs:
+  build:
+    name: Hello world action
+    runs-on: ubuntu-latest    
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: adwirawien/vvo-monitor
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        registry: repo.treescale.com
+    - name: deploy to cluster
+      uses: steebchen/kubectl@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      with:
+        args: set image --record deployment/my-app container=repo.treescale.com/adwirawien/vvo-monitor:latest
+    - name: verify deployment
+      uses: steebchen/kubectl@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      with:
+        args: '"rollout status deployment/my-app"'
