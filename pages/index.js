@@ -263,7 +263,7 @@ class Index extends React.Component {
             name="apple-mobile-web-app-status-bar-style"
             content="default"
           />
-          <meta name="version" content="17-42-12-09-2019" />
+          <meta name="version" content="18-41-12-09-2019" />
         </Head>
         <section className="section">
           <div className="container">
