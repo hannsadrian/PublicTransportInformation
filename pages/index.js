@@ -1,7 +1,6 @@
 import "react";
 import "bulma";
 import "../scss/bulma.scss";
-import "../static/tailwind.css";
 import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Router from "next/router";
