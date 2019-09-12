@@ -1,7 +1,7 @@
 import "react";
 import "bulma";
 import "../scss/bulma.scss";
-import "../static/tailwind.css"
+import "../static/tailwind.css";
 import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Router from "next/router";
@@ -49,9 +49,11 @@ class Index extends React.Component {
     }
 
     if ("serviceWorker" in navigator) {
-      //navigator.serviceWorker
-      //  .register("/sw.js")
-      //  .catch(err => console.error("Service worker registration failed", err));
+      navigator.serviceWorker
+        .register("/sw.js")
+        .catch((err) =>
+          console.error("Service worker registration failed", err)
+        );
     } else {
       console.log("Service worker not supported");
     }
@@ -71,7 +73,7 @@ class Index extends React.Component {
 
       var locationSuggestions = [];
 
-      stops.stops.forEach(stop => {
+      stops.stops.forEach((stop) => {
         locationSuggestions.push(
           <div key={stop.name} className="card" style={{ maxWidth: "800px" }}>
             <header className="card-header">
@@ -92,7 +94,7 @@ class Index extends React.Component {
     }
   };
 
-  locationSuggestionClickEvent = async event => {
+  locationSuggestionClickEvent = async (event) => {
     event.persist();
     await this.setState({
       stopSuggestion: ""
@@ -100,7 +102,7 @@ class Index extends React.Component {
     this.prepareForDepartures(event.target.innerHTML);
   };
 
-  suggestionClickEvent = async event => {
+  suggestionClickEvent = async (event) => {
     event.persist();
     await this.setState({
       stopSuggestion: ""
@@ -108,7 +110,7 @@ class Index extends React.Component {
     this.prepareForDepartures(event.target.innerHTML, false);
   };
 
-  getStopEvent = async event => {
+  getStopEvent = async (event) => {
     var value = await event.target.value;
     await this.setState({ stopInput: value });
 
@@ -120,14 +122,14 @@ class Index extends React.Component {
     }
   };
 
-  searchClickEvent = async event => {
+  searchClickEvent = async (event) => {
     if (this.state.stopInput !== "") {
       this.prepareForDepartures(this.state.stopInput, true);
     }
   };
 
-  getStop = async query => {
-    dvb.findStop(query).then(async result => {
+  getStop = async (query) => {
+    dvb.findStop(query).then(async (result) => {
       if (result.length > 0) {
         var results = [];
         for (var i = 0; i < result.length; i++) {
@@ -150,21 +152,21 @@ class Index extends React.Component {
     });
   };
 
-  updateStopName = stopName => {
+  updateStopName = (stopName) => {
     this.setState({ stopName: stopName });
     this.departureCollection.current.updateStopName(stopName);
   };
 
-  setPlaceholder = placeholder => {
+  setPlaceholder = (placeholder) => {
     this.setState({ placeholder: placeholder });
   };
 
-  updateLoading = loading => {
+  updateLoading = (loading) => {
     this.setState({ loading: loading });
     this.departureCollection.current.updateLoading(loading);
   };
 
-  setError = err => {
+  setError = (err) => {
     this.setState({ error: err });
   };
 
@@ -178,7 +180,7 @@ class Index extends React.Component {
 
   prepareForDepartures = async (stop, search) => {
     if (search) {
-      dvb.findStop(stop).then(result => {
+      dvb.findStop(stop).then((result) => {
         const href =
           "/stop/" +
           encodeURI(result[0].name + result[0].city).replace("/", "%2F");
@@ -262,6 +264,7 @@ class Index extends React.Component {
             name="apple-mobile-web-app-status-bar-style"
             content="default"
           />
+          <meta name="version" content="17-42-12-09-2019" />
         </Head>
         <section className="section">
           <div className="container">
