@@ -17,5 +17,5 @@ jobs:
     - name: Deploy to Kubernetes
       run: |
         export KUBECONFIG="${{ secrets.KUBE_CONFIG }}"
-        kubectl kubectl set image --record deployment/vvo-monitor vvo-monitor=repo.treescale.com/adwirawien/vvo-monitor
+        kubectl set image --record deployment/vvo-monitor vvo-monitor=repo.treescale.com/adwirawien/vvo-monitor
         kubectl rollout status deployment/vvo-monitor
