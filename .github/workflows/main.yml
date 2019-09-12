@@ -18,10 +18,10 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
-        args: set image --record deployment/my-app container=repo.treescale.com/adwirawien/vvo-monitor:latest
+        args: set image --record deployment/vvo-monitor container=repo.treescale.com/adwirawien/vvo-monitor:latest
     - name: verify deployment
       uses: steebchen/kubectl@master
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
-        args: '"rollout status deployment/my-app"'
+        args: rollout status deployment/vvo-monitor
