@@ -1,7 +1,7 @@
 import "react";
 import { randomBytes } from "crypto";
 var moment = require("moment");
-var momentDuration = require("moment-duration-format");
+require("moment-duration-format");
 import Router from "next/router";
 import * as dvb from "dvbjs";
 
@@ -85,7 +85,7 @@ export default class Departure extends React.Component {
                   onClick={() => {
                     dvb
                       .findStop(this.props.departure.direction)
-                      .then(result => {
+                      .then((result) => {
                         const href =
                           "/stop/" +
                           encodeURI(result[0].name + result[0].city).replace(
