@@ -36,11 +36,11 @@ class Index extends React.Component {
     }
 
     if ("serviceWorker" in navigator) {
-      /*navigator.serviceWorker
+      navigator.serviceWorker
         .register("/sw.js")
         .catch((err) =>
           console.error("Service worker registration failed", err)
-        );*/
+        );
     } else {
       console.log("Service worker not supported");
     }
@@ -61,9 +61,7 @@ class Index extends React.Component {
       var locationSuggestions = [];
 
       stops.stops.forEach((stop) => {
-        locationSuggestions.push(
-          (stop.name + ", " + stop.city).replace("/", "|")
-        );
+        locationSuggestions.push(stop.name + ", " + stop.city);
       });
 
       this.setState({ suggestions: locationSuggestions });
@@ -77,7 +75,7 @@ class Index extends React.Component {
 
     stops.map((value, index) => {
       if (index < 8) {
-        suggestions.push((value.name + ", " + value.city).replace("/", "|"));
+        suggestions.push(value.name + ", " + value.city);
       }
     });
 
@@ -95,48 +93,38 @@ class Index extends React.Component {
     }
   };
 
-  prepareForDepartures = async (stop, search) => {
-    if (search) {
-      dvb.findStop(stop).then((result) => {
-        const href =
-          "/stop/" +
-          encodeURI(result[0].name + result[0].city).replace("/", "%2F");
-        const as = href;
-        Router.push(href, as, { shallow: true });
-      });
-    } else {
-      const href = "/stop/" + encodeURI(stop).replace("/", "%2F");
-      const as = href;
-      Router.push(href, as, { shallow: true });
-    }
-  };
-
   render() {
     return (
-      <div className="p-6 pt-12 sm:p-20">
+      <div className="p-6 pt-12 sm:p-20 lg:pl-56">
         <Head>
           <title>Public Transport Monitor</title>
         </Head>
-        <h1 className="font-bold font-sans text-3xl sm:text-4xl text-indigo-200 mb-5 leading-tight">
+        <h1 className="font-semibold font-sans text-3xl text-gray-200 mb-5 leading-tight">
           Public Transport Monitor
         </h1>
         <div className="w-full sm:w-auto sm:max-w-xs">
           <input
             placeholder="stop"
             onChange={this.handleChange}
-            className="mb-5 shadow w-full text-lg font-sans font-semibold trans rounded px-3 py-2 bg-indigo-700 text-indigo-200 placeholder-indigo-500 focus:outline-none"
+            className="mb-5 shadow w-full text-lg font-sans font-semibold trans rounded px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
           ></input>
-          <div className="w-full bg-indigo-700 text-indigo-200 font-medium font-sans rounded overflow-hidden">
+          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded overflow-hidden">
             {this.state.suggestions.map((value, index) => {
               return (
                 <div key={index}>
-                  <Link href="/stop/[stop]" as={"/stop/" + value}>
-                    <p className="p-2 px-3 hover:bg-indigo-800 trans cursor-pointer">
-                      {value}
-                    </p>
+                  <Link
+                    prefetch
+                    href="/stop/[stop]"
+                    as={"/stop/" + value.replace("/", "%2F")}
+                  >
+                    <a>
+                      <p className="py-3 sm:py-2 px-3 hover:bg-black trans cursor-pointer">
+                        {value}
+                      </p>
+                    </a>
                   </Link>
                   {index < this.state.suggestions.length - 1 ? (
-                    <hr className="border-indigo-600 mx-2"></hr>
+                    <hr className="border-gray-800 mx-2"></hr>
                   ) : (
                     <div></div>
                   )}
