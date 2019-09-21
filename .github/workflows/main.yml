@@ -1,5 +1,8 @@
 name: A workflow for vvo-monitor
-on: push
+on:
+  push:
+    branches:    
+      - master
 jobs:
   build:
     name: Building & Deploying to k8s

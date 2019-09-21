@@ -1,0 +1,29 @@
+@tailwind base;
+
+.trans {
+  transition: all 0.25s;
+}
+
+.trans-bg {
+  transition-property: background;
+}
+
+.trans-slow {
+  transition-duration: 0.5s;
+}
+
+.trans-slower {
+  transition-duration: 0.5s;
+}
+
+.trans-fast {
+  transition-duration: 0.15s;
+}
+
+.trans-faster {
+  transition-duration: 0.075s;
+}
+
+@tailwind components;
+
+@tailwind utilities;
