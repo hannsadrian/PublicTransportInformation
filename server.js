@@ -16,7 +16,7 @@ app
     const server = express();
 
     server.get("/stop/:stop", async (req, res) => {
-      const actualPage = "/";
+      const actualPage = "/stop/[stop]";
       const queryParams = { stop: req.params.stop };
       app.render(req, res, actualPage, queryParams);
     });
@@ -86,16 +86,20 @@ app
       res.sendFile(path.join(__dirname, "/static", "/safari-pinned-tab.svg"));
     });
 
+    server.get("/background.css", (req, res) => {
+      res.sendFile(path.join(__dirname, "/static", "/background.css"));
+    });
+
     server.get("*", (req, res) => {
       return handle(req, res);
     });
 
-    server.listen(3000, err => {
+    server.listen(3000, (err) => {
       if (err) throw err;
       console.log("> Ready on port 3000");
     });
   })
-  .catch(ex => {
+  .catch((ex) => {
     console.error(ex.stack);
     process.exit(1);
   });
