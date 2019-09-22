@@ -225,16 +225,20 @@ class Stop extends React.Component {
               );
             }
           })}
-          <p className="text-gray-600 -mt-1">
-            Showing{" "}
-            {this.state.modes.length === 0 ||
-            this.state.modes.length === this.state.allModes.length
-              ? "all departures"
-              : "departures for" +
-                this.state.modes.map((value, index) => {
-                  return " " + value;
-                })}
-          </p>
+          {!this.state.loading ? (
+            <p className="text-gray-600 -mt-1">
+              Showing{" "}
+              {this.state.modes.length === 0 ||
+              this.state.modes.length === this.state.allModes.length
+                ? "all departures"
+                : "departures for" +
+                  this.state.modes.map((value, index) => {
+                    return " " + value;
+                  })}
+            </p>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     );
