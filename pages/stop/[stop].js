@@ -25,8 +25,7 @@ class Stop extends React.Component {
       latitude: "",
       longitude: "",
       modes: [],
-      allModes: [],
-      firstLoad: true
+      allModes: []
     };
   }
 
@@ -56,12 +55,6 @@ class Stop extends React.Component {
           mot.push(toPush);
         }
       });
-      if (this.state.firstLoad) {
-        this.setState({
-          modes: mot,
-          firstLoad: false
-        });
-      }
       this.setState({
         allModes: Object.assign([], mot),
         departures: query,
@@ -75,14 +68,17 @@ class Stop extends React.Component {
     var modes = this.state.modes;
     var mode = event.target.innerHTML;
 
-    event.target.classList.toggle("bg-gray-700");
+    event.target.classList.toggle("bg-unselected");
     event.target.classList.toggle("bg-gray-900");
-    if (modes.indexOf(mode) !== -1) {
-      modes.splice(modes.indexOf(mode), 1);
-      this.setState({ activeModes: modes });
-    } else {
+    if (modes.indexOf(mode) === -1) {
+      modes.push(mode);
       this.setState({
-        activeModes: modes.push(mode)
+        modes: modes
+      });
+    } else {
+      modes.splice(modes.indexOf(mode), 1);
+      this.setState({
+        modes: modes
       });
     }
   };
@@ -129,7 +125,7 @@ class Stop extends React.Component {
         )}
         <div className="flex flex-wrap">
           <Link href="/" as="/">
-            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 hover:shadow-outline focus:outline-none trans mb-3">
+            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 focus:outline-none trans mb-3">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
@@ -156,7 +152,7 @@ class Stop extends React.Component {
                 this.state.allModes.map((mode, index) => {
                   return (
                     <button
-                      className="text-gray-300 px-4 py-2 rounded focus:outline-none hover:shadow-outline trans mr-3 truncate bg-gray-900 mb-3"
+                      className="text-gray-300 px-4 py-2 rounded focus:outline-none hover:shadow-outline trans mr-3 truncate bg-unselected mb-3"
                       onClick={this.toggleMode}
                     >
                       {mode}
@@ -171,7 +167,7 @@ class Stop extends React.Component {
             <></>
           )}
         </div>
-        <div className="w-full sm:w-auto sm:max-w-lg mb-3">
+        <div className="w-full sm:w-auto sm:max-w-lg mb-6">
           {this.state.departures.map((departure, index) => {
             if (departure.arrivalTimeRelative > -1) {
               return (
@@ -179,7 +175,8 @@ class Stop extends React.Component {
                   className={
                     this.state.modes.includes(departure.mode.title) ||
                     (departure.line.includes("U") &&
-                      this.state.modes.includes("U-Bahn"))
+                      this.state.modes.includes("U-Bahn")) ||
+                    this.state.modes.length < 1
                       ? "trans w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
                       : "hidden trans w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
                   }
@@ -228,6 +225,16 @@ class Stop extends React.Component {
               );
             }
           })}
+          <p className="text-gray-600 -mt-1">
+            Showing{" "}
+            {this.state.modes.length === 0 ||
+            this.state.modes.length === this.state.allModes.length
+              ? "all departures"
+              : "departures for" +
+                this.state.modes.map((value, index) => {
+                  return " " + value;
+                })}
+          </p>
         </div>
       </div>
     );

@@ -1,7 +1,10 @@
 module.exports = {
   theme: {
-    fontFamily: {},
-    extend: {}
+    extend: {
+      colors: {
+        unselected: "#252e3d"
+      }
+    }
   },
   variants: {},
   plugins: []
