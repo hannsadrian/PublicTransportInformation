@@ -123,42 +123,48 @@ class Stop extends React.Component {
             if (departure.arrivalTimeRelative > -1) {
               return (
                 <div
-                  className="w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex justify-between"
+                  className="w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
                   key={
                     departure.line +
                     departure.direction +
                     departure.arrivalTimeRelative
                   }
                 >
-                  <div>
+                  <div className="w-3/4">
                     <p className="font-bold text-2xl flex items-center">
                       <img
                         style={
-                          this.state.imageError || !departure.mode.icon_url
+                          this.state.imageError
                             ? { display: "hidden", marginRight: "0" }
                             : { height: "26px", marginRight: "0.5rem" }
                         }
                         src={
                           departure.line.includes("U")
                             ? "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
+                            : departure.mode.title.includes("plusbus")
+                            ? "https://m.dvb.de/img/mot_icons/plusBus.svg"
                             : departure.mode.icon_url
                         }
                         onError={() => {
                           this.setState({ imageError: true });
                         }}
                       />
-                      {departure.line}
+                      <span className="truncate">{departure.line}</span>
                     </p>
-                    <p className="font-medium text-lg">{departure.direction}</p>
+                    <p className="font-medium text-lg truncate">
+                      {departure.direction}
+                    </p>
                   </div>
-                  <div>
-                    <div className="bg-gray-800 rounded p-3">
-                      <p className="font-semibold text-center text-2xl">
-                        {moment
-                          .duration(departure.arrivalTimeRelative, "minutes")
-                          .format("d[d] h[h] m[m]")}
-                      </p>
-                    </div>
+                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded p-3 object-right">
+                    <p className="font-semibold text-center text-2xl">
+                      {departure.arrivalTimeRelative < 60
+                        ? moment
+                            .duration(departure.arrivalTimeRelative, "minutes")
+                            .format("d[d] h[h] m[m]")
+                        : moment
+                            .duration(departure.arrivalTimeRelative, "minutes")
+                            .format(">h[h]")}
+                    </p>
                   </div>
                 </div>
               );
