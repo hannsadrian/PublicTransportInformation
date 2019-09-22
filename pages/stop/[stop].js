@@ -125,7 +125,7 @@ class Stop extends React.Component {
         )}
         <div className="flex flex-wrap">
           <Link href="/" as="/">
-            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 focus:outline-none trans mb-3">
+            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 hover:shadow-outline focus:outline-none trans mb-3">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
