@@ -1,19 +1,14 @@
 import "react";
-import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Head from "next/head";
 import Link from "next/link";
 import "../../static/tailwind.css";
 import { BarLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Offline, Online } from "react-detect-offline";
 import {
-  faHome,
   faRedoAlt,
   faArrowLeft,
-  faMapMarkerAlt,
-  faSearch,
-  faBus
+  faMapMarkerAlt
 } from "@fortawesome/free-solid-svg-icons";
 var moment = require("moment");
 require("moment-duration-format");
@@ -28,7 +23,10 @@ class Stop extends React.Component {
       loading: true,
       imageError: false,
       latitude: "",
-      longitude: ""
+      longitude: "",
+      modes: [],
+      allModes: [],
+      firstLoad: true
     };
   }
 
@@ -39,14 +37,60 @@ class Stop extends React.Component {
       latitude: stopid[0].coords[1],
       longitude: stopid[0].coords[0]
     });
-    var query = await dvb.monitor(stopid[0].id, 0, 10).catch((error) => {
+    var query = await dvb.monitor(stopid[0].id, 0, 30).catch((error) => {
       this.setState({ err: error.name });
     });
     if (this.state.err === "") {
-      this.setState({ departures: query, loading: false });
+      const mot = [];
+      query.forEach((departure) => {
+        var toPush = "";
+        if (
+          departure.mode.title.includes("undefined") &&
+          departure.line.includes("U")
+        ) {
+          toPush = "U-Bahn";
+        } else if (!departure.mode.title.includes("undefined")) {
+          toPush = departure.mode.title;
+        }
+        if (toPush !== "" && mot.indexOf(toPush) === -1) {
+          mot.push(toPush);
+        }
+      });
+      if (this.state.firstLoad) {
+        this.setState({
+          modes: mot,
+          firstLoad: false
+        });
+      }
+      this.setState({
+        allModes: Object.assign([], mot),
+        departures: query,
+        loading: false
+      });
     }
     this.forceUpdate();
   }
+
+  toggleMode = (event) => {
+    var modes = this.state.modes;
+    var mode = event.target.innerHTML;
+
+    event.target.classList.toggle("bg-gray-700");
+    event.target.classList.toggle("bg-gray-900");
+    if (modes.indexOf(mode) !== -1) {
+      modes.splice(modes.indexOf(mode), 1);
+      this.setState({ activeModes: modes });
+    } else {
+      this.setState({
+        activeModes: modes.push(mode)
+      });
+    }
+
+    console.log("--");
+    console.log(this.state.modes);
+    console.log(this.state.activeModes);
+    console.log(mode + " | " + this.state.modes.indexOf(mode));
+  };
 
   reloadDepartures = (event) => {
     event.preventDefault();
@@ -68,7 +112,7 @@ class Stop extends React.Component {
         <Head>
           <title>{this.state.stopName}</title>
         </Head>
-        <h1 className="font-semibold font-sans text-3xl text-gray-200 leading-tight mb-2">
+        <h1 className="trans font-semibold font-sans text-3xl text-gray-200 leading-tight mb-2">
           {this.state.stopName}{" "}
         </h1>
         <div className="rounded overflow-hidden max-w-xs mb-2">
@@ -88,9 +132,9 @@ class Stop extends React.Component {
         ) : (
           <></>
         )}
-        <div className="flex">
+        <div className="flex flex-wrap">
           <Link href="/" as="/">
-            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 focus:shadow-outline focus:outline-none trans">
+            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 hover:shadow-outline focus:outline-none trans mb-3">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
@@ -103,27 +147,47 @@ class Stop extends React.Component {
                   "," +
                   this.state.longitude
                 }
-                className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 focus:shadow-outline focus:outline-none trans"
+                className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 hover:shadow-outline focus:outline-none trans mb-3"
               >
                 <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
               </a>
               <button
                 onClick={this.reloadDepartures}
-                className="text-gray-300 bg-gray-900 px-4 py-2 rounded focus:shadow-outline focus:outline-none trans"
+                className="text-gray-300 bg-gray-900 px-4 py-2 rounded hover:shadow-outline focus:outline-none trans mr-3 mb-3"
               >
                 <FontAwesomeIcon icon={faRedoAlt}></FontAwesomeIcon>
               </button>
+              {this.state.allModes.length > 1 ? (
+                this.state.allModes.map((mode, index) => {
+                  return (
+                    <button
+                      className="text-gray-300 px-4 py-2 rounded focus:outline-none hover:shadow-outline trans mr-3 truncate bg-gray-900 mb-3"
+                      onClick={this.toggleMode}
+                    >
+                      {mode}
+                    </button>
+                  );
+                })
+              ) : (
+                <></>
+              )}
             </>
           ) : (
             <></>
           )}
         </div>
-        <div className="w-full sm:w-auto sm:max-w-lg mt-3">
+        <div className="w-full sm:w-auto sm:max-w-lg mb-3">
           {this.state.departures.map((departure, index) => {
             if (departure.arrivalTimeRelative > -1) {
               return (
                 <div
-                  className="w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                  className={
+                    this.state.modes.includes(departure.mode.title) ||
+                    (departure.line.includes("U") &&
+                      this.state.modes.includes("U-Bahn"))
+                      ? "trans w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                      : "hidden trans w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                  }
                   key={
                     departure.line +
                     departure.direction +
@@ -139,10 +203,9 @@ class Stop extends React.Component {
                             : { height: "26px", marginRight: "0.5rem" }
                         }
                         src={
-                          departure.line.includes("U")
+                          departure.line.includes("U") &&
+                          departure.mode.title.includes("undefined")
                             ? "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
-                            : departure.mode.title.includes("plusbus")
-                            ? "https://m.dvb.de/img/mot_icons/plusBus.svg"
                             : departure.mode.icon_url
                         }
                         onError={() => {
@@ -155,7 +218,7 @@ class Stop extends React.Component {
                       {departure.direction}
                     </p>
                   </div>
-                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded p-3 object-right">
+                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded p-3 object-right trans">
                     <p className="font-semibold text-center text-2xl">
                       {departure.arrivalTimeRelative < 60
                         ? moment
