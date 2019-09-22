@@ -85,11 +85,6 @@ class Stop extends React.Component {
         activeModes: modes.push(mode)
       });
     }
-
-    console.log("--");
-    console.log(this.state.modes);
-    console.log(this.state.activeModes);
-    console.log(mode + " | " + this.state.modes.indexOf(mode));
   };
 
   reloadDepartures = (event) => {
