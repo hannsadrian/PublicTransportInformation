@@ -2,7 +2,7 @@ import "react";
 import * as dvb from "dvbjs";
 import Head from "next/head";
 import Link from "next/link";
-import "../../static/tailwind.css";
+import "../../../static/tailwind.css";
 import { BarLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +18,7 @@ class Stop extends React.Component {
     super(props);
     this.state = {
       stopName: "",
+      stop: "",
       departures: [],
       err: "",
       loading: true,
@@ -34,10 +35,11 @@ class Stop extends React.Component {
     var stopid = await dvb.findStop(this.state.stopName);
     this.setState({
       latitude: stopid[0].coords[1],
-      longitude: stopid[0].coords[0]
+      longitude: stopid[0].coords[0],
+      stop: stopid
     });
     var query = await dvb.monitor(stopid[0].id, 0, 30).catch((error) => {
-      this.setState({ err: error.name });
+      this.setState({ err: error.name, loading: false });
     });
     if (this.state.err === "") {
       const mot = [];
@@ -91,7 +93,9 @@ class Stop extends React.Component {
   componentDidMount = async () => {
     await this.setState({
       stopName: decodeURI(
-        this.props.url.asPath.replace("/stop/", "").replace("%2F", "/")
+        this.props.originalProps.router.asPath
+          .replace("/monitor/stop/", "")
+          .replace("%2F", "/")
       )
     });
     this.findDepartures();
@@ -103,45 +107,50 @@ class Stop extends React.Component {
         <Head>
           <title>{this.state.stopName}</title>
         </Head>
-        <h1 className="trans font-semibold font-sans text-3xl text-gray-200 leading-tight mb-2">
+        <h1 className="trans font-semibold font-sans text-3xl text-gray-200 truncate">
           {this.state.stopName}{" "}
         </h1>
-        <div className="rounded overflow-hidden max-w-xs mb-2">
-          <BarLoader
-            heightUnit={"px"}
-            height={4}
-            widthUnit={"px"}
-            width={330}
-            color={"#e2e8f0"}
-            loading={this.state.loading}
-          />
-        </div>
-        {this.state.err !== "" ? (
-          <p className="p-1 pl-2 bg-red-600 text-gray-300 my-4 max-w-xs rounded font-semibold">
+        {this.state.err === "" && !this.state.loading ? (
+          <a
+            href={
+              "https://maps.apple.com/?dirflg=w&daddr=" +
+              this.state.latitude +
+              "," +
+              this.state.longitude
+            }
+            className="font-sans text-gray-500 leading-tight"
+          >
+            <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
+            {" " +
+              this.state.longitude.toString().substring(0, 10) +
+              ", " +
+              this.state.latitude.toString().substring(0, 10)}
+          </a>
+        ) : this.state.err === "" ? (
+          <div className="rounded overflow-hidden max-w-xs pb-2 pt-3">
+            <BarLoader
+              heightUnit={"px"}
+              height={4}
+              widthUnit={"px"}
+              width={330}
+              color={"#e2e8f0"}
+              loading={this.state.loading}
+            />
+          </div>
+        ) : (
+          <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded font-semibold">
             {this.state.err}
           </p>
-        ) : (
-          <></>
         )}
-        <div className="flex flex-wrap">
-          <Link href="/" as="/">
+
+        <div className="flex flex-wrap mt-5">
+          <Link href="/monitor" as="/monitor">
             <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 sm:hover:shadow-outline focus:outline-none trans mb-3">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
           {this.state.err === "" ? (
             <>
-              <a
-                href={
-                  "https://maps.apple.com/?dirflg=w&daddr=" +
-                  this.state.latitude +
-                  "," +
-                  this.state.longitude
-                }
-                className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 sm:hover:shadow-outline focus:outline-none trans mb-3"
-              >
-                <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
-              </a>
               <button
                 onClick={this.reloadDepartures}
                 className="text-gray-300 bg-gray-900 px-4 py-2 rounded sm:hover:shadow-outline focus:outline-none trans mr-3 mb-3"
@@ -225,7 +234,7 @@ class Stop extends React.Component {
               );
             }
           })}
-          {!this.state.loading ? (
+          {!this.state.loading && !this.state.err ? (
             <p className="text-gray-600 -mt-1">
               Showing{" "}
               {this.state.modes.length === 0 ||
@@ -237,7 +246,7 @@ class Stop extends React.Component {
                   })}
             </p>
           ) : (
-            <></>
+            <p className="text-gray-600 -mt-1">Loading...</p>
           )}
         </div>
       </div>
