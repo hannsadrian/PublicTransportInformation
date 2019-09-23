@@ -15,8 +15,8 @@ app
   .then(() => {
     const server = express();
 
-    server.get("/stop/:stop", async (req, res) => {
-      const actualPage = "/stop/[stop]";
+    server.get("/monitor/stop/:stop", async (req, res) => {
+      const actualPage = "/monitor/stop/[stop]";
       const queryParams = { stop: req.params.stop };
       app.render(req, res, actualPage, queryParams);
     });
