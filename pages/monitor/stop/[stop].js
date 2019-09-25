@@ -254,8 +254,10 @@ class Stop extends React.Component {
               );
             }
           })}
-          {!this.state.loading && !this.state.err ? (
-            <p className="text-gray-600 -mt-1">
+          {!this.state.loading &&
+          !this.state.err &&
+          this.state.allModes.length > 1 ? (
+            <p className="text-gray-600">
               Showing{" "}
               {this.state.modes.length === 0 ||
               this.state.modes.length === this.state.allModes.length
@@ -266,7 +268,7 @@ class Stop extends React.Component {
                   })}
             </p>
           ) : (
-            <p className="text-gray-600 -mt-1">Loading...</p>
+            <></>
           )}
         </div>
       </div>
