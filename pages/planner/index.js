@@ -95,7 +95,7 @@ class Index extends React.Component {
         <Head>
           <title>Public Transport Planner</title>
         </Head>
-        <h1 className="font-semibold font-sans text-3xl text-gray-200 leading-tight">
+        <h1 className="font-semibold font-sans text-3xl text-gray-200 leading-none">
           Still under construction
         </h1>
         <p className="font-sans text-gray-500 leading-tight mb-5">

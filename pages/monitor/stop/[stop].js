@@ -107,7 +107,7 @@ class Stop extends React.Component {
         <Head>
           <title>{this.state.stopName}</title>
         </Head>
-        <h1 className="trans font-semibold font-sans text-3xl text-gray-200 truncate">
+        <h1 className="trans font-semibold font-sans text-3xl text-gray-200 truncate leading-none">
           {this.state.stopName}{" "}
         </h1>
         {this.state.err === "" && !this.state.loading ? (
@@ -122,9 +122,9 @@ class Stop extends React.Component {
           >
             <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
             {" " +
-              this.state.longitude.toString().substring(0, 10) +
+              this.state.latitude.toString().substring(0, 10) +
               ", " +
-              this.state.latitude.toString().substring(0, 10)}
+              this.state.longitude.toString().substring(0, 10)}
           </a>
         ) : this.state.err === "" ? (
           <div className="rounded overflow-hidden max-w-xs pb-2 pt-3">
@@ -219,15 +219,35 @@ class Stop extends React.Component {
                       {departure.direction}
                     </p>
                   </div>
-                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded p-3 object-right trans">
-                    <p className="font-semibold text-center text-2xl">
-                      {departure.arrivalTimeRelative < 60
-                        ? moment
-                            .duration(departure.arrivalTimeRelative, "minutes")
-                            .format("d[d] h[h] m[m]")
-                        : moment
-                            .duration(departure.arrivalTimeRelative, "minutes")
-                            .format(">h[h]")}
+                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded object-right p-2 trans">
+                    <p className="text-center leading-tight">
+                      <span className="font-semibold text-2xl">
+                        {departure.arrivalTimeRelative < 60
+                          ? moment
+                              .duration(
+                                departure.arrivalTimeRelative,
+                                "minutes"
+                              )
+                              .format("d[d] h[h] m[m]")
+                          : moment
+                              .duration(
+                                departure.arrivalTimeRelative,
+                                "minutes"
+                              )
+                              .format("h[h]+")}
+                      </span>
+                      <br></br>
+                      <span className="font-thin text-gray-500 text-base">
+                        {new Date(Date.parse(departure.arrivalTime))
+                          .getHours()
+                          .toString()
+                          .padStart(2, "0") +
+                          ":" +
+                          new Date(Date.parse(departure.arrivalTime))
+                            .getMinutes()
+                            .toString()
+                            .padStart(2, "0")}
+                      </span>
                     </p>
                   </div>
                 </div>
