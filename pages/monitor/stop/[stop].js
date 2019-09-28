@@ -107,7 +107,7 @@ class Stop extends React.Component {
         <Head>
           <title>{this.state.stopName}</title>
         </Head>
-        <h1 className="trans font-semibold font-sans text-3xl text-gray-200 truncate leading-none">
+        <h1 className="trans font-semibold font-sans text-3xl text-gray-200 truncate leading-tight">
           {this.state.stopName}{" "}
         </h1>
         {this.state.err === "" && !this.state.loading ? (
