@@ -100,7 +100,7 @@ class Index extends React.Component {
               className="shadow w-full text-lg font-sans font-semibold trans rounded px-3 py-2 sm:hover:shadow-outline bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
-          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded overflow-hidden">
+          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900">
             {this.state.suggestions.map((value, index) => {
               return (
                 <div key={index}>
@@ -110,16 +110,27 @@ class Index extends React.Component {
                     as={"/monitor/stop/" + value.replace("/", "%2F")}
                   >
                     <a>
-                      <p className="py-3 sm:py-2 px-3 hover:bg-black trans cursor-pointer">
+                      <p
+                        className={
+                          (this.state.suggestions.length === 1
+                            ? "rounded "
+                            : index < 1
+                            ? "rounded-t "
+                            : index === this.state.suggestions.length - 1
+                            ? "rounded-b "
+                            : "") +
+                          "z-50 py-3 sm:py-2 px-3 trans cursor-pointer sm:hover:shadow-outline"
+                        }
+                      >
                         {value}
                       </p>
+                      {index < this.state.suggestions.length - 1 ? (
+                        <hr className="border-gray-800 z-0"></hr>
+                      ) : (
+                        <div></div>
+                      )}
                     </a>
                   </Link>
-                  {index < this.state.suggestions.length - 1 ? (
-                    <hr className="border-gray-800 mx-2"></hr>
-                  ) : (
-                    <div></div>
-                  )}
                 </div>
               );
             })}
@@ -133,3 +144,13 @@ class Index extends React.Component {
 export default geolocated({
   userDecisionTimeout: 5000
 })(Index);
+/* className={
+  (this.state.suggestions.length === 1
+    ? "rounded "
+    : index < 1
+    ? "rounded-t "
+    : index === this.state.suggestions.length - 1
+    ? "rounded-b "
+    : "") +
+  "py-3 sm:py-2 px-3 trans cursor-pointer sm:hover:shadow-outline trans bg-gray-900"
+}*/

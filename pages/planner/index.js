@@ -19,34 +19,17 @@ class Index extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      suggestions: []
+      suggestions: [],
+      date: "",
+      time: "",
+      from: "",
+      to: "",
+      currentTarget: ""
     };
   }
 
   componentDidMount = async () => {
-    this.getLocation();
     this.setState({ loading: false });
-  };
-
-  getLocation = async () => {
-    if (!this.props.coords) {
-      setTimeout(this.getLocation, 100);
-      return;
-    }
-    if (this.props.isGeolocationAvailable && this.props.isGeolocationEnabled) {
-      var stops = await dvb.findAddress(
-        this.props.coords.longitude,
-        this.props.coords.latitude
-      );
-
-      var locationSuggestions = [];
-
-      stops.stops.forEach((stop) => {
-        locationSuggestions.push(stop.name + ", " + stop.city);
-      });
-
-      this.setState({ suggestions: locationSuggestions });
-    }
   };
 
   onTimeChange(event) {
@@ -85,8 +68,18 @@ class Index extends React.Component {
     if (event.target.value.length > 0) {
       this.findSuggestions(event.target.value);
     } else {
-      this.getLocation();
+      this.setState({ suggestions: [] });
     }
+    this.setState({
+      currentTarget: event.target.id,
+      [event.target.id]: event.target.value
+    });
+  };
+
+  suggestionClick = (event) => {
+    event.preventDefault();
+    var target = this.state.currentTarget;
+    this.setState({ [target]: event.target.id, suggestions: [] });
   };
 
   render() {
@@ -96,7 +89,7 @@ class Index extends React.Component {
           <title>Public Transport Planner</title>
         </Head>
         <h1 className="font-semibold font-sans text-3xl text-gray-200 leading-tight">
-          Still under construction
+          Public Transport Planner
         </h1>
         <p className="font-sans text-gray-500 leading-tight mb-5">
           Where do you wanna go?
@@ -104,7 +97,7 @@ class Index extends React.Component {
         <div className="w-full sm:w-auto sm:max-w-xs">
           <div className="flex mb-3 sm:max-w-xs">
             <Link href="/" as="/">
-              <button className="w-full text-gray-300 bg-gray-900 px-4 rounded mr-3 sm:hover:shadow-outline focus:outline-none trans">
+              <button className="w-2/12 text-gray-300 bg-gray-900 px-4 rounded mr-3 sm:hover:shadow-outline focus:outline-none trans">
                 <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               </button>
             </Link>
@@ -120,7 +113,7 @@ class Index extends React.Component {
                 timePattern: ["h", "m"]
               }}
               onChange={this.onTimeChange}
-              className="text-lg font-sans font-semibold trans rounded-l px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="hover:bg-black w-3/12 text-lg font-sans font-semibold trans rounded-l px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             />
             <Cleave
               placeholder={
@@ -136,39 +129,54 @@ class Index extends React.Component {
                 datePattern: ["d", "m", "Y"]
               }}
               onChange={this.onDateChange}
-              className="text-lg font-sans font-semibold trans rounded-r px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none mr-3"
+              className="hover:bg-black w-5/12 text-lg font-sans font-semibold trans rounded-r px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none mr-3"
             />
             <Link href="/" as="/">
-              <button className="w-full text-gray-300 bg-gray-900 px-4 rounded mr-3 sm:hover:shadow-outline focus:outline-none trans">
+              <button className="w-2/12 text-gray-300 bg-gray-900 px-4 rounded sm:hover:shadow-outline focus:outline-none trans">
                 <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
               </button>
             </Link>
           </div>
           <input
             placeholder="from"
+            id="from"
+            value={this.state.from}
             onChange={this.handleChange}
-            className="min-w-full text-lg font-sans font-semibold trans rounded px-3 py-2 sm:hover:shadow-outline bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+            className="hover:bg-black min-w-full text-lg font-sans font-semibold trans rounded-t px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
           ></input>
-          <div className="hidden w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded overflow-hidden">
+          <input
+            placeholder="to"
+            id="to"
+            value={this.state.to}
+            onChange={this.handleChange}
+            className="hover:bg-black mb-3 min-w-full text-lg font-sans font-semibold trans rounded-b px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+          ></input>
+          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900">
             {this.state.suggestions.map((value, index) => {
               return (
                 <div key={index}>
-                  <Link
-                    prefetch
-                    href="/monitor/stop/[stop]"
-                    as={"/monitor/stop/" + value.replace("/", "%2F")}
-                  >
-                    <a>
-                      <p className="py-3 sm:py-2 px-3 hover:bg-black trans cursor-pointer">
-                        {value}
-                      </p>
-                    </a>
-                  </Link>
-                  {index < this.state.suggestions.length - 1 ? (
-                    <hr className="border-gray-800 mx-2"></hr>
-                  ) : (
-                    <div></div>
-                  )}
+                  <a onClick={this.suggestionClick}>
+                    <p
+                      className={
+                        (this.state.suggestions.length === 1
+                          ? "rounded "
+                          : index < 1
+                          ? "rounded-t "
+                          : index === this.state.suggestions.length - 1
+                          ? "rounded-b "
+                          : "") +
+                        "z-50 py-3 sm:py-2 px-3 trans cursor-pointer sm:hover:shadow-outline"
+                      }
+                      id={value}
+                    >
+                      {value}
+                    </p>
+                    {index < this.state.suggestions.length - 1 ? (
+                      <hr className="border-gray-800 z-0"></hr>
+                    ) : (
+                      <div></div>
+                    )}
+                  </a>
                 </div>
               );
             })}
