@@ -94,12 +94,12 @@ app
       return handle(req, res);
     });
 
-    server.listen(3000, err => {
+    server.listen(3000, (err) => {
       if (err) throw err;
       console.log("> Ready on port 3000");
     });
   })
-  .catch(ex => {
+  .catch((ex) => {
     console.error(ex.stack);
     process.exit(1);
   });

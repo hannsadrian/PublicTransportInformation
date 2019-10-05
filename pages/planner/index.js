@@ -1,8 +1,8 @@
 import "react";
-import { geolocated } from "react-geolocated";
 import * as dvb from "dvbjs";
 import Head from "next/head";
 import Link from "next/link";
+import Router from "next/router";
 import "../../static/tailwind.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,8 +20,16 @@ class Index extends React.Component {
     super(props);
     this.state = {
       suggestions: [],
-      date: "",
-      time: "",
+      date:
+        String(new Date().getDate()).padStart(2, "0") +
+        "." +
+        String(new Date().getMonth() + 1).padStart(2, "0") +
+        "." +
+        new Date().getFullYear(),
+      time:
+        String(new Date().getHours()).padStart(2, "0") +
+        ":" +
+        String(new Date().getMinutes()).padStart(2, "0"),
       from: "",
       to: "",
       currentTarget: ""
@@ -33,18 +41,26 @@ class Index extends React.Component {
   };
 
   onTimeChange(event) {
-    // formatted pretty value
-    console.log(event.target.value);
-
-    // raw value
-    console.log(event.target.rawValue);
+    this.setState({
+      time:
+        event.target.value.length === 0
+          ? String(new Date().getHours()).padStart(2, "0") +
+            ":" +
+            String(new Date().getMinutes()).padStart(2, "0")
+          : event.target.value
+    });
   }
   onDateChange(event) {
-    // formatted pretty value
-    console.log(event.target.value);
-
-    // raw value
-    console.log(event.target.rawValue);
+    this.setState({
+      date:
+        event.target.value.length === 0
+          ? String(new Date().getDate()).padStart(2, "0") +
+            "." +
+            String(new Date().getMonth() + 1).padStart(2, "0") +
+            "." +
+            new Date().getFullYear()
+          : event.target.value
+    });
   }
 
   findSuggestions = async (input) => {
@@ -82,6 +98,35 @@ class Index extends React.Component {
     this.setState({ [target]: event.target.id, suggestions: [] });
   };
 
+  checkValid = () => {
+    if (
+      this.state.from.length > 0 &&
+      this.state.to.length > 0 &&
+      this.state.time.length > 4 &&
+      this.state.date.length > 9
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  redirect = () => {
+    if (!this.checkValid) {
+      return;
+    }
+    Router.push(
+      "/planner/plan?origin=" +
+        this.state.from.replace("/", "%2F") +
+        "&destination=" +
+        this.state.to.replace("/", "%2F") +
+        "&time=" +
+        this.state.time +
+        "&date=" +
+        this.state.date
+    );
+  };
+
   render() {
     return (
       <div className="p-6 pt-12 sm:p-20 lg:pl-56">
@@ -112,8 +157,8 @@ class Index extends React.Component {
                 delimiter: ":",
                 timePattern: ["h", "m"]
               }}
-              onChange={this.onTimeChange}
-              className="hover:bg-black w-3/12 text-lg font-sans font-semibold trans rounded-l px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              onChange={this.onTimeChange.bind(this)}
+              className="hover:bg-black w-3/12 text-lg font-sans font-semibold trans rounded-l px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
             />
             <Cleave
               placeholder={
@@ -128,14 +173,19 @@ class Index extends React.Component {
                 delimiter: ".",
                 datePattern: ["d", "m", "Y"]
               }}
-              onChange={this.onDateChange}
-              className="hover:bg-black w-5/12 text-lg font-sans font-semibold trans rounded-r px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none mr-3"
+              onChange={this.onDateChange.bind(this)}
+              className="hover:bg-black w-5/12 text-lg font-sans font-semibold trans rounded-r px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none mr-3"
             />
-            <Link href="/" as="/">
-              <button className="w-2/12 text-gray-300 bg-gray-900 px-4 rounded sm:hover:shadow-outline focus:outline-none trans">
-                <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-              </button>
-            </Link>
+            <button
+              onClick={this.redirect}
+              disabled={!this.checkValid()}
+              className={
+                "disabled:bg-unselected disabled:cursor-not-allowed w-2/12 text-gray-300 bg-gray-900 px-4 rounded focus:outline-none trans" +
+                (this.checkValid() ? " sm:hover:shadow-outline" : "")
+              }
+            >
+              <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+            </button>
           </div>
           <input
             placeholder="from"
@@ -187,6 +237,4 @@ class Index extends React.Component {
   }
 }
 
-export default geolocated({
-  userDecisionTimeout: 5000
-})(Index);
+export default Index;
