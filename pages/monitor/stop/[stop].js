@@ -39,7 +39,7 @@ class Stop extends React.Component {
       stop: stopid
     });
     var query = await dvb.monitor(stopid[0].id, 0, 30).catch((error) => {
-      this.setState({ err: error.name, loading: false });
+      this.setState({ err: error.name + ": " + error.message, loading: false });
     });
     if (this.state.err === "") {
       const mot = [];
