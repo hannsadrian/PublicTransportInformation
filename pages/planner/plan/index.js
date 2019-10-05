@@ -25,8 +25,6 @@ class Index extends React.Component {
   }
 
   componentDidMount = async () => {
-    this.setState({ loading: false });
-
     var query = this.props.originalProps.router.query;
 
     var origin = await dvb.findStop(query.origin);
@@ -61,8 +59,18 @@ class Index extends React.Component {
         <Head>
           <title>Public Transport Planner</title>
         </Head>
+        <div className="flex">
+          <Link href="/planner" as="/planner">
+            <button className="text-gray-300 bg-gray-900 px-4 h-12 w-12 mr-3 rounded sm:hover:shadow-outline focus:outline-none trans">
+              <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+            </button>
+          </Link>
+          <h1 className="font-semibold font-sans text-2xl my-auto text-gray-200 mb-3 leading-tight">
+            Public Transport Planner
+          </h1>
+        </div>
 
-        {this.state.err === "" && this.state.loading ? (
+        {this.state.loading ? (
           <div className="rounded overflow-hidden max-w-xs pb-2 pt-3">
             <BarLoader
               heightUnit={"px"}
@@ -88,12 +96,18 @@ class Index extends React.Component {
               <div className="p-1 pl-4 pr-4 pt-4 bg-gray-900 text-gray-300 mt-4 max-w-sm rounded">
                 {trip.departure !== undefined ? (
                   <p className="leading-tight font-semibold truncate mt-2">
-                    <span className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
-                      {trip.departure.platform.type +
-                        " " +
-                        trip.departure.platform.name}
-                    </span>{" "}
-                    <br></br>
+                    {trip.departure.platform !== undefined ? (
+                      <>
+                        <span className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
+                          {trip.departure.platform.type +
+                            " " +
+                            trip.departure.platform.name}
+                        </span>{" "}
+                        <br></br>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     {trip.departure.name + ", " + trip.departure.city} <br></br>
                     <span className="tracking-tighter text-gray-500 font-light font-mono">
                       {String(trip.departure.time.getHours()).padStart(2, "0") +
@@ -139,7 +153,7 @@ class Index extends React.Component {
                             .format("m") +
                           (moment
                             .duration(trip.duration, "minutes")
-                            .format("m") === 1
+                            .format("m") === "1"
                             ? " minute"
                             : " minutes")
                         : moment
@@ -147,21 +161,27 @@ class Index extends React.Component {
                             .format("h") +
                           (moment
                             .duration(trip.duration, "minutes")
-                            .format("h") === 1
-                            ? " hours"
-                            : " hour")}
+                            .format("h") === "1"
+                            ? " hour"
+                            : " hours")}
                     </span>
                   </p>
                 </div>
                 {trip.arrival !== undefined ? (
                   <>
                     <p className="leading-tight font-semibold truncate">
-                      <span className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
-                        {trip.arrival.platform.type +
-                          " " +
-                          trip.arrival.platform.name}
-                      </span>{" "}
-                      <br></br>
+                      {trip.arrival.platform !== undefined ? (
+                        <>
+                          <span className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
+                            {trip.arrival.platform.type +
+                              " " +
+                              trip.arrival.platform.name}
+                          </span>{" "}
+                          <br></br>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                       {trip.arrival.name + ", " + trip.arrival.city} <br></br>
                       <span className="tracking-tighter text-gray-500 font-light font-mono">
                         {String(trip.arrival.time.getHours()).padStart(2, "0") +
@@ -187,7 +207,7 @@ class Index extends React.Component {
                 )}
                 <hr className="mt-6 mb-3 border-gray-700"></hr>
                 {trip.nodes.map((node, index) => (
-                  <div className="mb-5">
+                  <div className="mb-6">
                     <div className="flex justify-between my-2">
                       <div className="flex">
                         <img
