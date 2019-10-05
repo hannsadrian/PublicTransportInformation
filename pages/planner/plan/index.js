@@ -27,7 +27,11 @@ class Index extends React.Component {
     var time = query.time.split(":");
     var date = query.date.split(".");
 
-    var departure = new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+    var departure = new Date();
+    departure.setUTCHours(time[0]);
+    departure.setUTCMinutes(time[1]);
+    departure.setUTCFullYear(date[2], date[1] - 1, date[0]);
+    console.log(departure);
 
     var route = await dvb
       .route(origin[0].id, destination[0].id, departure)
