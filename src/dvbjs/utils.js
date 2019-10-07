@@ -105,21 +105,21 @@ export function parsePlatform(p) {
 function pinType(str) {
   switch (str) {
     case "":
-      return PIN_TYPE.stop;
+      return "stop";
     case "p":
-      return PIN_TYPE.poi;
+      return "poi";
     case "pf":
-      return PIN_TYPE.platform;
+      return "platform";
     case "pr":
-      return PIN_TYPE.parkandride;
+      return "parkandride";
     case "r":
-      return PIN_TYPE.rentabike;
+      return "rentabike";
     case "c":
-      return PIN_TYPE.carsharing;
+      return "carsharing";
     case "t":
-      return PIN_TYPE.ticketmachine;
+      return "ticketmachine";
   }
-  return PIN_TYPE.unknown;
+  return "unknown";
 }
 
 export function parsePin(dataAsString) {
