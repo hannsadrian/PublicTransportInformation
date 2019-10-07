@@ -97,7 +97,7 @@ class Index extends React.Component {
             <input
               placeholder="stop"
               onChange={this.handleChange}
-              className="shadow w-full text-lg font-sans font-semibold trans rounded px-3 py-2 sm:hover:shadow-outline bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="shadow w-full text-lg font-sans font-semibold trans rounded px-3 py-2 hover:bg-black bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
           <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900">
