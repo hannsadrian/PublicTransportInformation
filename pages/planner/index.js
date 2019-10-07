@@ -1,5 +1,5 @@
 import "react";
-import * as dvb from "dvbjs";
+import * as dvb from "../../src/dvbjs";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
