@@ -11,7 +11,10 @@ import {
   faArrowLeft,
   faMapMarkerAlt,
   faSearch,
-  faBus
+  faBus,
+  faHospitalSymbol,
+  faLocationArrow,
+  faMapMarker
 } from "@fortawesome/free-solid-svg-icons";
 import Cleave from "cleave.js/react";
 
@@ -64,13 +67,13 @@ class Index extends React.Component {
   }
 
   findSuggestions = async (input) => {
-    var stops = await dvb.findStop(input);
+    var stops = await dvb.findPOI(input);
 
     var suggestions = [];
 
     stops.map((value, index) => {
       if (index < 8) {
-        suggestions.push(value.name + ", " + value.city);
+        suggestions.push(value);
       }
     });
 
@@ -95,6 +98,7 @@ class Index extends React.Component {
   suggestionClick = (event) => {
     event.preventDefault();
     var target = this.state.currentTarget;
+    console.log(event.target)
     this.setState({ [target]: event.target.id, suggestions: [] });
   };
 
@@ -112,7 +116,7 @@ class Index extends React.Component {
   };
 
   redirect = () => {
-    if (!this.checkValid) {
+    if (!this.checkValid()) {
       return;
     }
     Router.push(
@@ -209,8 +213,8 @@ class Index extends React.Component {
             {this.state.suggestions.map((value, index) => {
               return (
                 <div key={index}>
-                  <a onClick={this.suggestionClick}>
-                    <p
+                    <button
+                      onClick={this.suggestionClick}
                       className={
                         (this.state.suggestions.length === 1
                           ? "rounded "
@@ -219,18 +223,18 @@ class Index extends React.Component {
                           : index === this.state.suggestions.length - 1
                           ? "rounded-b "
                           : "") +
-                        "z-50 py-3 sm:py-2 px-3 trans cursor-pointer sm:hover:shadow-outline"
+                        "z-50 py-3 sm:py-2 px-3 trans w-full cursor-pointer sm:hover:shadow-outline outline-none focus:outline-none flex justify-between"
                       }
-                      id={value}
+                      id={value.name + ", " + value.city}
                     >
-                      {value}
-                    </p>
+                      <span className="truncate" id={value.name + ", " + value.city}>{value.name + ", " + value.city}</span>
+                      <div id={value.name + ", " + value.city}><FontAwesomeIcon className="ml-2" icon={value.type === "Stop" ? faHospitalSymbol : value.type === "Address" ? faHome : faMapMarker}></FontAwesomeIcon></div>
+                    </button>
                     {index < this.state.suggestions.length - 1 ? (
                       <hr className="border-gray-800 z-0"></hr>
                     ) : (
                       <div></div>
                     )}
-                  </a>
                 </div>
               );
             })}

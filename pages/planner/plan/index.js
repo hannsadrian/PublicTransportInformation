@@ -27,8 +27,8 @@ class Index extends React.Component {
   componentDidMount = async () => {
     var query = this.props.originalProps.router.query;
 
-    var origin = await dvb.findStop(query.origin);
-    var destination = await dvb.findStop(query.destination);
+    var origin = await dvb.findPOI(query.origin);
+    var destination = await dvb.findPOI(query.destination);
 
     var time = query.time.split(":");
     var date = query.date.split(".");
