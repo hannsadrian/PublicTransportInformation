@@ -2,6 +2,7 @@ import "react";
 import * as dvb from "../../src/dvbjs";
 import Head from "next/head";
 import Link from "next/link";
+import { geolocated } from "react-geolocated";
 import Router from "next/router";
 import "../../static/tailwind.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,6 +42,27 @@ class Index extends React.Component {
 
   componentDidMount = async () => {
     this.setState({ loading: false });
+  };
+
+  getLocation = async () => {
+    if (!this.props.coords) {
+      setTimeout(this.getLocation, 100);
+      return;
+    }
+    if (this.props.isGeolocationAvailable && this.props.isGeolocationEnabled) {
+      var stops = await dvb.findAddress(
+        this.props.coords.longitude,
+        this.props.coords.latitude
+      );
+
+      var locationSuggestions = [];
+
+      stops.stops.forEach((stop) => {
+        locationSuggestions.push(stop);
+      });
+
+      this.setState({ suggestions: locationSuggestions });
+    }
   };
 
   onTimeChange(event) {
@@ -87,13 +109,22 @@ class Index extends React.Component {
     if (event.target.value.length > 0) {
       this.findSuggestions(event.target.value);
     } else {
-      this.setState({ suggestions: [] });
+      this.getLocation()
     }
     this.setState({
       currentTarget: event.target.id,
       [event.target.id]: event.target.value
     });
   };
+
+  setActive = (event) => {
+    this.setState({
+      currentTarget: event.target.id
+    });
+    if (event.target.value.length === 0) {
+      this.getLocation()
+    }
+  }
 
   suggestionClick = (event) => {
     event.preventDefault();
@@ -193,23 +224,7 @@ class Index extends React.Component {
               <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
             </button>
           </div>
-          <div className="rounded overflow-hidden mb-3">
-            <input
-              placeholder="from"
-              id="from"
-              value={this.state.from}
-              onChange={this.handleChange}
-              className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
-            ></input>
-            <input
-              placeholder="to"
-              id="to"
-              value={this.state.to}
-              onChange={this.handleChange}
-              className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
-            ></input>
-          </div>
-          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900">
+          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900 mb-3">
             {this.state.suggestions.map((value, index) => {
               return (
                 <div key={index}>
@@ -239,10 +254,31 @@ class Index extends React.Component {
               );
             })}
           </div>
+          <div className="rounded overflow-hidden">
+            <input
+              placeholder="from"
+              onClick={this.setActive}
+              id="from"
+              value={this.state.from}
+              onChange={this.handleChange}
+              className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+            ></input>
+            <input
+              placeholder="to"
+              onClick={this.setActive}
+              id="to"
+              value={this.state.to}
+              onChange={this.handleChange}
+              className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+            ></input>
+          </div>
+          
         </div>
       </div>
     );
   }
 }
 
-export default Index;
+export default geolocated({
+  userDecisionTimeout: 5000
+})(Index);
