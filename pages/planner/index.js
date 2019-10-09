@@ -94,7 +94,7 @@ class Index extends React.Component {
     var suggestions = [];
 
     stops.map((value, index) => {
-      if (index < 8) {
+      if (index < 4) {
         suggestions.push(value);
       }
     });
