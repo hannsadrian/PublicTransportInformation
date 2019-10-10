@@ -1,5 +1,5 @@
 import "react";
-import * as dvb from "../../../src/dvbjs";
+import * as dvb from "dvbjs";
 import Head from "next/head";
 import Link from "next/link";
 import "../../../static/tailwind.css";
@@ -40,7 +40,7 @@ class Index extends React.Component {
 
     var route = await dvb
       .route(origin[0].id, destination[0].id, departure, false)
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           err: error.name + ": " + error.message,
           loading: false
@@ -96,20 +96,11 @@ class Index extends React.Component {
               <div className="p-1 pl-4 pr-4 pt-4 bg-gray-900 text-gray-300 mt-4 max-w-sm rounded">
                 {trip.departure !== undefined ? (
                   <p className="leading-tight font-semibold truncate mt-2">
-                    {trip.departure.platform !== undefined ? (
-                      <>
-                        <span className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
-                          {trip.departure.platform.type +
-                            " " +
-                            trip.departure.platform.name}
-                        </span>{" "}
-                        <br></br>
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                    {trip.departure.name + ", " + trip.departure.city} <br></br>
-                    <span className="tracking-tighter text-gray-500 font-light font-mono">
+                    <span className="text-xl">
+                      {trip.departure.name + ", " + trip.departure.city}
+                    </span>{" "}
+                    <br></br>
+                    <span className="tracking-tighter text-gray-600 font-light font-mono ml-2">
                       {String(trip.departure.time.getHours()).padStart(2, "0") +
                         ":" +
                         String(trip.departure.time.getMinutes()).padStart(
@@ -125,6 +116,19 @@ class Index extends React.Component {
                         ) +
                         "." +
                         String(trip.departure.time.getFullYear())}
+
+                      {trip.departure.platform !== undefined ? (
+                        <>
+                          <span className="uppercase tracking-wide">
+                            {" | " +
+                              trip.departure.platform.type +
+                              " " +
+                              trip.departure.platform.name}
+                          </span>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </span>
                   </p>
                 ) : (
@@ -170,20 +174,11 @@ class Index extends React.Component {
                 {trip.arrival !== undefined ? (
                   <>
                     <p className="leading-tight font-semibold truncate">
-                      {trip.arrival.platform !== undefined ? (
-                        <>
-                          <span className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
-                            {trip.arrival.platform.type +
-                              " " +
-                              trip.arrival.platform.name}
-                          </span>{" "}
-                          <br></br>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {trip.arrival.name + ", " + trip.arrival.city} <br></br>
-                      <span className="tracking-tighter text-gray-500 font-light font-mono">
+                      <span className="text-xl">
+                        {trip.arrival.name + ", " + trip.arrival.city}
+                      </span>{" "}
+                      <br></br>
+                      <span className="tracking-tighter text-gray-600 font-light font-mono ml-2">
                         {String(trip.arrival.time.getHours()).padStart(2, "0") +
                           ":" +
                           String(trip.arrival.time.getMinutes()).padStart(
@@ -199,6 +194,19 @@ class Index extends React.Component {
                           ) +
                           "." +
                           String(trip.arrival.time.getFullYear())}
+
+                        {trip.arrival.platform !== undefined ? (
+                          <>
+                            <span className="uppercase tracking-wide">
+                              {" | " +
+                                trip.arrival.platform.type +
+                                " " +
+                                trip.arrival.platform.name}
+                            </span>
+                          </>
+                        ) : (
+                          <></>
+                        )}
                       </span>
                     </p>
                   </>
@@ -206,100 +214,126 @@ class Index extends React.Component {
                   <></>
                 )}
                 <hr className="mt-6 mb-3 border-gray-700"></hr>
-                {trip.nodes.map((node, index) => (
-                  <div className="mb-6">
-                    <div className="flex justify-between my-2">
-                      <div className="flex">
-                        <img
-                          style={
-                            this.state.imageError
-                              ? { display: "hidden", marginRight: "0" }
-                              : {
-                                  height: "24px",
-                                  marginRight: "0.5rem"
-                                }
-                          }
-                          className="my-auto w-auto"
-                          src={
-                            typeof node.line === "string" &&
-                            node.line.includes("U") &&
-                            node.mode.title.includes("undefined")
-                              ? "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
-                              : node.mode.title.includes("taxi")
-                              ? "https://www.dvb.de/assets/img/trans-icon/transport-alita.svg"
-                              : node.mode.icon_url
-                          }
-                          onError={() => {
-                            this.setState({ imageError: true });
-                          }}
-                        />
-                        <div className="w-48 leading-tight">
-                          <p className="font-semibold truncate mr-1">
-                            {node.line === "" ? node.mode.title : node.line}
-                          </p>
-                          <p className="truncate">{node.direction}</p>
+                <div className="mb-3">
+                  {trip.nodes.map((node, index) => (
+                    <div>
+                      <div className="flex justify-between">
+                        <div className="flex">
+                          <img
+                            style={
+                              this.state.imageError
+                                ? { display: "hidden", marginRight: "0" }
+                                : {
+                                    height: "24px",
+                                    marginRight: "0.5rem"
+                                  }
+                            }
+                            className="my-2 w-auto"
+                            src={
+                              typeof node.line === "string" &&
+                              node.line.includes("U") &&
+                              !node.mode
+                                ? "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
+                                : node.mode.title.includes("taxi")
+                                ? "https://www.dvb.de/assets/img/trans-icon/transport-alita.svg"
+                                : node.mode.iconUrl
+                            }
+                            onError={() => {
+                              this.setState({ imageError: true });
+                            }}
+                          />
+                          <div className="w-48 leading-tight my-auto">
+                            <span className="font-semibold truncate mr-1">
+                              {node.line === "" ? node.mode.title : node.line}
+                            </span>
+                            <span className="truncate">
+                              {node.direction !== "" ? (
+                                <>
+                                  <br></br> {node.direction}
+                                </>
+                              ) : node.arrival ? (
+                                <>
+                                  <br></br>
+                                  {node.arrival.name}
+                                </>
+                              ) : (
+                                ""
+                              )}
+                            </span>
+                          </div>
                         </div>
+                        <p className="my-auto whitespace-no-wrap text-gray-600 tracking-wide mr-4">
+                          {node.duration} min
+                        </p>
                       </div>
-                      <p className="my-auto whitespace-no-wrap text-gray-600 tracking-wide mr-4">
-                        {node.duration} min
-                      </p>
+                      {node.departure !== undefined &&
+                      node.arrival !== undefined ? (
+                        <div
+                          style={{ marginLeft: "0.63rem" }}
+                          className="border-l-2 border-gray-700 mt-1 mb-1 pl-6 pt-1 pb-2 text-gray-500 leading-tight"
+                        >
+                          <>
+                            <h3 className="text-gray-500 mb-1">
+                              {node.departure.name + ", " + node.departure.city}
+                              {node.stops.length > 0 ? (
+                                <p className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
+                                  {String(
+                                    node.departure.time.getHours()
+                                  ).padStart(2, "0") +
+                                    ":" +
+                                    String(
+                                      node.departure.time.getMinutes()
+                                    ).padStart(2, "0") +
+                                    String(
+                                      node.stops[0].platform !== undefined
+                                        ? " | " +
+                                            node.stops[0].platform.type +
+                                            " " +
+                                            node.stops[0].platform.name
+                                        : ""
+                                    )}
+                                </p>
+                              ) : (
+                                <></>
+                              )}
+                            </h3>
+                            <h3 className="text-gray-500">
+                              {node.arrival.name + ", " + node.arrival.city}
+                              {node.stops.length > 0 &&
+                              typeof node.stops[node.stops.length - 1]
+                                .platform !== "undefined" ? (
+                                <p className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
+                                  {String(
+                                    node.arrival.time.getHours()
+                                  ).padStart(2, "0") +
+                                    ":" +
+                                    String(
+                                      node.arrival.time.getMinutes()
+                                    ).padStart(2, "0") +
+                                    " | " +
+                                    node.stops[node.stops.length - 1].platform
+                                      .type +
+                                    " " +
+                                    node.stops[node.stops.length - 1].platform
+                                      .name}
+                                </p>
+                              ) : (
+                                <></>
+                              )}
+                            </h3>
+                          </>
+                        </div>
+                      ) : index !== trip.nodes.length - 1 ? (
+                        <div
+                          style={{ marginLeft: "0.63rem" }}
+                          className="border-l-2 border-gray-700 mt-1 mb-1 pl-6 pt-1 pb-2 text-gray-500 leading-tight"
+                        ></div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
-                    {node.departure !== undefined &&
-                    node.arrival !== undefined ? (
-                      <div className="border-l-2 border-gray-700 pl-2 ml-2 text-gray-500 leading-tight">
-                        <h3 className="text-gray-400 mb-2">
-                          {node.departure.name + ", " + node.departure.city}
-                          {node.stops.length > 0 &&
-                          typeof node.stops[0].platform !== "undefined" ? (
-                            <p className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
-                              {String(node.departure.time.getHours()).padStart(
-                                2,
-                                "0"
-                              ) +
-                                ":" +
-                                String(
-                                  node.departure.time.getMinutes()
-                                ).padStart(2, "0") +
-                                " | " +
-                                node.stops[0].platform.type +
-                                " " +
-                                node.stops[0].platform.name}
-                            </p>
-                          ) : (
-                            <></>
-                          )}
-                        </h3>
-                        <h3 className="text-gray-400">
-                          {node.arrival.name + ", " + node.arrival.city}
-                          {node.stops.length > 0 &&
-                          typeof node.stops[node.stops.length - 1].platform !==
-                            "undefined" ? (
-                            <p className="uppercase font-mono tracking-wide font-bold text-sm text-gray-600">
-                              {String(node.arrival.time.getHours()).padStart(
-                                2,
-                                "0"
-                              ) +
-                                ":" +
-                                String(node.arrival.time.getMinutes()).padStart(
-                                  2,
-                                  "0"
-                                ) +
-                                " | " +
-                                node.stops[node.stops.length - 1].platform
-                                  .type +
-                                " " +
-                                node.stops[node.stops.length - 1].platform.name}
-                            </p>
-                          ) : (
-                            <></>
-                          )}
-                        </h3>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             ))}
           </div>
