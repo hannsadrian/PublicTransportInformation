@@ -48,7 +48,6 @@ class Index extends React.Component {
       });
 
     if (this.state.err === "") {
-      console.log(route);
       this.setState({ route: route, loading: false });
     }
   };

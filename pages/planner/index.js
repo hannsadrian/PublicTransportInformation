@@ -57,7 +57,7 @@ class Index extends React.Component {
 
       var locationSuggestions = [];
 
-      stops.stops.forEach((stop) => {
+      stops.stops.forEach(stop => {
         locationSuggestions.push(stop);
       });
 
@@ -88,7 +88,7 @@ class Index extends React.Component {
     });
   }
 
-  findSuggestions = async (input) => {
+  findSuggestions = async input => {
     var stops = await dvb.findPOI(input);
 
     var suggestions = [];
@@ -102,14 +102,14 @@ class Index extends React.Component {
     this.setState({ suggestions: suggestions });
   };
 
-  handleChange = (event) => {
+  handleChange = event => {
     this.setState({
       input: event.target.value
     });
     if (event.target.value.length > 0) {
       this.findSuggestions(event.target.value);
     } else {
-      this.getLocation()
+      this.getLocation();
     }
     this.setState({
       currentTarget: event.target.id,
@@ -117,16 +117,16 @@ class Index extends React.Component {
     });
   };
 
-  setActive = (event) => {
+  setActive = event => {
     this.setState({
       currentTarget: event.target.id
     });
     if (event.target.value.length === 0) {
-      this.getLocation()
+      this.getLocation();
     }
-  }
+  };
 
-  suggestionClick = (event) => {
+  suggestionClick = event => {
     event.preventDefault();
     var target = this.state.currentTarget;
     this.setState({ [target]: event.target.id, suggestions: [] });
@@ -227,34 +227,51 @@ class Index extends React.Component {
             {this.state.suggestions.map((value, index) => {
               return (
                 <div key={index}>
-                    <button
-                      onClick={this.suggestionClick}
-                      className={
-                        (this.state.suggestions.length === 1
-                          ? "rounded "
-                          : index < 1
-                          ? "rounded-t "
-                          : index === this.state.suggestions.length - 1
-                          ? "rounded-b "
-                          : "") +
-                        "z-50 py-3 sm:py-2 px-3 trans w-full cursor-pointer sm:hover:shadow-outline outline-none focus:outline-none flex justify-between"
-                      }
+                  <button
+                    onClick={this.suggestionClick}
+                    className={
+                      (this.state.suggestions.length === 1
+                        ? "rounded "
+                        : index < 1
+                        ? "rounded-t "
+                        : index === this.state.suggestions.length - 1
+                        ? "rounded-b "
+                        : "") +
+                      "z-50 py-3 sm:py-2 px-3 trans w-full cursor-pointer sm:hover:shadow-outline outline-none focus:outline-none flex justify-between"
+                    }
+                    id={value.name + ", " + value.city}
+                  >
+                    <span
+                      className="truncate"
                       id={value.name + ", " + value.city}
                     >
-                      <span className="truncate" id={value.name + ", " + value.city}>{value.name + ", " + value.city}</span>
-                      <div id={value.name + ", " + value.city}><FontAwesomeIcon className="ml-2" icon={value.type === "Stop" ? faHospitalSymbol : value.type === "Address" ? faHome : faMapMarker}></FontAwesomeIcon></div>
-                    </button>
-                    {index < this.state.suggestions.length - 1 ? (
-                      <hr className="border-gray-800 z-0"></hr>
-                    ) : (
-                      <div></div>
-                    )}
+                      {value.name + ", " + value.city}
+                    </span>
+                    <div id={value.name + ", " + value.city}>
+                      <FontAwesomeIcon
+                        className="ml-2"
+                        icon={
+                          value.type === "Stop"
+                            ? faHospitalSymbol
+                            : value.type === "Address"
+                            ? faHome
+                            : faMapMarker
+                        }
+                      ></FontAwesomeIcon>
+                    </div>
+                  </button>
+                  {index < this.state.suggestions.length - 1 ? (
+                    <hr className="border-gray-800 z-0"></hr>
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
               );
             })}
           </div>
           <div className="rounded overflow-hidden">
             <input
+              onSubmit={this.redirect}
               placeholder="from"
               onClick={this.setActive}
               id="from"
@@ -263,6 +280,7 @@ class Index extends React.Component {
               className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
             <input
+              onSubmit={this.redirect}
               placeholder="to"
               onClick={this.setActive}
               id="to"
@@ -271,7 +289,6 @@ class Index extends React.Component {
               className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
-          
         </div>
       </div>
     );
