@@ -35,7 +35,7 @@
     "@zeit/next-css": "^1.0.1",
     "autoprefixer": "^9.6.1",
     "cleave.js": "^1.5.3",
-    "dvbjs": "^5.1.1",
+    "dvbjs": "^6.0.0",
     "express": "^4.17.1",
     "gauss-krueger": "^1.0.1",
     "ignore-errors": "^1.0.0",
