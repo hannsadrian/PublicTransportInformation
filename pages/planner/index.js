@@ -1,5 +1,5 @@
 import "react";
-import * as dvb from "../../src/dvbjs";
+import * as dvb from "dvbjs";
 import Head from "next/head";
 import Link from "next/link";
 import { geolocated } from "react-geolocated";
@@ -129,7 +129,6 @@ class Index extends React.Component {
   suggestionClick = (event) => {
     event.preventDefault();
     var target = this.state.currentTarget;
-    console.log(event.target)
     this.setState({ [target]: event.target.id, suggestions: [] });
   };
 
