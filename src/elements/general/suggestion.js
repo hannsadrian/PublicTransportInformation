@@ -31,7 +31,7 @@ class Suggestion extends Component {
           id={this.props.value.name + ", " + this.props.value.city}
         >
           <span
-            className="truncate"
+            className="truncate text-left"
             id={this.props.value.name + ", " + this.props.value.city}
           >
             {this.props.value.name + ", " + this.props.value.city}

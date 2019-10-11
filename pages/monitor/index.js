@@ -37,12 +37,10 @@ class Index extends React.Component {
         <Head>
           <title>Public Transport Monitor</title>
         </Head>
-        <h1 className="font-semibold font-inter text-2xl text-gray-200 leading-tight">
+        <h1 className="font-semibold font-inter text-2xl text-gray-200">
           Public Transport Monitor
         </h1>
-        <p className="font-inter text-gray-500 leading-tight mb-5">
-          Find your Departure
-        </p>
+        <p className="font-inter text-gray-500 mb-5">Find your Departure</p>
         <div className="w-full sm:w-auto sm:max-w-xs">
           <div className="flex mb-3">
             <Link href="/" as="/">

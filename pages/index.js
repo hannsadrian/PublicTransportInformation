@@ -32,31 +32,24 @@ class Index extends React.Component {
         <Head>
           <title>Public Transport</title>
         </Head>
-        <h1 className="font-semibold font-inter text-2xl text-gray-200 leading-tight">
+        <h1 className="font-semibold font-inter text-2xl text-gray-200">
           Public Transport
         </h1>
-        <p className="font-inter text-gray-500 leading-tight mb-5">
-          Choose wiseley...
-        </p>
+        <p className="font-inter text-gray-500 mb-5">Choose wiseley...</p>
         <div className="w-full sm:w-auto sm:max-w-xs mb-6">
           <Link href="/monitor" as="/monitor">
             <a>
               <div className="sm:hover:shadow-outline trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
                 <div className="w-3/4">
-                  <p className="font-bold text-2xl flex items-center">
-                    <FontAwesomeIcon
-                      style={{ height: "24px" }}
-                      icon={faBusAlt}
-                    ></FontAwesomeIcon>
-                    <span className="ml-2 truncate">Monitor</span>
+                  <p className="font-semibold text-xl flex items-center">
+                    <FontAwesomeIcon icon={faBusAlt}></FontAwesomeIcon>
+                    <span className="truncate mt-1 ml-2">Monitor</span>
                   </p>
-                  <p className="font-medium text-lg truncate">
-                    Find your departure
-                  </p>
+                  <p className="font-normal truncate">Find your departure</p>
                 </div>
 
                 <div className="w-1/4 sm:w-1/5 md:w-1/6 p-3 object-right trans">
-                  <p className="font-semibold text-center text-2xl text-gray-500">
+                  <p className="font-semibold text-right text-2xl text-gray-400">
                     <FontAwesomeIcon
                       style={{ height: "21px" }}
                       icon={faArrowRight}
@@ -70,20 +63,17 @@ class Index extends React.Component {
             <a>
               <div className="sm:hover:shadow-outline trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
                 <div className="w-3/4">
-                  <p className="font-bold text-2xl flex items-center">
-                    <FontAwesomeIcon
-                      style={{ height: "24px" }}
-                      icon={faMapSigns}
-                    ></FontAwesomeIcon>
-                    <span className="ml-2 truncate">Planner</span>
+                  <p className="font-bold text-xl flex items-center">
+                    <FontAwesomeIcon icon={faMapSigns}></FontAwesomeIcon>
+                    <span className="truncate mt-1 ml-2">Planner</span>
                   </p>
-                  <p className="font-medium text-lg truncate">
-                    Where do you wanna go?
+                  <p className="font-normal truncate">
+                    Where do you want to go?
                   </p>
                 </div>
 
                 <div className="w-1/4 sm:w-1/5 md:w-1/6 p-3 object-right trans">
-                  <p className="font-semibold text-center text-2xl text-gray-500">
+                  <p className="font-semibold text-right text-2xl text-gray-400">
                     <FontAwesomeIcon
                       style={{ height: "21px" }}
                       icon={faArrowRight}

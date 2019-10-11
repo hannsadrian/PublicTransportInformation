@@ -104,11 +104,11 @@ class Stop extends React.Component {
 
   render() {
     return (
-      <div className="p-6 pt-12 sm:p-20 lg:pl-56 cursor-default">
+      <div className="p-6 pt-12 sm:p-20 lg:pl-56">
         <Head>
           <title>{this.state.stopName}</title>
         </Head>
-        <h1 className="trans font-semibold font-inter text-2xl text-gray-200 truncate leading-tight">
+        <h1 className="trans font-semibold font-inter text-2xl text-gray-200 truncate">
           {this.state.stopName}{" "}
         </h1>
         {this.state.err === "" && !this.state.loading ? (
@@ -119,7 +119,7 @@ class Stop extends React.Component {
               "," +
               this.state.longitude
             }
-            className="font-inter text-gray-500 leading-tight"
+            className="font-inter text-gray-500"
           >
             <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
             {" " +
@@ -197,7 +197,7 @@ class Stop extends React.Component {
                   }
                 >
                   <div className="w-3/4">
-                    <p className="font-bold text-2xl flex items-center">
+                    <p className="font-semibold text-2xl flex items-center">
                       <img
                         style={
                           this.state.imageError
@@ -214,11 +214,9 @@ class Stop extends React.Component {
                           this.setState({ imageError: true });
                         }}
                       />
-                      <span className="truncate">{departure.line}</span>
+                      <span className="truncate pt-1">{departure.line}</span>
                     </p>
-                    <p className="font-medium text-lg truncate">
-                      {departure.direction}
-                    </p>
+                    <p className="text-lg truncate">{departure.direction}</p>
                   </div>
                   <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded object-right p-2 trans">
                     <p className="text-center leading-tight">
