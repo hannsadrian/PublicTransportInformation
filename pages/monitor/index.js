@@ -1,78 +1,34 @@
 import "react";
 import { geolocated } from "react-geolocated";
-import * as dvb from "dvbjs";
 import Router from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import "../../static/tailwind.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Offline, Online } from "react-detect-offline";
-import {
-  faHome,
-  faRedoAlt,
-  faArrowLeft,
-  faMapMarkerAlt,
-  faSearch,
-  faBus
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import Suggestions from "../../src/components/general/suggestions";
 
 class Index extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      suggestions: []
+      suggestions: [],
+      input: ""
     };
   }
 
   componentDidMount = async () => {
-    this.getLocation();
     this.setState({ loading: false });
   };
 
-  getLocation = async () => {
-    if (!this.props.coords) {
-      setTimeout(this.getLocation, 100);
-      return;
-    }
-    if (this.props.isGeolocationAvailable && this.props.isGeolocationEnabled) {
-      var stops = await dvb.findAddress(
-        this.props.coords.longitude,
-        this.props.coords.latitude
-      );
-
-      var locationSuggestions = [];
-
-      stops.stops.forEach((stop) => {
-        locationSuggestions.push(stop.name + ", " + stop.city);
-      });
-
-      this.setState({ suggestions: locationSuggestions });
-    }
+  redirect = event => {
+    Router.push("/monitor/stop/" + event.target.id.replace("/", "%2F"));
   };
 
-  findSuggestions = async (input) => {
-    var stops = await dvb.findStop(input);
-
-    var suggestions = [];
-
-    stops.map((value, index) => {
-      if (index < 8) {
-        suggestions.push(value.name + ", " + value.city);
-      }
-    });
-
-    this.setState({ suggestions: suggestions });
-  };
-
-  handleChange = (event) => {
+  handleChange = event => {
     this.setState({
       input: event.target.value
     });
-    if (event.target.value.length > 0) {
-      this.findSuggestions(event.target.value);
-    } else {
-      this.getLocation();
-    }
   };
 
   render() {
@@ -101,39 +57,11 @@ class Index extends React.Component {
             ></input>
           </div>
           <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900">
-            {this.state.suggestions.map((value, index) => {
-              return (
-                <div key={index}>
-                  <Link
-                    prefetch
-                    href="/monitor/stop/[stop]"
-                    as={"/monitor/stop/" + value.replace("/", "%2F")}
-                  >
-                    <a>
-                      <p
-                        className={
-                          (this.state.suggestions.length === 1
-                            ? "rounded "
-                            : index < 1
-                            ? "rounded-t "
-                            : index === this.state.suggestions.length - 1
-                            ? "rounded-b "
-                            : "") +
-                          "z-50 py-3 sm:py-2 px-3 trans cursor-pointer sm:hover:shadow-outline"
-                        }
-                      >
-                        {value}
-                      </p>
-                      {index < this.state.suggestions.length - 1 ? (
-                        <hr className="border-gray-800 z-0"></hr>
-                      ) : (
-                        <div></div>
-                      )}
-                    </a>
-                  </Link>
-                </div>
-              );
-            })}
+            <Suggestions
+              input={this.state.input}
+              suggestionClick={this.redirect}
+              stopsOnly={true}
+            ></Suggestions>
           </div>
         </div>
       </div>
@@ -144,13 +72,3 @@ class Index extends React.Component {
 export default geolocated({
   userDecisionTimeout: 5000
 })(Index);
-/* className={
-  (this.state.suggestions.length === 1
-    ? "rounded "
-    : index < 1
-    ? "rounded-t "
-    : index === this.state.suggestions.length - 1
-    ? "rounded-b "
-    : "") +
-  "py-3 sm:py-2 px-3 trans cursor-pointer sm:hover:shadow-outline trans bg-gray-900"
-}*/

@@ -1,8 +1,6 @@
 import "react";
-import * as dvb from "dvbjs";
 import Head from "next/head";
 import Link from "next/link";
-import { geolocated } from "react-geolocated";
 import Router from "next/router";
 import "../../static/tailwind.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,12 +16,12 @@ import {
   faMapMarker
 } from "@fortawesome/free-solid-svg-icons";
 import Cleave from "cleave.js/react";
+import Suggestions from "../../src/components/general/suggestions";
 
 class Index extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      suggestions: [],
       date:
         String(new Date().getDate()).padStart(2, "0") +
         "." +
@@ -36,33 +34,13 @@ class Index extends React.Component {
         String(new Date().getMinutes()).padStart(2, "0"),
       from: "",
       to: "",
-      currentTarget: ""
+      currentTarget: undefined,
+      input: undefined
     };
   }
 
   componentDidMount = async () => {
     this.setState({ loading: false });
-  };
-
-  getLocation = async () => {
-    if (!this.props.coords) {
-      setTimeout(this.getLocation, 100);
-      return;
-    }
-    if (this.props.isGeolocationAvailable && this.props.isGeolocationEnabled) {
-      var stops = await dvb.findAddress(
-        this.props.coords.longitude,
-        this.props.coords.latitude
-      );
-
-      var locationSuggestions = [];
-
-      stops.stops.forEach(stop => {
-        locationSuggestions.push(stop);
-      });
-
-      this.setState({ suggestions: locationSuggestions });
-    }
   };
 
   onTimeChange(event) {
@@ -88,48 +66,24 @@ class Index extends React.Component {
     });
   }
 
-  findSuggestions = async input => {
-    var stops = await dvb.findPOI(input);
-
-    var suggestions = [];
-
-    stops.map((value, index) => {
-      if (index < 3) {
-        suggestions.push(value);
-      }
-    });
-
-    this.setState({ suggestions: suggestions });
-  };
-
   handleChange = event => {
     this.setState({
+      currentTarget: event.target.id,
+      [event.target.id]: event.target.value,
       input: event.target.value
     });
-    if (event.target.value.length > 0) {
-      this.findSuggestions(event.target.value);
-    } else {
-      this.getLocation();
-    }
-    this.setState({
-      currentTarget: event.target.id,
-      [event.target.id]: event.target.value
-    });
   };
-
   setActive = event => {
     this.setState({
-      currentTarget: event.target.id
+      currentTarget: event.target.id,
+      input: event.target.value
     });
-    if (event.target.value.length === 0) {
-      this.getLocation();
-    }
   };
-
   suggestionClick = event => {
-    event.preventDefault();
-    var target = this.state.currentTarget;
-    this.setState({ [target]: event.target.id, suggestions: [] });
+    this.setState({
+      [this.state.currentTarget]: event.target.id,
+      input: undefined
+    });
   };
 
   checkValid = () => {
@@ -224,54 +178,13 @@ class Index extends React.Component {
             </button>
           </div>
           <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900 mb-3">
-            {this.state.suggestions.map((value, index) => {
-              return (
-                <div key={index}>
-                  <button
-                    onClick={this.suggestionClick}
-                    className={
-                      (this.state.suggestions.length === 1
-                        ? "rounded "
-                        : index < 1
-                        ? "rounded-t "
-                        : index === this.state.suggestions.length - 1
-                        ? "rounded-b "
-                        : "") +
-                      "z-50 py-3 sm:py-2 px-3 trans w-full cursor-pointer sm:hover:shadow-outline outline-none focus:outline-none flex justify-between"
-                    }
-                    id={value.name + ", " + value.city}
-                  >
-                    <span
-                      className="truncate"
-                      id={value.name + ", " + value.city}
-                    >
-                      {value.name + ", " + value.city}
-                    </span>
-                    <div id={value.name + ", " + value.city}>
-                      <FontAwesomeIcon
-                        className="ml-2"
-                        icon={
-                          value.type === "Stop"
-                            ? faHospitalSymbol
-                            : value.type === "Address"
-                            ? faHome
-                            : faMapMarker
-                        }
-                      ></FontAwesomeIcon>
-                    </div>
-                  </button>
-                  {index < this.state.suggestions.length - 1 ? (
-                    <hr className="border-gray-800 z-0"></hr>
-                  ) : (
-                    <div></div>
-                  )}
-                </div>
-              );
-            })}
+            <Suggestions
+              input={this.state.input}
+              suggestionClick={this.suggestionClick}
+            ></Suggestions>
           </div>
           <div className="rounded overflow-hidden">
             <input
-              onSubmit={this.redirect}
               placeholder="from"
               onClick={this.setActive}
               id="from"
@@ -280,7 +193,6 @@ class Index extends React.Component {
               className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
             <input
-              onSubmit={this.redirect}
               placeholder="to"
               onClick={this.setActive}
               id="to"
@@ -295,6 +207,4 @@ class Index extends React.Component {
   }
 }
 
-export default geolocated({
-  userDecisionTimeout: 5000
-})(Index);
+export default Index;
