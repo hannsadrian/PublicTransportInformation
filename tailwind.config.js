@@ -3,6 +3,9 @@ module.exports = {
     extend: {
       colors: {
         unselected: "#252e3d"
+      },
+      fontFamily: {
+        inter: ["Inter"]
       }
     }
   },

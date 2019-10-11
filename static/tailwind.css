@@ -603,6 +603,18 @@ video {
   height: auto;
 }
 
+@import url("https://rsms.me/inter/inter.css");
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+@supports (font-variation-settings: normal) {
+  * {
+    font-family: "Inter var", sans-serif;
+  }
+}
+
 .trans {
   transition: all 0.25s;
 }
@@ -4127,6 +4139,10 @@ video {
 
 .font-mono {
   font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.font-inter {
+  font-family: Inter;
 }
 
 .font-hairline {
@@ -15398,6 +15414,10 @@ video {
 
   .sm\:font-mono {
     font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  .sm\:font-inter {
+    font-family: Inter;
   }
 
   .sm\:font-hairline {
@@ -26672,6 +26692,10 @@ video {
     font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
+  .md\:font-inter {
+    font-family: Inter;
+  }
+
   .md\:font-hairline {
     font-weight: 100;
   }
@@ -37944,6 +37968,10 @@ video {
     font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
+  .lg\:font-inter {
+    font-family: Inter;
+  }
+
   .lg\:font-hairline {
     font-weight: 100;
   }
@@ -49214,6 +49242,10 @@ video {
 
   .xl\:font-mono {
     font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  .xl\:font-inter {
+    font-family: Inter;
   }
 
   .xl\:font-hairline {

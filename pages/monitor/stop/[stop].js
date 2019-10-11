@@ -16,6 +16,7 @@ require("moment-duration-format");
 class Stop extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       stopName: "",
       stop: "",
@@ -107,7 +108,7 @@ class Stop extends React.Component {
         <Head>
           <title>{this.state.stopName}</title>
         </Head>
-        <h1 className="trans font-semibold font-sans text-2xl text-gray-200 truncate leading-tight">
+        <h1 className="trans font-semibold font-inter text-2xl text-gray-200 truncate leading-tight">
           {this.state.stopName}{" "}
         </h1>
         {this.state.err === "" && !this.state.loading ? (
@@ -118,7 +119,7 @@ class Stop extends React.Component {
               "," +
               this.state.longitude
             }
-            className="font-sans text-gray-500 leading-tight"
+            className="font-inter text-gray-500 leading-tight"
           >
             <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
             {" " +
@@ -186,8 +187,8 @@ class Stop extends React.Component {
                     (departure.line.includes("U") &&
                       this.state.modes.includes("U-Bahn")) ||
                     this.state.modes.length < 1
-                      ? "trans w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
-                      : "hidden trans w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                      ? "trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                      : "hidden trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
                   }
                   key={
                     departure.line +

@@ -121,10 +121,10 @@ class Index extends React.Component {
         <Head>
           <title>Public Transport Planner</title>
         </Head>
-        <h1 className="font-semibold font-sans text-2xl text-gray-200 leading-tight">
+        <h1 className="font-semibold font-inter text-2xl text-gray-200 leading-tight">
           Public Transport Planner
         </h1>
-        <p className="font-sans text-gray-500 leading-tight mb-5">
+        <p className="font-inter text-gray-500 leading-tight mb-5">
           Where do you wanna go?
         </p>
         <div className="w-full sm:w-auto sm:max-w-xs">
@@ -147,7 +147,7 @@ class Index extends React.Component {
                   timePattern: ["h", "m"]
                 }}
                 onChange={this.onTimeChange.bind(this)}
-                className="hover:bg-black w-2/5 rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
+                className="hover:bg-black w-2/5 rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
               />
               <Cleave
                 placeholder={
@@ -163,7 +163,7 @@ class Index extends React.Component {
                   datePattern: ["d", "m", "Y"]
                 }}
                 onChange={this.onDateChange.bind(this)}
-                className="hover:bg-black w-3/5 rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
+                className="hover:bg-black w-3/5 rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
               />
             </div>
             <button
@@ -177,10 +177,11 @@ class Index extends React.Component {
               <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
             </button>
           </div>
-          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900 mb-3">
+          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-inter rounded bg-gray-900 mb-3">
             <Suggestions
               input={this.state.input}
               suggestionClick={this.suggestionClick}
+              maxResults={3}
             ></Suggestions>
           </div>
           <div className="rounded overflow-hidden">
@@ -190,7 +191,7 @@ class Index extends React.Component {
               id="from"
               value={this.state.from}
               onChange={this.handleChange}
-              className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="hover:bg-black min-w-full rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
             <input
               placeholder="to"
@@ -198,7 +199,7 @@ class Index extends React.Component {
               id="to"
               value={this.state.to}
               onChange={this.handleChange}
-              className="hover:bg-black min-w-full rounded-none text-lg font-sans font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="hover:bg-black min-w-full rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
         </div>

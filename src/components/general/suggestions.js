@@ -57,7 +57,7 @@ class Suggestions extends Component {
     var suggestions = [];
 
     stops.map((value, index) => {
-      if (index < 3) {
+      if (index < this.props.maxResults) {
         suggestions.push(value);
       }
     });

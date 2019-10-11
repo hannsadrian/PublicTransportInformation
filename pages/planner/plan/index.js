@@ -64,7 +64,7 @@ class Index extends React.Component {
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
-          <h1 className="font-semibold font-sans text-2xl my-auto text-gray-200 mb-3 leading-tight">
+          <h1 className="font-semibold font-inter text-2xl my-auto text-gray-200 mb-3 leading-tight">
             Public Transport Planner
           </h1>
         </div>

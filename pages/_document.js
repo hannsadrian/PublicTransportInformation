@@ -36,7 +36,7 @@ export default class CustomDocument extends Document {
             content="black-translucent"
           />
         </Head>
-        <body className="bg-gray-800 topography">
+        <body className="bg-gray-800 topography font-display">
           <Main />
           <NextScript />
         </body>

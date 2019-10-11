@@ -19,9 +19,7 @@ class Index extends React.Component {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
-        .catch((err) =>
-          console.error("Service worker registration failed", err)
-        );
+        .catch(err => console.error("Service worker registration failed", err));
     } else {
       console.log("Service worker not supported");
     }
@@ -34,16 +32,16 @@ class Index extends React.Component {
         <Head>
           <title>Public Transport</title>
         </Head>
-        <h1 className="font-semibold font-sans text-2xl text-gray-200 leading-tight">
+        <h1 className="font-semibold font-inter text-2xl text-gray-200 leading-tight">
           Public Transport
         </h1>
-        <p className="font-sans text-gray-500 leading-tight mb-5">
+        <p className="font-inter text-gray-500 leading-tight mb-5">
           Choose wiseley...
         </p>
         <div className="w-full sm:w-auto sm:max-w-xs mb-6">
           <Link href="/monitor" as="/monitor">
             <a>
-              <div className="sm:hover:shadow-outline trans w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
+              <div className="sm:hover:shadow-outline trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
                 <div className="w-3/4">
                   <p className="font-bold text-2xl flex items-center">
                     <FontAwesomeIcon
@@ -70,7 +68,7 @@ class Index extends React.Component {
           </Link>
           <Link href="/planner" as="/planner">
             <a>
-              <div className="sm:hover:shadow-outline trans w-full bg-gray-900 text-gray-400 font-medium font-sans rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
+              <div className="sm:hover:shadow-outline trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
                 <div className="w-3/4">
                   <p className="font-bold text-2xl flex items-center">
                     <FontAwesomeIcon

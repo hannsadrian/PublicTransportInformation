@@ -37,10 +37,10 @@ class Index extends React.Component {
         <Head>
           <title>Public Transport Monitor</title>
         </Head>
-        <h1 className="font-semibold font-sans text-2xl text-gray-200 leading-tight">
+        <h1 className="font-semibold font-inter text-2xl text-gray-200 leading-tight">
           Public Transport Monitor
         </h1>
-        <p className="font-sans text-gray-500 leading-tight mb-5">
+        <p className="font-inter text-gray-500 leading-tight mb-5">
           Find your Departure
         </p>
         <div className="w-full sm:w-auto sm:max-w-xs">
@@ -53,14 +53,15 @@ class Index extends React.Component {
             <input
               placeholder="stop"
               onChange={this.handleChange}
-              className="shadow w-full text-lg font-sans font-semibold trans rounded px-3 py-2 hover:bg-black bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="shadow w-full text-lg font-inter font-semibold trans rounded px-3 py-2 hover:bg-black bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
-          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-sans rounded bg-gray-900">
+          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-inter rounded bg-gray-900">
             <Suggestions
               input={this.state.input}
               suggestionClick={this.redirect}
               stopsOnly={true}
+              maxResults={30}
             ></Suggestions>
           </div>
         </div>
