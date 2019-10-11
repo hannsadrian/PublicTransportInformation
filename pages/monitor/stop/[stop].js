@@ -32,18 +32,18 @@ class Stop extends React.Component {
 
   async findDepartures() {
     this.setState({ loading: true });
-    var stopid = await dvb.findStop(this.state.stopName);
+    var stop = await dvb.findStop(this.state.stopName);
     this.setState({
-      latitude: stopid[0].coords[1],
-      longitude: stopid[0].coords[0],
-      stop: stopid
+      latitude: stop[0].coords[1],
+      longitude: stop[0].coords[0],
+      stop: stop
     });
-    var query = await dvb.monitor(stopid[0].id, 0, 30).catch((error) => {
+    var query = await dvb.monitor(stop[0].id, 0, 30).catch(error => {
       this.setState({ err: error.name + ": " + error.message, loading: false });
     });
     if (this.state.err === "") {
       const mot = [];
-      query.forEach((departure) => {
+      query.forEach(departure => {
         var toPush = "";
         if (
           departure.mode.title.includes("undefined") &&
@@ -66,7 +66,7 @@ class Stop extends React.Component {
     this.forceUpdate();
   }
 
-  toggleMode = (event) => {
+  toggleMode = event => {
     var modes = this.state.modes;
     var mode = event.target.innerHTML;
 
@@ -85,7 +85,7 @@ class Stop extends React.Component {
     }
   };
 
-  reloadDepartures = (event) => {
+  reloadDepartures = event => {
     event.preventDefault();
     this.findDepartures();
   };
@@ -103,7 +103,7 @@ class Stop extends React.Component {
 
   render() {
     return (
-      <div className="p-6 pt-12 sm:p-20 lg:pl-56">
+      <div className="p-6 pt-12 sm:p-20 lg:pl-56 cursor-default">
         <Head>
           <title>{this.state.stopName}</title>
         </Head>
@@ -207,7 +207,7 @@ class Stop extends React.Component {
                           departure.line.includes("U") &&
                           departure.mode.title.includes("undefined")
                             ? "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
-                            : departure.mode.icon_url
+                            : departure.mode.iconUrl
                         }
                         onError={() => {
                           this.setState({ imageError: true });
