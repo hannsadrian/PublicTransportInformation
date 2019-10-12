@@ -10,6 +10,10 @@ import Interchanges from "../../../src/elements/planner/interchanges";
 import Duration from "../../../src/elements/planner/duration";
 import { randomBytes } from "crypto";
 
+Array.prototype.insert = function(index, item) {
+  this.splice(index, 0, item);
+};
+
 class Index extends React.Component {
   constructor(props) {
     super(props);
@@ -45,6 +49,42 @@ class Index extends React.Component {
       });
 
     if (this.state.err === "") {
+      // add waiting
+      await route.trips.forEach(trip => {
+        trip.nodes.map((node, index) => {
+          if (index === 0) {
+            return;
+          }
+
+          if (
+            trip.nodes[index - 1].arrival !== undefined &&
+            node.departure !== undefined
+          ) {
+            var diffMins = Math.round(
+              (((node.departure.time - trip.nodes[index - 1].arrival.time) %
+                86400000) %
+                3600000) /
+                60000
+            );
+            trip.nodes.insert(index, {
+              arrival: undefined,
+              departure: undefined,
+              direction: "",
+              diva: undefined,
+              duration: diffMins,
+              line: "",
+              mode: {
+                title: "Warten",
+                name: "Waiting",
+                iconUrl: "https://m.dvb.de/img/sit.svg"
+              },
+              path: [],
+              stops: []
+            });
+          }
+        });
+      });
+
       this.setState({ route: route, loading: false });
     }
   };
@@ -183,16 +223,14 @@ class Index extends React.Component {
                 <div className="mb-3">
                   {trip.nodes.map((node, index) => (
                     <div key={JSON.stringify(node) + randomBytes(123)}>
-                      {(index === 0 ||
-                        (index !== 0 &&
-                          trip.nodes[index - 1].departure === undefined)) &&
-                      node.departure !== undefined ? (
+                      {node.departure !== undefined ? (
                         <h3 className="text-gray-300 truncate mb-2 mt-2">
                           <span className="font-semibold text-sm">
                             {node.departure.name + ", " + node.departure.city}
                           </span>
                           {node.stops.length > 0 ? (
                             <p className="tracking-wide text-gray-600 font-semibold text-sm -mt-1">
+                              ab{" "}
                               {String(node.departure.time.getHours()).padStart(
                                 2,
                                 "0"
@@ -217,10 +255,7 @@ class Index extends React.Component {
                       ) : (
                         <></>
                       )}
-                      <div
-                        style={{ marginLeft: "0.63rem" }}
-                        className="border-l-2 border-gray-700 pl-3 pt-2 pb-2 text-gray-400"
-                      >
+                      <div className="border-l-2 border-gray-700 ml-2 pl-3 pt-2 pb-2 text-gray-400">
                         <div className="flex justify-between">
                           <div className="flex">
                             <img
@@ -228,11 +263,11 @@ class Index extends React.Component {
                                 this.state.imageError
                                   ? { display: "hidden", marginRight: "0" }
                                   : {
-                                      height: "24px",
-                                      marginRight: "0.5rem"
+                                      height: "24px"
                                     }
                               }
-                              className="my-2 w-auto"
+                              id={node.line}
+                              className="my-2 mr-2 w-auto"
                               src={
                                 typeof node.line === "string" &&
                                 node.line.includes("U") &&
@@ -246,7 +281,7 @@ class Index extends React.Component {
                                 this.setState({ imageError: true });
                               }}
                             />
-                            <div className="w-56 leading-tight truncate my-auto text-sm">
+                            <div className="w-auto leading-tight truncate my-auto text-sm">
                               <span className="font-semibold truncate mr-1">
                                 {node.line === "" ? node.mode.title : node.line}
                               </span>
@@ -266,18 +301,21 @@ class Index extends React.Component {
                               </span>
                             </div>
                           </div>
-                          <p className="my-auto whitespace-no-wrap text-gray-600 mr-4">
+                          <p className="my-auto whitespace-no-wrap text-right text-gray-600 mr-4">
                             {node.duration} min
                           </p>
                         </div>
                       </div>
-                      {node.arrival !== undefined ? (
+                      {(index === trip.nodes.length - 1 ||
+                        index !== trip.nodes.length - 1) &&
+                      node.arrival !== undefined ? (
                         <h3 className="text-gray-300 truncate mt-2 mb-2">
                           <span className="font-semibold text-sm">
                             {node.arrival.name + ", " + node.arrival.city}
                           </span>
                           {node.stops.length > 0 ? (
                             <p className="tracking-wide text-gray-600 font-semibold text-sm -mt-1">
+                              an{" "}
                               {String(node.arrival.time.getHours()).padStart(
                                 2,
                                 "0"
