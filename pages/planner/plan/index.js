@@ -273,15 +273,19 @@ class Index extends React.Component {
                       )}
                       <div
                         className={
-                          (String(node.mode.name).includes("Footpath") ||
-                          String(node.mode.name).includes("StairsUp") ||
-                          String(node.mode.name).includes("StairsDown") ||
-                          String(node.mode.name).includes("EscalatorUp") ||
-                          String(node.mode.name).includes("EscalatorDown") ||
-                          String(node.mode.name).includes("ElevatorUp") ||
-                          String(node.mode.name).includes("ElevatorDown") ||
-                          String(node.mode.name).includes("Waiting")
-                            ? "bg-gray-900 text-gray-500"
+                          (node.mode !== undefined
+                            ? String(node.mode.name).includes("Footpath") ||
+                              String(node.mode.name).includes("StairsUp") ||
+                              String(node.mode.name).includes("StairsDown") ||
+                              String(node.mode.name).includes("EscalatorUp") ||
+                              String(node.mode.name).includes(
+                                "EscalatorDown"
+                              ) ||
+                              String(node.mode.name).includes("ElevatorUp") ||
+                              String(node.mode.name).includes("ElevatorDown") ||
+                              String(node.mode.name).includes("Waiting")
+                              ? "bg-gray-900 text-gray-500"
+                              : "bg-gray-800 text-gray-400"
                             : "bg-gray-800 text-gray-400") +
                           " rounded-lg ml-1 mr-2 pl-3 pt-2 pb-2"
                         }
