@@ -45,9 +45,14 @@ class Index extends React.Component {
       });
 
     if (this.state.err === "") {
+      console.log(route);
+
       await route.trips.forEach(trip => {
         trip.nodes.map((node, index) => {
-          if (trip.nodes[index].mode.name === "StayForConnection") {
+          if (node.mode === undefined) {
+            return;
+          }
+          if (node.mode.name === "StayForConnection") {
             trip.nodes.splice(index, 1);
             return;
           }
