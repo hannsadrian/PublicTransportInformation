@@ -44,17 +44,17 @@ class Index extends React.Component {
         <div className="w-full sm:w-auto sm:max-w-xs">
           <div className="flex mb-3">
             <Link href="/" as="/">
-              <button className="text-gray-300 bg-gray-900 px-4 rounded mr-3 sm:hover:shadow-outline focus:outline-none trans">
+              <button className="text-gray-300 bg-gray-900 px-4 rounded-lg mr-3 sm:hover:shadow-outline focus:outline-none trans">
                 <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               </button>
             </Link>
             <input
               placeholder="stop"
               onChange={this.handleChange}
-              className="shadow w-full text-lg font-inter font-semibold trans rounded px-3 py-2 hover:bg-black bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="shadow w-full text-lg font-inter font-semibold trans rounded-lg px-3 py-2 hover:bg-black bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
-          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-inter rounded bg-gray-900">
+          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-inter rounded-lg bg-gray-900">
             <Suggestions
               input={this.state.input}
               suggestionClick={this.redirect}

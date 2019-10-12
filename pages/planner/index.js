@@ -130,11 +130,11 @@ class Index extends React.Component {
         <div className="w-full sm:w-auto sm:max-w-xs">
           <div className="flex mb-3 sm:max-w-xs">
             <Link href="/" as="/">
-              <button className="w-2/12 text-gray-300 bg-gray-900 px-4 rounded mr-3 sm:hover:shadow-outline focus:outline-none trans">
+              <button className="w-2/12 text-gray-300 bg-gray-900 px-4 rounded-lg mr-3 sm:hover:shadow-outline focus:outline-none trans">
                 <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               </button>
             </Link>
-            <div className="flex rounded overflow-hidden w-auto mr-3">
+            <div className="flex rounded-lg overflow-hidden w-auto mr-3">
               <Cleave
                 placeholder={
                   String(new Date().getHours()).padStart(2, "0") +
@@ -147,7 +147,7 @@ class Index extends React.Component {
                   timePattern: ["h", "m"]
                 }}
                 onChange={this.onTimeChange.bind(this)}
-                className="hover:bg-black w-2/5 rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
+                className="hover:bg-black w-2/5 -none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
               />
               <Cleave
                 placeholder={
@@ -163,35 +163,35 @@ class Index extends React.Component {
                   datePattern: ["d", "m", "Y"]
                 }}
                 onChange={this.onDateChange.bind(this)}
-                className="hover:bg-black w-3/5 rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
+                className="hover:bg-black w-3/5 -none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
               />
             </div>
             <button
               onClick={this.redirect}
               disabled={!this.checkValid()}
               className={
-                "disabled:bg-unselected disabled:cursor-not-allowed w-2/12 text-gray-300 bg-gray-900 px-4 rounded focus:outline-none trans" +
+                "disabled:bg-unselected disabled:cursor-not-allowed w-2/12 text-gray-300 bg-gray-900 px-4 rounded-lg focus:outline-none trans" +
                 (this.checkValid() ? " sm:hover:shadow-outline" : "")
               }
             >
               <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
             </button>
           </div>
-          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-inter rounded bg-gray-900 mb-3">
+          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-inter rounded-lg bg-gray-900 mb-3">
             <Suggestions
               input={this.state.input}
               suggestionClick={this.suggestionClick}
               maxResults={3}
             ></Suggestions>
           </div>
-          <div className="rounded overflow-hidden">
+          <div className="rounded-lg overflow-hidden">
             <input
               placeholder="from"
               onClick={this.setActive}
               id="from"
               value={this.state.from}
               onChange={this.handleChange}
-              className="hover:bg-black min-w-full rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="hover:bg-black min-w-full text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
             <input
               placeholder="to"
@@ -199,7 +199,7 @@ class Index extends React.Component {
               id="to"
               value={this.state.to}
               onChange={this.handleChange}
-              className="hover:bg-black min-w-full rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="hover:bg-black min-w-full text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
         </div>

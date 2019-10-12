@@ -20,11 +20,11 @@ class Suggestion extends Component {
           onClick={this.props.suggestionClick}
           className={
             (this.props.suggestions.length === 1
-              ? "rounded "
+              ? "rounded-lg "
               : this.props.index < 1
-              ? "rounded-t "
+              ? "rounded-t-lg "
               : this.props.index === this.props.suggestions.length - 1
-              ? "rounded-b "
+              ? "rounded-b-lg "
               : "") +
             "z-50 py-3 sm:py-2 px-3 trans w-full cursor-pointer sm:hover:shadow-outline outline-none focus:outline-none flex justify-between"
           }

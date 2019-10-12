@@ -128,7 +128,7 @@ class Stop extends React.Component {
               this.state.longitude.toString().substring(0, 10)}
           </a>
         ) : this.state.err === "" ? (
-          <div className="rounded overflow-hidden max-w-xs pb-2 pt-3">
+          <div className="rounded-lg overflow-hidden max-w-xs pb-2 pt-3">
             <BarLoader
               heightUnit={"px"}
               height={4}
@@ -139,14 +139,14 @@ class Stop extends React.Component {
             />
           </div>
         ) : (
-          <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded font-semibold">
+          <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded-lg font-semibold">
             {this.state.err}
           </p>
         )}
 
         <div className="flex flex-wrap mt-5">
           <Link href="/monitor" as="/monitor">
-            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded mr-3 sm:hover:shadow-outline focus:outline-none trans mb-3">
+            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded-lg mr-3 sm:hover:shadow-outline focus:outline-none trans mb-3">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
@@ -154,7 +154,7 @@ class Stop extends React.Component {
             <>
               <button
                 onClick={this.reloadDepartures}
-                className="text-gray-300 bg-gray-900 px-4 py-2 rounded sm:hover:shadow-outline focus:outline-none trans mr-3 mb-3"
+                className="text-gray-300 bg-gray-900 px-4 py-2 rounded-lg sm:hover:shadow-outline focus:outline-none trans mr-3 mb-3"
               >
                 <FontAwesomeIcon icon={faRedoAlt}></FontAwesomeIcon>
               </button>
@@ -162,7 +162,7 @@ class Stop extends React.Component {
                 this.state.allModes.map((mode, index) => {
                   return (
                     <button
-                      className="text-gray-300 px-4 py-2 rounded focus:outline-none sm:hover:shadow-outline trans mr-3 truncate bg-unselected mb-3"
+                      className="text-gray-300 px-4 py-2 rounded-lg focus:outline-none sm:hover:shadow-outline trans mr-3 truncate bg-unselected mb-3"
                       onClick={this.toggleMode}
                     >
                       {mode}
@@ -187,8 +187,8 @@ class Stop extends React.Component {
                     (departure.line.includes("U") &&
                       this.state.modes.includes("U-Bahn")) ||
                     this.state.modes.length < 1
-                      ? "trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
-                      : "hidden trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                      ? "trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                      : "hidden trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
                   }
                   key={
                     departure.line +
@@ -196,8 +196,8 @@ class Stop extends React.Component {
                     departure.arrivalTimeRelative
                   }
                 >
-                  <div className="w-3/4">
-                    <p className="font-semibold text-2xl flex items-center">
+                  <div className="w-3/4 ml-1 my-auto">
+                    <p className="font-semibold text-2xl flex items-center leading-tight">
                       <img
                         style={
                           this.state.imageError
@@ -216,9 +216,11 @@ class Stop extends React.Component {
                       />
                       <span className="truncate pt-1">{departure.line}</span>
                     </p>
-                    <p className="text-lg truncate">{departure.direction}</p>
+                    <p className="text-lg font-normal truncate">
+                      {departure.direction}
+                    </p>
                   </div>
-                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded object-right p-2 trans">
+                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded-lg object-right p-2 sm:m-1 trans">
                     <p className="text-center leading-tight">
                       <span className="font-semibold text-2xl">
                         {departure.arrivalTimeRelative < 60

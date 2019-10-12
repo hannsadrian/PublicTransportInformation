@@ -76,6 +76,7 @@ class Suggestions extends Component {
       <>
         {this.state.suggestions.map((value, index) => (
           <Suggestion
+            key={index}
             value={value}
             index={index}
             suggestions={this.state.suggestions}

@@ -10,10 +10,6 @@ import Interchanges from "../../../src/elements/planner/interchanges";
 import Duration from "../../../src/elements/planner/duration";
 import { randomBytes } from "crypto";
 
-Array.prototype.insert = function(index, item) {
-  this.splice(index, 0, item);
-};
-
 class Index extends React.Component {
   constructor(props) {
     super(props);
@@ -49,10 +45,22 @@ class Index extends React.Component {
       });
 
     if (this.state.err === "") {
-      // add waiting
       await route.trips.forEach(trip => {
         trip.nodes.map((node, index) => {
+          if (trip.nodes[index].mode.name === "StayForConnection") {
+            trip.nodes.splice(index, 1);
+            return;
+          }
+        });
+      });
+
+      // add waiting
+      await route.trips.map((trip, tripIndex) => {
+        var finalNodes = [];
+
+        trip.nodes.map((node, index) => {
           if (index === 0) {
+            finalNodes.push(node);
             return;
           }
 
@@ -66,7 +74,7 @@ class Index extends React.Component {
                 3600000) /
                 60000
             );
-            trip.nodes.insert(index, {
+            finalNodes.push({
               arrival: undefined,
               departure: undefined,
               direction: "",
@@ -82,7 +90,10 @@ class Index extends React.Component {
               stops: []
             });
           }
+          finalNodes.push(node);
         });
+
+        trip.nodes = finalNodes;
       });
 
       this.setState({ route: route, loading: false });
@@ -97,7 +108,7 @@ class Index extends React.Component {
         </Head>
         <div className="flex">
           <Link href="/planner" as="/planner">
-            <button className="text-gray-300 bg-gray-900 px-4 my-auto h-12 w-12 mr-3 rounded sm:hover:shadow-outline focus:outline-none trans">
+            <button className="text-gray-300 bg-gray-900 px-4 my-auto h-12 w-12 mr-3 rounded-lg sm:hover:shadow-outline focus:outline-none trans">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
@@ -107,7 +118,7 @@ class Index extends React.Component {
         </div>
 
         {this.state.loading ? (
-          <div className="rounded overflow-hidden max-w-xs pb-2 pt-3">
+          <div className="rounded-lg overflow-hidden max-w-xs pb-2 pt-3">
             <BarLoader
               heightUnit={"px"}
               height={4}
@@ -118,7 +129,7 @@ class Index extends React.Component {
             />
           </div>
         ) : this.state.err !== "" ? (
-          <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded font-semibold">
+          <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded-lg font-semibold">
             {this.state.err}
           </p>
         ) : (
@@ -131,7 +142,7 @@ class Index extends React.Component {
             {this.state.route.trips.map((trip, index) => (
               <div
                 key={JSON.stringify(trip)}
-                className="p-1 pl-4 pr-4 pt-4 bg-gray-900 text-gray-300 mt-4 max-w-sm rounded"
+                className="p-1 pl-4 pr-4 pt-4 bg-gray-900 text-gray-300 mt-4 max-w-sm rounded-lg"
               >
                 {trip.departure !== undefined ? (
                   <p className="leading-tight font-semibold truncate mt-2">
@@ -219,7 +230,7 @@ class Index extends React.Component {
                 ) : (
                   <></>
                 )}
-                <hr className="mt-6 mb-5 border-2 rounded border-gray-800"></hr>
+                <hr className="mt-6 mb-5 border-2 rounded-lg border-gray-800"></hr>
                 <div className="mb-3">
                   {trip.nodes.map((node, index) => (
                     <div key={JSON.stringify(node) + randomBytes(123)}>
@@ -255,7 +266,21 @@ class Index extends React.Component {
                       ) : (
                         <></>
                       )}
-                      <div className="border-l-2 border-gray-700 ml-2 pl-3 pt-2 pb-2 text-gray-400">
+                      <div
+                        className={
+                          (String(node.mode.name).includes("Footpath") ||
+                          String(node.mode.name).includes("StairsUp") ||
+                          String(node.mode.name).includes("StairsDown") ||
+                          String(node.mode.name).includes("EscalatorUp") ||
+                          String(node.mode.name).includes("EscalatorDown") ||
+                          String(node.mode.name).includes("ElevatorUp") ||
+                          String(node.mode.name).includes("ElevatorDown") ||
+                          String(node.mode.name).includes("Waiting")
+                            ? "bg-gray-900 text-gray-500"
+                            : "bg-gray-800 text-gray-400") +
+                          " rounded-lg ml-1 mr-2 pl-3 pt-2 pb-2"
+                        }
+                      >
                         <div className="flex justify-between">
                           <div className="flex">
                             <img
@@ -282,9 +307,16 @@ class Index extends React.Component {
                               }}
                             />
                             <div className="w-auto leading-tight truncate my-auto text-sm">
-                              <span className="font-semibold truncate mr-1">
-                                {node.line === "" ? node.mode.title : node.line}
+                              <span className="font-semibold truncate">
+                                {node.line === "" ? "" : node.line}
                               </span>
+                              {node.line === "" ? (
+                                <span className="truncate mr-1">
+                                  {node.mode.title}
+                                </span>
+                              ) : (
+                                <></>
+                              )}
                               <span className="truncate">
                                 {node.direction !== "" ? (
                                   <>
@@ -301,7 +333,7 @@ class Index extends React.Component {
                               </span>
                             </div>
                           </div>
-                          <p className="my-auto whitespace-no-wrap text-right text-gray-600 mr-4">
+                          <p className="my-auto whitespace-no-wrap text-right mr-4">
                             {node.duration} min
                           </p>
                         </div>
