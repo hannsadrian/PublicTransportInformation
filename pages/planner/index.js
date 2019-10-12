@@ -147,7 +147,7 @@ class Index extends React.Component {
                   timePattern: ["h", "m"]
                 }}
                 onChange={this.onTimeChange.bind(this)}
-                className="hover:bg-black w-2/5 -none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
+                className="hover:bg-black w-2/5 rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
               />
               <Cleave
                 placeholder={
@@ -163,7 +163,7 @@ class Index extends React.Component {
                   datePattern: ["d", "m", "Y"]
                 }}
                 onChange={this.onDateChange.bind(this)}
-                className="hover:bg-black w-3/5 -none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
+                className="hover:bg-black w-3/5 rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
               />
             </div>
             <button
@@ -191,7 +191,7 @@ class Index extends React.Component {
               id="from"
               value={this.state.from}
               onChange={this.handleChange}
-              className="hover:bg-black min-w-full text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="hover:bg-black rounded-none min-w-full text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
             <input
               placeholder="to"
@@ -199,7 +199,7 @@ class Index extends React.Component {
               id="to"
               value={this.state.to}
               onChange={this.handleChange}
-              className="hover:bg-black min-w-full text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="hover:bg-black rounded-none min-w-full text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
         </div>

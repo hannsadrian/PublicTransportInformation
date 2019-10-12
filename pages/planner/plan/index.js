@@ -36,7 +36,7 @@ class Index extends React.Component {
     departure.setFullYear(date[2], date[1] - 1, date[0]);
 
     var route = await dvb
-      .route(origin[0].id, destination[0].id, departure, false)
+      .route(origin[0].id, destination[0].id, departure, false, 30000)
       .catch(error => {
         this.setState({
           err: error.name + ": " + error.message,
