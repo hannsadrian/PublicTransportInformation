@@ -316,15 +316,14 @@ class Index extends React.Component {
                               }}
                             />
                             <div className="w-auto leading-tight truncate my-auto text-sm">
-                              <span className="font-semibold truncate">
-                                {node.line === "" ? "" : node.line}
-                              </span>
                               {node.line === "" ? (
                                 <span className="truncate mr-1">
                                   {node.mode.title}
                                 </span>
                               ) : (
-                                <></>
+                                <span className="font-semibold truncate mr-1">
+                                  {node.line}
+                                </span>
                               )}
                               <span className="truncate">
                                 {node.direction !== "" ? (
