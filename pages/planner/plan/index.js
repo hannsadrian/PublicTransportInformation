@@ -45,8 +45,7 @@ class Index extends React.Component {
       });
 
     if (this.state.err === "") {
-      console.log(route);
-
+      // remove/edit unnessecary details
       await route.trips.forEach(trip => {
         trip.nodes.map((node, index) => {
           if (node.mode === undefined) {
@@ -55,6 +54,17 @@ class Index extends React.Component {
           if (node.mode.name === "StayForConnection") {
             trip.nodes.splice(index, 1);
             return;
+          } else if (node.mode.name === "Footpath") {
+            if (index === trip.nodes.length - 1) {
+              node.departure = undefined;
+            } else {
+              node.arrival = undefined;
+            }
+            node.line = ""
+            node.direction = ""
+          } else if (node.mode.name === "StayInVehicle") {
+            node.arrival = undefined;
+            node.departure = undefined;
           }
         });
       });
@@ -79,21 +89,23 @@ class Index extends React.Component {
                 3600000) /
                 60000
             );
-            finalNodes.push({
-              arrival: undefined,
-              departure: undefined,
-              direction: "",
-              diva: undefined,
-              duration: diffMins,
-              line: "",
-              mode: {
-                title: "Warten",
-                name: "Waiting",
-                iconUrl: "https://m.dvb.de/img/sit.svg"
-              },
-              path: [],
-              stops: []
-            });
+            if (diffMins > 0) {
+              finalNodes.push({
+                arrival: undefined,
+                departure: undefined,
+                direction: "",
+                diva: undefined,
+                duration: diffMins,
+                line: "",
+                mode: {
+                  title: "Wartezeit",
+                  name: "Waiting",
+                  iconUrl: "https://m.dvb.de/img/sit.svg"
+                },
+                path: [],
+                stops: []
+              });
+            }
           }
           finalNodes.push(node);
         });
@@ -283,7 +295,8 @@ class Index extends React.Component {
                               ) ||
                               String(node.mode.name).includes("ElevatorUp") ||
                               String(node.mode.name).includes("ElevatorDown") ||
-                              String(node.mode.name).includes("Waiting")
+                              String(node.mode.name).includes("Waiting") ||
+                              String(node.mode.name).includes("StayInVehicle")
                               ? "bg-gray-900 text-gray-500"
                               : "bg-gray-800 text-gray-400"
                             : "bg-gray-800 text-gray-400") +
@@ -315,7 +328,7 @@ class Index extends React.Component {
                                 this.setState({ imageError: true });
                               }}
                             />
-                            <div className="w-auto leading-tight truncate my-auto text-sm">
+                            <div className="w-40 leading-tight truncate my-auto text-sm">
                               {node.line === "" ? (
                                 <span className="truncate mr-1">
                                   {node.mode.title}
@@ -329,11 +342,6 @@ class Index extends React.Component {
                                 {node.direction !== "" ? (
                                   <>
                                     <br></br> {node.direction}
-                                  </>
-                                ) : node.arrival ? (
-                                  <>
-                                    <br></br>
-                                    {node.arrival.name}
                                   </>
                                 ) : (
                                   ""
