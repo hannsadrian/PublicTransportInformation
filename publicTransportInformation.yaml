@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: public-transport-information
-          image: repo.treescale.com/adwirawien/public-transport-information
+          image: <your-docker-image>
           ports:
             - containerPort: 3000
