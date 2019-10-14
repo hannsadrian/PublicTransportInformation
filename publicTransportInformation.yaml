@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: public-transport-information
+  labels:
+    app: public-transport-information
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: public-transport-information
+  template:
+    metadata:
+      labels:
+        app: public-transport-information
+    spec:
+      containers:
+        - name: public-transport-information
+          image: repo.treescale.com/adwirawien/public-transport-information
+          ports:
+            - containerPort: 3000
