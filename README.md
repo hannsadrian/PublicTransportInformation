@@ -1,17 +1,17 @@
-# 🚎 Public Transport Web
+# 🚋 Public Transport Information
 
 Web page to view departures or plan a route in germany.
 
-## ⛸ Getting started
+### ⛸ Getting started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### 📦 Prerequisites
+#### 📦 Prerequisites
 
 - [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/get-npm)/[yarn](https://yarnpkg.com/lang/en/)
 
-### 💈 Installing
+#### 💈 Installing
 
 How to start the site on your system:
 
@@ -24,21 +24,21 @@ How to start the site on your system:
 
 Since we use next.js for the routing stuff, the page automatically reloads when you make changes during development.
 
-## 🌍 Deployment
+### 🌍 Deployment
 
 The demo page is hosted on a kubernetes cluster. You can find the deployment file as `publicTransportWeb.yaml` in this repository.
 
-## 🔨 Build with
+### 🔨 Build with
 
 - [dvbjs](https://github.com/kiliankoe/dvbjs)
 - [Next.js](https://nextjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 
-## 🦜 Contributing
+### 🦜 Contributing
 
-Please read (CONTRIBUTING.md)[https://github.com/Adwirawien/PublicTransportWeb/CONTRIBUTING.md] for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/Adwirawien/PublicTransportWeb/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## 🖋 Authors
+### 🖋 Authors
 
 - **Adrian Böhme** - *Creator/Maintainer* - [Adwirawien](https://github.com/Adwirawien)
 
