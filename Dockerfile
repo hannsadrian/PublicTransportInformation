@@ -11,6 +11,7 @@ RUN npm install
 COPY . .
 
 # Building app
+RUN npm run build-css
 RUN npm run build
 
 # Running the app
