@@ -1,6 +1,6 @@
 # 🚟 Public Transport Information
 
-Web page to view departures or plan a route in germany.
+Webpage to view departures or plan a route in germany.
 
 ### ⛸ Getting started
 
@@ -26,7 +26,7 @@ Since we use next.js for the routing stuff, the page automatically reloads when 
 
 ### 🌍 Deployment
 
-The demo page is hosted on a kubernetes cluster. You can find the deployment file as `publicTransportWeb.yaml` in this repository.
+The demo page is hosted on a kubernetes cluster. You can find the deployment file as `publicTransportInformation.yaml` in this repository.
 
 ### 🔨 Build with
 
@@ -36,10 +36,10 @@ The demo page is hosted on a kubernetes cluster. You can find the deployment fil
 
 ### 🦜 Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/Adwirawien/PublicTransportWeb/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/Adwirawien/PublicTransportInformation/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ### 🖋 Authors
 
 - **Adrian Böhme** - *Creator/Maintainer* - [Adwirawien](https://github.com/Adwirawien)
 
-See also the list of [contributors](https://github.com/Adwirawien/PublicTransportWeb/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/Adwirawien/PublicTransportInformation/contributors) who participated in this project.
