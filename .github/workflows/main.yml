@@ -15,7 +15,6 @@ jobs:
         name: adwirawien/public-transport-information
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        registry: repo.treescale.com
     - name: Deploy to Cluster
       uses: steebchen/kubectl@master
       env:
