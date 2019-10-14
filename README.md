@@ -20,7 +20,8 @@ How to start the site on your system:
 - run `$ [npm|yarn] install` to install dependencies
 - then run `$ [npm|yarn] run build-css` to build the tailwind.css file
 - finally run `$ [npm|yarn] run dev` to start the development server
-- visit `http://localhost:3000/` in your browser
+- visit [localhost:3000](http://localhost:3000/) in your browser
+- enjoy 🙂
 
 Since we use next.js for the routing stuff, the page automatically reloads when you make changes during development.
 
