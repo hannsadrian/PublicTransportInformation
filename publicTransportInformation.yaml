@@ -16,8 +16,6 @@ spec:
     spec:
       containers:
         - name: public-transport-information
-          image: repo.treescale.org/adwirawien/public-transport-information
+          image: adwirawien/public-transport-information
           ports:
             - containerPort: 3000
-      imagePullSecrets:
-        - name: regcred
