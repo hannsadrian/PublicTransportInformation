@@ -196,7 +196,7 @@ class Stop extends React.Component {
                     departure.arrivalTimeRelative
                   }
                 >
-                  <div className="w-3/4 ml-1 my-auto">
+                  <div className="w-3/4 sm:ml-1 my-auto">
                     <p className="font-semibold text-2xl flex items-center leading-tight">
                       <img
                         style={
