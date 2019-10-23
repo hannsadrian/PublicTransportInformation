@@ -48,7 +48,7 @@ class Index extends React.Component {
       // remove/edit unnessecary details
       await route.trips.forEach(trip => {
         trip.nodes.map((node, index) => {
-          if (node.mode === undefined) {
+          if (node.mode === undefined || trip.nodes.length === 1) {
             return;
           }
           if (node.mode.name === "StayForConnection") {
@@ -60,8 +60,8 @@ class Index extends React.Component {
             } else {
               node.arrival = undefined;
             }
-            node.line = ""
-            node.direction = ""
+            node.line = "";
+            node.direction = "";
           } else if (node.mode.name === "StayInVehicle") {
             node.arrival = undefined;
             node.departure = undefined;

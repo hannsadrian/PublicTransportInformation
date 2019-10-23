@@ -7,6 +7,7 @@ import "../../static/tailwind.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Suggestions from "../../src/components/general/suggestions";
+import * as dvb from "dvbjs";
 
 class Index extends React.Component {
   constructor(props) {
@@ -21,8 +22,12 @@ class Index extends React.Component {
     this.setState({ loading: false });
   };
 
-  redirect = event => {
-    Router.push("/monitor/stop/" + event.target.id.replace("/", "%2F"));
+  redirect = async event => {
+    var stop = await dvb.findStop(event.target.id);
+    if (stop.length < 1) {
+      return;
+    }
+    Router.push("/monitor/stop/" + stop[0].id);
   };
 
   handleChange = event => {
