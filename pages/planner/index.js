@@ -4,19 +4,10 @@ import Link from "next/link";
 import Router from "next/router";
 import "../../static/tailwind.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHome,
-  faRedoAlt,
-  faArrowLeft,
-  faMapMarkerAlt,
-  faSearch,
-  faBus,
-  faHospitalSymbol,
-  faLocationArrow,
-  faMapMarker
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Cleave from "cleave.js/react";
 import Suggestions from "../../src/components/general/suggestions";
+import * as dvb from "dvbjs";
 
 class Index extends React.Component {
   constructor(props) {
@@ -99,15 +90,20 @@ class Index extends React.Component {
     }
   };
 
-  redirect = () => {
+  redirect = async () => {
     if (!this.checkValid()) {
+      return;
+    }
+    var origin = await dvb.findPOI(this.state.from);
+    var destination = await dvb.findPOI(this.state.to);
+    if (origin.length < 1 || destination.length < 1) {
       return;
     }
     Router.push(
       "/planner/plan?origin=" +
-        this.state.from.replace("/", "%2F") +
+        origin[0].id +
         "&destination=" +
-        this.state.to.replace("/", "%2F") +
+        destination[0].id +
         "&time=" +
         this.state.time +
         "&date=" +

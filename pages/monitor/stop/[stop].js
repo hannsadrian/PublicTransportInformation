@@ -19,7 +19,7 @@ class Stop extends React.Component {
 
     this.state = {
       stopName: "",
-      stop: "",
+      stop: [],
       departures: [],
       err: "",
       loading: true,
@@ -106,10 +106,16 @@ class Stop extends React.Component {
     return (
       <div className="p-6 pt-12 sm:p-20 lg:pl-56">
         <Head>
-          <title>{this.state.stopName}</title>
+          <title>
+            {this.state.stop.length > 0
+              ? this.state.stop[0].name + ", " + this.state.stop[0].city
+              : "Loading"}
+          </title>
         </Head>
         <h1 className="trans font-semibold font-inter text-2xl text-gray-200 truncate">
-          {this.state.stopName}{" "}
+          {this.state.stop.length > 0
+            ? this.state.stop[0].name + ", " + this.state.stop[0].city
+            : "Loading"}
         </h1>
         {this.state.err === "" && !this.state.loading ? (
           <a
