@@ -4,57 +4,61 @@ import Link from "next/link";
 import Router from "next/router";
 import "../../static/tailwind.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faSearch,
+  faTimes,
+  faTimesCircle
+} from "@fortawesome/free-solid-svg-icons";
 import Cleave from "cleave.js/react";
 import Suggestions from "../../src/components/general/suggestions";
 import * as dvb from "dvbjs";
 
+const INITIAL_STATE = {
+  date: "",
+  time: "",
+  from: "",
+  to: "",
+  currentTarget: undefined,
+  input: undefined
+};
+
 class Index extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      date:
-        String(new Date().getDate()).padStart(2, "0") +
-        "." +
-        String(new Date().getMonth() + 1).padStart(2, "0") +
-        "." +
-        new Date().getFullYear(),
-      time:
-        String(new Date().getHours()).padStart(2, "0") +
-        ":" +
-        String(new Date().getMinutes()).padStart(2, "0"),
-      from: "",
-      to: "",
-      currentTarget: undefined,
-      input: undefined
-    };
+    this.state = INITIAL_STATE;
   }
 
   componentDidMount = async () => {
-    this.setState({ loading: false });
+    if (localStorage.getItem("to") !== null) {
+      this.setState({
+        from: localStorage.getItem("from")
+      });
+    }
+    if (localStorage.getItem("to") !== null) {
+      this.setState({
+        to: localStorage.getItem("to")
+      });
+    }
+    if (localStorage.getItem("date") !== null) {
+      this.setState({ date: localStorage.getItem("date") });
+    }
+    if (localStorage.getItem("time") !== null) {
+      this.setState({ time: localStorage.getItem("time") });
+    }
   };
 
   onTimeChange(event) {
     this.setState({
-      time:
-        event.target.value.length === 0
-          ? String(new Date().getHours()).padStart(2, "0") +
-            ":" +
-            String(new Date().getMinutes()).padStart(2, "0")
-          : event.target.value
+      time: event.target.value
     });
+    localStorage.setItem("time", event.target.value);
   }
   onDateChange(event) {
     this.setState({
-      date:
-        event.target.value.length === 0
-          ? String(new Date().getDate()).padStart(2, "0") +
-            "." +
-            String(new Date().getMonth() + 1).padStart(2, "0") +
-            "." +
-            new Date().getFullYear()
-          : event.target.value
+      date: event.target.value
     });
+    localStorage.setItem("date", event.target.value);
   }
 
   handleChange = event => {
@@ -63,6 +67,7 @@ class Index extends React.Component {
       [event.target.id]: event.target.value,
       input: event.target.value
     });
+    localStorage.setItem([event.target.id], event.target.value);
   };
   setActive = event => {
     this.setState({
@@ -75,15 +80,11 @@ class Index extends React.Component {
       [this.state.currentTarget]: event.target.id,
       input: undefined
     });
+    localStorage.setItem([this.state.currentTarget], event.target.id);
   };
 
   checkValid = () => {
-    if (
-      this.state.from.length > 0 &&
-      this.state.to.length > 0 &&
-      this.state.time.length > 4 &&
-      this.state.date.length > 9
-    ) {
+    if (this.state.from.length > 0 && this.state.to.length > 0) {
       return true;
     } else {
       return false;
@@ -91,6 +92,20 @@ class Index extends React.Component {
   };
 
   redirect = async () => {
+    var time =
+      String(new Date().getHours()).padStart(2, "0") +
+      ":" +
+      String(new Date().getMinutes()).padStart(2, "0");
+    var date =
+      String(new Date().getDate()).padStart(2, "0") +
+      "." +
+      String(new Date().getMonth() + 1).padStart(2, "0") +
+      "." +
+      new Date().getFullYear();
+
+    this.state.time.length > 0 ? (time = this.state.time) : () => {};
+    this.state.date.length > 0 ? (date = this.state.date) : () => {};
+
     if (!this.checkValid()) {
       return;
     }
@@ -105,9 +120,9 @@ class Index extends React.Component {
         "&destination=" +
         destination[0].id +
         "&time=" +
-        this.state.time +
+        time +
         "&date=" +
-        this.state.date
+        date
     );
   };
 
@@ -142,6 +157,7 @@ class Index extends React.Component {
                   delimiter: ":",
                   timePattern: ["h", "m"]
                 }}
+                value={this.state.time}
                 onChange={this.onTimeChange.bind(this)}
                 className="hover:bg-black w-2/5 rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
               />
@@ -158,6 +174,7 @@ class Index extends React.Component {
                   delimiter: ".",
                   datePattern: ["d", "m", "Y"]
                 }}
+                value={this.state.date}
                 onChange={this.onDateChange.bind(this)}
                 className="hover:bg-black w-3/5 rounded-none text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-400 focus:outline-none"
               />
@@ -198,6 +215,19 @@ class Index extends React.Component {
               className="hover:bg-black rounded-none min-w-full text-lg font-inter font-semibold trans px-3 py-2 bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
             ></input>
           </div>
+          <button
+            onClick={() => {
+              this.setState(INITIAL_STATE);
+              localStorage.clear();
+            }}
+            className="mt-3 text-lg font-semibold py-2 w-full text-gray-300 bg-gray-900 px-4 rounded-lg focus:outline-none trans sm:hover:shadow-outline"
+          >
+            <FontAwesomeIcon
+              className="text-base"
+              icon={faTimesCircle}
+            ></FontAwesomeIcon>{" "}
+            Clear
+          </button>
         </div>
       </div>
     );
