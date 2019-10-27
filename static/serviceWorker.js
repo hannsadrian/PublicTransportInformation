@@ -1,8 +1,7 @@
 const CACHE = "pwabuilder-offline";
 
 // Install stage sets up the index page (home page) in the cache and opens a new cache
-self.addEventListener("install", function(event) {
-});
+self.addEventListener("install", function(event) {});
 
 // If any fetch fails, it will look for the request in the cache and serve it from there first
 self.addEventListener("fetch", function(event) {
@@ -11,7 +10,6 @@ self.addEventListener("fetch", function(event) {
   event.respondWith(
     fetch(event.request)
       .then(function(response) {
-
         // If request was success, add or update it in the cache
         event.waitUntil(updateCache(event.request, response.clone()));
 
@@ -35,11 +33,5 @@ function fromCache(request) {
 
       return matching;
     });
-  });
-}
-
-function updateCache(request, response) {
-  return caches.open(CACHE).then(function(cache) {
-    return cache.put(request, response);
   });
 }
