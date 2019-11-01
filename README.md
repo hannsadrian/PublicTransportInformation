@@ -1,4 +1,4 @@
-# 🚍 Public Transport Information
+# 🚟 Public Transport Information
 
 Webpage to view departures or plan a route in germany.
 
