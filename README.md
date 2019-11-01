@@ -37,7 +37,7 @@ The demo page is hosted on a kubernetes cluster. You can find the deployment fil
 
 ### 🦜 Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/Adwirawien/PublicTransportInformation/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/Adwirawien/PublicTransportInformation/CONTRIBUTING.md)(coming soon 🙂) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ### 🖋 Authors
 
