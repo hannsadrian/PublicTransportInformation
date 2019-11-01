@@ -44,6 +44,10 @@ class Index extends React.Component {
         });
       });
 
+    /*
+      Some additional parsing for beautiful displaying
+    */
+
     if (this.state.err === "") {
       // remove/edit unnessecary details
       await route.trips.forEach(trip => {
