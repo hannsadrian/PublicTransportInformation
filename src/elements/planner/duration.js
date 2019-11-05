@@ -15,7 +15,7 @@ class Duration extends PureComponent {
               <span className="font-semibold">
                 {moment.duration(this.props.duration, "minutes").format("m")}
               </span>
-              <span className="text-gray-400">
+              <span className="text-gray-800">
                 {moment.duration(this.props.duration, "minutes").format("m") ===
                 "1"
                   ? " minute"
@@ -27,7 +27,7 @@ class Duration extends PureComponent {
               <span className="font-semibold">
                 {moment.duration(this.props.duration, "minutes").format("h")}
               </span>
-              <span className="text-gray-400">
+              <span className="text-gray-800">
                 {moment.duration(this.props.duration, "minutes").format("h") ===
                 "1"
                   ? " hour"

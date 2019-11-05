@@ -71,8 +71,10 @@ class Stop extends React.Component {
     var modes = this.state.modes;
     var mode = event.target.innerHTML;
 
-    event.target.classList.toggle("bg-unselected");
-    event.target.classList.toggle("bg-gray-900");
+    event.target.classList.toggle("sm:bg-gray-300");
+    event.target.classList.toggle("sm:bg-gray-400");
+    event.target.classList.toggle("bg-gray-100");
+    event.target.classList.toggle("bg-gray-300");
     if (modes.indexOf(mode) === -1) {
       modes.push(mode);
       this.setState({
@@ -112,7 +114,7 @@ class Stop extends React.Component {
               : "Loading"}
           </title>
         </Head>
-        <h1 className="trans font-semibold font-inter text-2xl text-gray-200 truncate">
+        <h1 className="trans font-semibold font-inter text-2xl text-black truncate">
           {this.state.stop.length > 0
             ? this.state.stop[0].name + ", " + this.state.stop[0].city
             : "Loading"}
@@ -125,7 +127,7 @@ class Stop extends React.Component {
               "," +
               this.state.longitude
             }
-            className="font-inter text-gray-500"
+            className="font-inter text-gray-700"
           >
             <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
             {" " +
@@ -140,7 +142,7 @@ class Stop extends React.Component {
               height={4}
               widthUnit={"px"}
               width={330}
-              color={"#e2e8f0"}
+              color={"#1a202c"}
               loading={this.state.loading}
             />
           </div>
@@ -152,7 +154,7 @@ class Stop extends React.Component {
 
         <div className="flex flex-wrap mt-5">
           <Link href="/monitor" as="/monitor">
-            <button className="text-gray-300 bg-gray-900 px-4 py-2 rounded-lg mr-3 sm:hover:shadow-outline focus:outline-none trans mb-3">
+            <button className="text-gray-900 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
@@ -160,7 +162,7 @@ class Stop extends React.Component {
             <>
               <button
                 onClick={this.reloadDepartures}
-                className="text-gray-300 bg-gray-900 px-4 py-2 rounded-lg sm:hover:shadow-outline focus:outline-none trans mr-3 mb-3"
+                className="text-gray-900 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans"
               >
                 <FontAwesomeIcon icon={faRedoAlt}></FontAwesomeIcon>
               </button>
@@ -168,7 +170,7 @@ class Stop extends React.Component {
                 this.state.allModes.map((mode, index) => {
                   return (
                     <button
-                      className="text-gray-300 px-4 py-2 rounded-lg focus:outline-none sm:hover:shadow-outline trans mr-3 truncate bg-unselected mb-3"
+                      className="text-gray-900 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 px-4 py-2 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans"
                       onClick={this.toggleMode}
                     >
                       {mode}
@@ -193,8 +195,8 @@ class Stop extends React.Component {
                     (departure.line.includes("U") &&
                       this.state.modes.includes("U-Bahn")) ||
                     this.state.modes.length < 1
-                      ? "trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
-                      : "hidden trans w-full bg-gray-900 text-gray-400 font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                      ? "trans w-full bg-gray-300 text-gray-900 font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
+                      : "hidden"
                   }
                   key={
                     departure.line +
@@ -222,13 +224,13 @@ class Stop extends React.Component {
                       />
                       <span className="truncate pt-1">{departure.line}</span>
                     </p>
-                    <p className="text-lg font-normal truncate">
+                    <p className="text-lg font-normal truncate text-gray-800">
                       {departure.direction}
                     </p>
                   </div>
-                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-800 rounded-lg object-right p-2 sm:m-1 trans">
+                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-400 rounded-lg object-right p-2 sm:m-1 trans">
                     <p className="text-center leading-tight">
-                      <span className="font-semibold text-2xl">
+                      <span className="font-semibold text-2xl text-gray-800">
                         {departure.arrivalTimeRelative < 60
                           ? moment
                               .duration(
@@ -244,7 +246,7 @@ class Stop extends React.Component {
                               .format("h[h]+")}
                       </span>
                       <br></br>
-                      <span className="font-thin text-gray-500 text-base">
+                      <span className="font-thin text-gray-800 text-base">
                         {new Date(Date.parse(departure.arrivalTime))
                           .getHours()
                           .toString()
@@ -264,7 +266,7 @@ class Stop extends React.Component {
           {!this.state.loading &&
           !this.state.err &&
           this.state.allModes.length > 1 ? (
-            <p className="text-gray-600">
+            <p className="text-gray-700">
               Showing{" "}
               {this.state.modes.length === 0 ||
               this.state.modes.length === this.state.allModes.length

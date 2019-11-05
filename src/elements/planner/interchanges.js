@@ -12,7 +12,7 @@ class Interchanges extends Component {
         ></FontAwesomeIcon>
         <span className="my-auto">
           <span className="font-semibold">{this.props.interchanges}</span>{" "}
-          <span className="text-gray-400">
+          <span className="text-gray-800">
             {this.props.interchanges === 1 ? "interchange" : "interchanges"}
           </span>
         </span>

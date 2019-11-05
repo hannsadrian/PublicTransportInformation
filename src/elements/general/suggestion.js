@@ -15,7 +15,11 @@ class Suggestion extends Component {
 
   render() {
     return (
-      <div key={this.props.index}>
+      <div
+        key={this.props.index}
+        style={{ zIndex: this.props.suggestions.length - this.props.index }}
+        className="rounded-lg mb-1 bg-gray-400 hover:bg-gray-300 trans-fast sm:hover:shadow-lg relative"
+      >
         <button
           onClick={this.props.suggestionClick}
           className={
@@ -26,7 +30,7 @@ class Suggestion extends Component {
               : this.props.index === this.props.suggestions.length - 1
               ? "rounded-b-lg "
               : "") +
-            "z-50 py-3 sm:py-2 px-3 trans w-full cursor-pointer sm:hover:shadow-outline outline-none focus:outline-none flex justify-between"
+            "py-3 sm:py-2 px-3 trans w-full cursor-pointer outline-none focus:outline-none flex justify-between"
           }
           id={this.props.value.name + ", " + this.props.value.city}
         >
@@ -49,11 +53,6 @@ class Suggestion extends Component {
             ></FontAwesomeIcon>
           </div>
         </button>
-        {this.props.index < this.props.suggestions.length - 1 ? (
-          <hr className="border-gray-800 z-0"></hr>
-        ) : (
-          <div></div>
-        )}
       </div>
     );
   }

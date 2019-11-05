@@ -129,11 +129,11 @@ class Index extends React.Component {
         </Head>
         <div className="flex">
           <Link href="/planner" as="/planner">
-            <button className="text-gray-300 bg-gray-900 px-4 my-auto h-12 w-12 mr-3 rounded-lg sm:hover:shadow-outline focus:outline-none trans">
+            <button className="text-gray-900 bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg z-50 relative sm:bg-gray-400 sm:hover:bg-gray-300 focus:outline-none trans">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
-          <h1 className="font-semibold font-inter text-2xl my-auto text-gray-200">
+          <h1 className="my-auto font-semibold font-inter text-2xl text-black">
             Public Transport Planner
           </h1>
         </div>
@@ -145,8 +145,8 @@ class Index extends React.Component {
               height={4}
               widthUnit={"px"}
               width={330}
-              color={"#e2e8f0"}
-              loading={true}
+              color={"#1a202c"}
+              loading={this.state.loading}
             />
           </div>
         ) : this.state.err !== "" ? (
@@ -163,7 +163,7 @@ class Index extends React.Component {
             {this.state.route.trips.map((trip, index) => (
               <div
                 key={JSON.stringify(trip)}
-                className="p-1 pl-4 pr-4 pt-4 bg-gray-900 text-gray-300 mt-4 max-w-sm rounded-lg"
+                className="p-1 pl-4 pr-4 pt-4 bg-gray-300 text-black mt-4 max-w-sm rounded-lg"
               >
                 {trip.departure !== undefined ? (
                   <p className="leading-tight font-semibold truncate mt-2">
@@ -171,7 +171,7 @@ class Index extends React.Component {
                       {trip.departure.name + ", " + trip.departure.city}
                     </span>{" "}
                     <br></br>
-                    <span className="tracking-wide text-gray-600 font-semibold text-sm">
+                    <span className="tracking-wide text-gray-700 font-semibold text-sm">
                       {String(trip.departure.time.getHours()).padStart(2, "0") +
                         ":" +
                         String(trip.departure.time.getMinutes()).padStart(
@@ -216,7 +216,7 @@ class Index extends React.Component {
                         {trip.arrival.name + ", " + trip.arrival.city}
                       </span>{" "}
                       <br></br>
-                      <span className="tracking-wide text-gray-600 font-semibold text-sm">
+                      <span className="tracking-wide text-gray-700 font-semibold text-sm">
                         {String(trip.arrival.time.getHours()).padStart(2, "0") +
                           ":" +
                           String(trip.arrival.time.getMinutes()).padStart(
@@ -251,17 +251,17 @@ class Index extends React.Component {
                 ) : (
                   <></>
                 )}
-                <hr className="mt-6 mb-5 border-2 rounded-lg border-gray-800"></hr>
+                <hr className="mt-6 mb-5 border-2 rounded-lg border-gray-500"></hr>
                 <div className="mb-3">
                   {trip.nodes.map((node, index) => (
                     <div key={JSON.stringify(node) + randomBytes(123)}>
                       {node.departure !== undefined ? (
-                        <h3 className="text-gray-300 truncate mb-2 mt-2">
+                        <h3 className="text-gray-800 truncate mb-2 mt-2">
                           <span className="font-semibold text-sm">
                             {node.departure.name + ", " + node.departure.city}
                           </span>
                           {node.stops.length > 0 ? (
-                            <p className="tracking-wide text-gray-600 font-semibold text-sm -mt-1">
+                            <p className="tracking-wide text-gray-700 font-semibold text-sm -mt-1">
                               ab{" "}
                               {String(node.departure.time.getHours()).padStart(
                                 2,
@@ -301,9 +301,9 @@ class Index extends React.Component {
                               String(node.mode.name).includes("ElevatorDown") ||
                               String(node.mode.name).includes("Waiting") ||
                               String(node.mode.name).includes("StayInVehicle")
-                              ? "bg-gray-900 text-gray-500"
-                              : "bg-gray-800 text-gray-400"
-                            : "bg-gray-800 text-gray-400") +
+                              ? "bg-gray-300 text-gray-900"
+                              : "bg-gray-400 text-gray-800"
+                            : "bg-gray-400 text-gray-800") +
                           " rounded-lg ml-1 mr-2 pl-3 pt-2 pb-2"
                         }
                       >
@@ -361,12 +361,12 @@ class Index extends React.Component {
                       {(index === trip.nodes.length - 1 ||
                         index !== trip.nodes.length - 1) &&
                       node.arrival !== undefined ? (
-                        <h3 className="text-gray-300 truncate mt-2 mb-2">
+                        <h3 className="text-gray-800 truncate mt-2 mb-2">
                           <span className="font-semibold text-sm">
                             {node.arrival.name + ", " + node.arrival.city}
                           </span>
                           {node.stops.length > 0 ? (
-                            <p className="tracking-wide text-gray-600 font-semibold text-sm -mt-1">
+                            <p className="tracking-wide text-gray-700 font-semibold text-sm -mt-1">
                               an{" "}
                               {String(node.arrival.time.getHours()).padStart(
                                 2,

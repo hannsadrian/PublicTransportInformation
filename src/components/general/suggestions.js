@@ -67,7 +67,9 @@ class Suggestions extends Component {
 
   suggestionClick = async event => {
     event.preventDefault();
-    this.setState({ suggestions: [] });
+    if (this.props.clearSuggestions) {
+      this.setState({ suggestions: [] });
+    }
     this.props.suggestionClick(event);
   };
 

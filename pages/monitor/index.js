@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Suggestions from "../../src/components/general/suggestions";
 import * as dvb from "dvbjs";
+import { BarLoader } from "react-spinners";
 
 class Index extends React.Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class Index extends React.Component {
   };
 
   redirect = async event => {
+    this.setState({ loading: true });
     var stop = await dvb.findStop(event.target.id);
     if (stop.length < 1) {
       return;
@@ -42,24 +44,37 @@ class Index extends React.Component {
         <Head>
           <title>Public Transport Monitor</title>
         </Head>
-        <h1 className="font-semibold font-inter text-2xl text-gray-200">
+        <h1 className="font-semibold font-inter text-2xl text-black">
           Public Transport Monitor
         </h1>
-        <p className="font-inter text-gray-500 mb-5">Find your Departure</p>
+        {!this.state.loading ? (
+          <p className="font-inter text-gray-700 mb-5">Find your Departure</p>
+        ) : (
+          <div className="rounded-lg overflow-hidden max-w-xs pb-8 pt-2">
+            <BarLoader
+              heightUnit={"px"}
+              height={4}
+              widthUnit={"px"}
+              width={330}
+              color={"#1a202c"}
+              loading={this.state.loading}
+            />
+          </div>
+        )}
         <div className="w-full sm:w-auto sm:max-w-xs">
           <div className="flex mb-3">
             <Link href="/" as="/">
-              <button className="text-gray-300 bg-gray-900 px-4 rounded-lg mr-3 sm:hover:shadow-outline focus:outline-none trans">
+              <button className="text-gray-900 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg focus:outline-none z-50 relative trans-fast">
                 <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               </button>
             </Link>
             <input
               placeholder="stop"
               onChange={this.handleChange}
-              className="shadow w-full text-lg font-inter font-semibold trans rounded-lg px-3 py-2 hover:bg-black bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none"
+              className="w-full text-lg font-inter font-semibold trans-fast rounded-lg px-3 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
             ></input>
           </div>
-          <div className="w-full bg-gray-900 text-gray-200 font-semibold font-inter rounded-lg bg-gray-900">
+          <div className="w-full font-semibold font-inter">
             <Suggestions
               input={this.state.input}
               suggestionClick={this.redirect}
