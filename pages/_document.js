@@ -33,7 +33,7 @@ export default class CustomDocument extends Document {
           <meta name="theme-color" content="#ffffff" />
           <meta
             name="apple-mobile-web-app-status-bar-style"
-            content="black-translucent"
+            content="default"
           />
         </Head>
         <body className="bg-gray-400 select-none font-inter">
