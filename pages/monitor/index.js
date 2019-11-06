@@ -64,14 +64,14 @@ class Index extends React.Component {
         <div className="w-full sm:w-auto sm:max-w-xs">
           <div className="flex mb-3">
             <Link href="/" as="/">
-              <button className="text-gray-900 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg focus:outline-none z-50 relative trans-fast">
+              <button className="text-gray-900 bg-gray-300  sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg focus:outline-none z-50 relative trans-fast">
                 <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               </button>
             </Link>
             <input
               placeholder="stop"
               onChange={this.handleChange}
-              className="w-full text-lg font-inter font-semibold trans-fast rounded-lg px-3 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
+              className="w-full text-lg font-inter font-semibold trans-fast rounded-lg px-3 bg-gray-300  sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
             ></input>
           </div>
           <div className="w-full font-semibold font-inter">

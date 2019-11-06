@@ -39,7 +39,7 @@ class Index extends React.Component {
         <div className="w-full sm:w-auto sm:max-w-xs mb-6">
           <Link href="/monitor" as="/monitor">
             <a>
-              <div className="sm:hover:shadow-lg sm:hover:bg-gray-300 trans w-full bg-gray-300 sm:bg-gray-400 font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
+              <div className="sm:hover:shadow-lg sm:hover:bg-gray-300 trans w-full bg-gray-300  font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
                 <div className="w-3/4">
                   <p className="font-semibold text-xl flex items-center">
                     <FontAwesomeIcon icon={faBusAlt}></FontAwesomeIcon>
@@ -65,7 +65,7 @@ class Index extends React.Component {
           </Link>
           <Link href="/planner" as="/planner">
             <a>
-              <div className="sm:hover:shadow-lg sm:hover:bg-gray-300 trans w-full bg-gray-300 sm:bg-gray-400 font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
+              <div className="sm:hover:shadow-lg sm:hover:bg-gray-300 trans w-full bg-gray-300  font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between">
                 <div className="w-3/4">
                   <p className="font-semibold text-xl flex items-center">
                     <FontAwesomeIcon icon={faMapSigns}></FontAwesomeIcon>

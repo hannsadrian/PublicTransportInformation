@@ -129,7 +129,7 @@ class Index extends React.Component {
         </Head>
         <div className="flex">
           <Link href="/planner" as="/planner">
-            <button className="text-gray-900 bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg z-50 relative sm:bg-gray-400 sm:hover:bg-gray-300 focus:outline-none trans">
+            <button className="text-gray-900 bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg z-50 relative  sm:hover:bg-gray-300 focus:outline-none trans">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>

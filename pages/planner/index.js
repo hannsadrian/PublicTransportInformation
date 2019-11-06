@@ -157,7 +157,7 @@ class Index extends React.Component {
         <div className="w-full sm:w-auto sm:max-w-xs">
           <div className="flex mb-3 sm:max-w-xs">
             <Link href="/" as="/">
-              <button className="w-2/12 text-gray-900 bg-gray-300 px-4 rounded-lg mr-3 sm:hover:shadow-lg z-50 relative sm:bg-gray-400 sm:hover:bg-gray-300 focus:outline-none trans">
+              <button className="w-2/12 text-gray-900 bg-gray-300 px-4 rounded-lg mr-3 sm:hover:shadow-lg z-50 relative  sm:hover:bg-gray-300 focus:outline-none trans">
                 <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
               </button>
             </Link>
@@ -175,7 +175,7 @@ class Index extends React.Component {
                 }}
                 value={this.state.time}
                 onChange={this.onTimeChange.bind(this)}
-                className="w-2/5 sm:mr-1 rounded-none sm:rounded-lg text-lg font-inter font-semibold trans z-50 relative px-3 py-2 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
+                className="w-2/5 sm:mr-1 rounded-none sm:rounded-lg text-lg font-inter font-semibold trans z-50 relative px-3 py-2 bg-gray-300  sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
               />
               <Cleave
                 placeholder={
@@ -192,14 +192,14 @@ class Index extends React.Component {
                 }}
                 value={this.state.date}
                 onChange={this.onDateChange.bind(this)}
-                className="w-3/5 rounded-none sm:rounded-lg text-lg font-inter font-semibold trans px-3 py-2 bg-gray-300 z-50 relative sm:bg-gray-400 sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
+                className="w-3/5 rounded-none sm:rounded-lg text-lg font-inter font-semibold trans px-3 py-2 bg-gray-300 z-50 relative  sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
               />
             </div>
             <button
               onClick={this.redirect}
               disabled={!this.checkValid()}
               className={
-                "w-2/12 text-gray-900 bg-gray-300 disabled:bg-gray-400 disabled:cursor-not-allowed px-4 rounded-lg z-50 relative sm:bg-gray-400 focus:outline-none trans" +
+                "w-2/12 text-gray-900 bg-gray-300 disabled:bg-gray-400 disabled:cursor-not-allowed px-4 rounded-lg z-50 relative  focus:outline-none trans" +
                 (this.checkValid()
                   ? " sm:hover:shadow-lg sm:hover:bg-gray-300"
                   : "")
@@ -223,7 +223,7 @@ class Index extends React.Component {
               id="from"
               value={this.state.from}
               onChange={this.handleChange}
-              className="w-full sm:mb-1 rounded-none sm:rounded-lg text-lg font-inter font-semibold trans px-3 py-2 bg-gray-300 z-20 relative sm:bg-gray-400 sm:hover:bg-gray-300 focus:bg-gray-300 text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
+              className="w-full sm:mb-1 rounded-none sm:rounded-lg text-lg font-inter font-semibold trans px-3 py-2 bg-gray-300 z-20 relative  sm:hover:bg-gray-300 focus:bg-gray-300 text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
             ></input>
             <input
               placeholder="to"
@@ -231,7 +231,7 @@ class Index extends React.Component {
               id="to"
               value={this.state.to}
               onChange={this.handleChange}
-              className="w-full rounded-none sm:rounded-lg text-lg font-inter font-semibold trans px-3 py-2 bg-gray-300 z-10 relative sm:bg-gray-400 sm:hover:bg-gray-300 focus:bg-gray-300 text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
+              className="w-full rounded-none sm:rounded-lg text-lg font-inter font-semibold trans px-3 py-2 bg-gray-300 z-10 relative  sm:hover:bg-gray-300 focus:bg-gray-300 text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
             ></input>
           </div>
           <button
@@ -239,7 +239,7 @@ class Index extends React.Component {
               this.setState(INITIAL_STATE);
               localStorage.clear();
             }}
-            className="w-full rounded-lg text-lg font-inter font-semibold trans mt-4 px-3 py-2 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 focus:bg-gray-300 text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
+            className="w-full rounded-lg text-lg font-inter font-semibold trans mt-4 px-3 py-2 bg-gray-300  sm:hover:bg-gray-300 focus:bg-gray-300 text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
           >
             <FontAwesomeIcon
               className="text-base"
