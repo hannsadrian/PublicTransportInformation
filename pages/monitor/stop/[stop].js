@@ -162,7 +162,7 @@ class Stop extends React.Component {
             <>
               <button
                 onClick={this.reloadDepartures}
-                className="text-gray-900 bg-gray-300  sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans"
+                className="text-gray-900 bg-gray-300 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans"
               >
                 <FontAwesomeIcon icon={faRedoAlt}></FontAwesomeIcon>
               </button>
@@ -170,7 +170,7 @@ class Stop extends React.Component {
                 this.state.allModes.map((mode, index) => {
                   return (
                     <button
-                      className="text-gray-900 bg-gray-300  sm:hover:bg-gray-300 px-4 py-2 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans"
+                      className="text-gray-900 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans"
                       onClick={this.toggleMode}
                     >
                       {mode}
