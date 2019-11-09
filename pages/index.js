@@ -35,11 +35,7 @@ class Index extends React.Component {
         <h1 className="font-bold font-inter text-2xl text-black">
           Public Transport
         </h1>
-        <a href="https://youtu.be/dQw4w9WgXcQ">
-          <p className="font-inter mb-5 text-blue-600 underline cursor-pointer">
-            Get Premium Free
-          </p>
-        </a>
+        <p className="font-inter mb-5 text-gray-700">Choose wiseley...</p>
         <div className="w-full sm:w-auto sm:max-w-xs mb-6">
           <Link href="/monitor" as="/monitor">
             <a>
