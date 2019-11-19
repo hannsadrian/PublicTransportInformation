@@ -154,7 +154,7 @@ class Stop extends React.Component {
 
         <div className="flex flex-wrap mt-5">
           <Link href="/monitor" as="/monitor">
-            <button className="text-gray-900 bg-gray-300  sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans">
+            <button className="text-gray-900 bg-gray-300 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans">
               <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
             </button>
           </Link>
@@ -225,7 +225,14 @@ class Stop extends React.Component {
                       <span className="truncate pt-1">{departure.line}</span>
                     </p>
                     <p className="text-lg font-normal truncate text-gray-800">
-                      {departure.direction}
+                      <Link
+                        href={"/monitor/stop/" + departure.direction}
+                        as={"/monitor/stop/" + departure.direction}
+                      >
+                        <span className="hover:underline cursor-pointer">
+                          {departure.direction}
+                        </span>
+                      </Link>
                     </p>
                   </div>
                   <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-400 rounded-lg object-right p-2 sm:m-1 trans">
