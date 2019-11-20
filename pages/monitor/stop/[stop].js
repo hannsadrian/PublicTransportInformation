@@ -102,6 +102,10 @@ class Stop extends React.Component {
       await this.setState({
         stopName: nextProps.stop
       });
+      this.setState({
+        modes: [],
+        allModes: []
+      });
       this.findDepartures();
     } else {
       this.setState({
