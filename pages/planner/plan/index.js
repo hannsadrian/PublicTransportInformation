@@ -9,6 +9,11 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Interchanges from "../../../src/elements/planner/interchanges";
 import Duration from "../../../src/elements/planner/duration";
 import { randomBytes } from "crypto";
+import StopInformation from "../../../src/elements/planner/StopInformation";
+import DepartureStopDisplay from "../../../src/elements/planner/DepartureStopDisplay";
+import ArrivalStopDisplay from "../../../src/elements/planner/ArrivalStopDisplay";
+import Node from "../../../src/elements/planner/Node";
+import Stop from "../../monitor/stop/[stop]";
 
 class Index extends React.Component {
   constructor(props) {
@@ -17,7 +22,8 @@ class Index extends React.Component {
       route: {},
       err: "",
       loading: true,
-      imageError: false
+      imageError: false,
+      stop: ""
     };
   }
 
@@ -121,290 +127,114 @@ class Index extends React.Component {
     }
   };
 
+  showDepartures(event) {
+    this.setState({ stop: event.target.id });
+  }
+
   render() {
     return (
-      <div className="p-6 pt-12 sm:p-20 lg:pl-56">
+      <div className="p-6 pb-0 pt-12 sm:p-20 lg:pl-32">
         <Head>
           <title>Public Transport Planner</title>
         </Head>
         <div className="flex">
-          <Link href="/planner" as="/planner">
-            <button className="text-gray-900 bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg z-50 relative  sm:hover:bg-gray-300 focus:outline-none trans">
-              <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
-            </button>
-          </Link>
-          <h1 className="my-auto font-semibold font-inter text-2xl text-black">
-            Public Transport Planner
-          </h1>
-        </div>
+          <div className="w-full max-w-md">
+            <div className="flex">
+              <Link href="/planner" as="/planner">
+                <button className="text-gray-900 bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg z-50 relative  sm:hover:bg-gray-300 focus:outline-none trans">
+                  <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+                </button>
+              </Link>
+              <h1 className="my-auto font-semibold font-inter text-2xl text-black">
+                Public Transport Planner
+              </h1>
+            </div>
 
-        {this.state.loading ? (
-          <div className="rounded-lg overflow-hidden max-w-xs pb-2 pt-3">
-            <BarLoader
-              heightUnit={"px"}
-              height={4}
-              widthUnit={"px"}
-              width={330}
-              color={"#1a202c"}
-              loading={this.state.loading}
-            />
-          </div>
-        ) : this.state.err !== "" ? (
-          <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded-lg font-semibold">
-            {this.state.err}
-          </p>
-        ) : (
-          <></>
-        )}
-        {this.state.err === "" &&
-        this.state.route.trips &&
-        this.state.route.trips.length > 0 ? (
-          <div>
-            {this.state.route.trips.map((trip, index) => (
-              <div
-                key={JSON.stringify(trip)}
-                className="p-1 pl-4 pr-4 pt-4 bg-gray-300 text-black mt-4 max-w-sm rounded-lg"
-              >
-                {trip.departure !== undefined ? (
-                  <p className="leading-tight font-semibold truncate mt-2">
-                    <span className="text-lg">
-                      {trip.departure.name + ", " + trip.departure.city}
-                    </span>{" "}
-                    <br></br>
-                    <span className="tracking-wide text-gray-700 font-semibold text-sm">
-                      {String(trip.departure.time.getHours()).padStart(2, "0") +
-                        ":" +
-                        String(trip.departure.time.getMinutes()).padStart(
-                          2,
-                          "0"
-                        ) +
-                        " " +
-                        String(trip.departure.time.getDate()).padStart(2, "0") +
-                        "." +
-                        String(trip.departure.time.getMonth() + 1).padStart(
-                          2,
-                          "0"
-                        ) +
-                        "." +
-                        String(trip.departure.time.getFullYear())}
-
-                      {trip.departure.platform !== undefined ? (
-                        <>
-                          <span className="tracking-wide">
-                            {" | " +
-                              trip.departure.platform.type +
-                              " " +
-                              trip.departure.platform.name}
-                          </span>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </span>
-                  </p>
-                ) : (
-                  <></>
-                )}
-                <div className="my-3 ml-2">
-                  <Interchanges interchanges={trip.interchanges}></Interchanges>
-                  <Duration duration={trip.duration}></Duration>
-                </div>
-                {trip.arrival !== undefined ? (
-                  <>
-                    <p className="leading-tight font-semibold truncate">
-                      <span className="text-lg">
-                        {trip.arrival.name + ", " + trip.arrival.city}
-                      </span>{" "}
-                      <br></br>
-                      <span className="tracking-wide text-gray-700 font-semibold text-sm">
-                        {String(trip.arrival.time.getHours()).padStart(2, "0") +
-                          ":" +
-                          String(trip.arrival.time.getMinutes()).padStart(
-                            2,
-                            "0"
-                          ) +
-                          " " +
-                          String(trip.arrival.time.getDate()).padStart(2, "0") +
-                          "." +
-                          String(trip.arrival.time.getMonth() + 1).padStart(
-                            2,
-                            "0"
-                          ) +
-                          "." +
-                          String(trip.arrival.time.getFullYear())}
-
-                        {trip.arrival.platform !== undefined ? (
-                          <>
-                            <span className="tracking-wide">
-                              {" | " +
-                                trip.arrival.platform.type +
-                                " " +
-                                trip.arrival.platform.name}
-                            </span>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </span>
-                    </p>
-                  </>
-                ) : (
-                  <></>
-                )}
-                <hr className="mt-6 mb-5 border-2 rounded-lg border-gray-500"></hr>
-                <div className="mb-3">
-                  {trip.nodes.map((node, index) => (
-                    <div key={JSON.stringify(node) + randomBytes(123)}>
-                      {node.departure !== undefined ? (
-                        <h3 className="text-gray-800 truncate mb-2 mt-2">
-                          <span className="font-semibold text-sm">
-                            {node.departure.name + ", " + node.departure.city}
-                          </span>
-                          {node.stops.length > 0 ? (
-                            <p className="tracking-wide text-gray-700 font-semibold text-sm -mt-1">
-                              ab{" "}
-                              {String(node.departure.time.getHours()).padStart(
-                                2,
-                                "0"
-                              ) +
-                                ":" +
-                                String(
-                                  node.departure.time.getMinutes()
-                                ).padStart(2, "0") +
-                                String(
-                                  node.stops[0].platform !== undefined
-                                    ? " | " +
-                                        node.stops[0].platform.type +
-                                        " " +
-                                        node.stops[0].platform.name
-                                    : ""
-                                )}
-                            </p>
-                          ) : (
-                            <></>
-                          )}
-                        </h3>
-                      ) : (
-                        <></>
-                      )}
-                      <div
-                        className={
-                          (node.mode !== undefined
-                            ? String(node.mode.name).includes("Footpath") ||
-                              String(node.mode.name).includes("StairsUp") ||
-                              String(node.mode.name).includes("StairsDown") ||
-                              String(node.mode.name).includes("EscalatorUp") ||
-                              String(node.mode.name).includes(
-                                "EscalatorDown"
-                              ) ||
-                              String(node.mode.name).includes("ElevatorUp") ||
-                              String(node.mode.name).includes("ElevatorDown") ||
-                              String(node.mode.name).includes("Waiting") ||
-                              String(node.mode.name).includes("StayInVehicle")
-                              ? "bg-gray-300 text-gray-900"
-                              : "bg-gray-400 text-gray-800"
-                            : "bg-gray-400 text-gray-800") +
-                          " rounded-lg ml-1 mr-2 pl-3 pt-2 pb-2"
-                        }
-                      >
-                        <div className="flex justify-between">
-                          <div className="flex">
-                            <img
-                              style={
-                                this.state.imageError
-                                  ? { display: "hidden", marginRight: "0" }
-                                  : {
-                                      height: "24px"
-                                    }
-                              }
-                              id={node.line}
-                              className="my-2 mr-2 w-auto"
-                              src={
-                                typeof node.line === "string" &&
-                                node.line.includes("U") &&
-                                !node.mode
-                                  ? "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
-                                  : node.mode.title.includes("taxi")
-                                  ? "https://www.dvb.de/assets/img/trans-icon/transport-alita.svg"
-                                  : node.mode.iconUrl
-                              }
-                              onError={() => {
-                                this.setState({ imageError: true });
-                              }}
-                            />
-                            <div className="w-40 leading-tight truncate my-auto text-sm">
-                              {node.line === "" ? (
-                                <span className="truncate mr-1">
-                                  {node.mode.title}
-                                </span>
-                              ) : (
-                                <span className="font-semibold truncate mr-1">
-                                  {node.line}
-                                </span>
-                              )}
-                              <span className="truncate">
-                                {node.direction !== "" ? (
-                                  <>
-                                    <br></br> {node.direction}
-                                  </>
-                                ) : (
-                                  ""
-                                )}
-                              </span>
-                            </div>
-                          </div>
-                          <p className="my-auto whitespace-no-wrap text-right mr-4">
-                            {node.duration} min
-                          </p>
-                        </div>
-                      </div>
-                      {(index === trip.nodes.length - 1 ||
-                        index !== trip.nodes.length - 1) &&
-                      node.arrival !== undefined ? (
-                        <h3 className="text-gray-800 truncate mt-2 mb-2">
-                          <span className="font-semibold text-sm">
-                            {node.arrival.name + ", " + node.arrival.city}
-                          </span>
-                          {node.stops.length > 0 ? (
-                            <p className="tracking-wide text-gray-700 font-semibold text-sm -mt-1">
-                              an{" "}
-                              {String(node.arrival.time.getHours()).padStart(
-                                2,
-                                "0"
-                              ) +
-                                ":" +
-                                String(node.arrival.time.getMinutes()).padStart(
-                                  2,
-                                  "0"
-                                ) +
-                                String(
-                                  node.stops[node.stops.length - 1].platform !==
-                                    undefined
-                                    ? " | " +
-                                        node.stops[node.stops.length - 1]
-                                          .platform.type +
-                                        " " +
-                                        node.stops[node.stops.length - 1]
-                                          .platform.name
-                                    : ""
-                                )}
-                            </p>
-                          ) : (
-                            <></>
-                          )}
-                        </h3>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  ))}
-                </div>
+            {this.state.loading ? (
+              <div className="rounded-lg overflow-hidden max-w-xs pb-2 pt-3">
+                <BarLoader
+                  heightUnit={"px"}
+                  height={4}
+                  widthUnit={"px"}
+                  width={330}
+                  color={"#1a202c"}
+                  loading={this.state.loading}
+                />
               </div>
-            ))}
+            ) : this.state.err !== "" ? (
+              <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded-lg font-semibold">
+                {this.state.err}
+              </p>
+            ) : (
+              <></>
+            )}
+
+            {this.state.err === "" &&
+            this.state.route.trips &&
+            this.state.route.trips.length > 0 ? (
+              <div
+                style={{ height: "80vh" }}
+                className="max-w-md overflow-x-hidden overflow-scroll custom-scrollbar mt-4 pb-32 rounded-lg"
+              >
+                {this.state.route.trips.map((trip, index) => (
+                  <div
+                    key={JSON.stringify(trip)}
+                    className="p-1 pl-4 pr-4 pt-4 bg-gray-300 text-black mt-4 rounded-lg"
+                  >
+                    {trip.departure !== undefined ? (
+                      <StopInformation
+                        information={trip.departure}
+                      ></StopInformation>
+                    ) : (
+                      <></>
+                    )}
+                    <div className="my-3 ml-2">
+                      <Interchanges
+                        interchanges={trip.interchanges}
+                      ></Interchanges>
+                      <Duration duration={trip.duration}></Duration>
+                    </div>
+                    {trip.arrival !== undefined ? (
+                      <StopInformation
+                        information={trip.arrival}
+                      ></StopInformation>
+                    ) : (
+                      <></>
+                    )}
+                    <hr className="mt-6 mb-5 border-2 rounded-lg border-gray-500"></hr>
+                    <div className="mb-3">
+                      {trip.nodes.map((node, index) => (
+                        <div key={JSON.stringify(node) + randomBytes(123)}>
+                          <DepartureStopDisplay
+                            node={node}
+                            onClick={this.showDepartures.bind(this)}
+                          ></DepartureStopDisplay>
+                          <Node node={node}></Node>
+                          <ArrivalStopDisplay
+                            node={node}
+                            trip={trip}
+                            index={index}
+                            onClick={this.showDepartures.bind(this)}
+                          ></ArrivalStopDisplay>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
-        ) : (
-          <></>
-        )}
+          <Stop
+            embed={true}
+            originalProps={this.props.originalProps}
+            stop={this.state.stop}
+            closeEmbed={() => {
+              this.setState({ stop: "" });
+            }}
+          ></Stop>
+        </div>
       </div>
     );
   }
