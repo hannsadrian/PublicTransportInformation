@@ -192,14 +192,14 @@ class Index extends React.Component {
                 }}
                 value={this.state.date}
                 onChange={this.onDateChange.bind(this)}
-                className="w-3/5 rounded-none sm:rounded-lg text-lg font-inter font-semibold trans px-3 py-2 bg-gray-300 z-50 relative  sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
+                className="w-3/5 rounded-none sm:rounded-lg text-lg font-inter font-semibold trans px-3 py-2 bg-gray-300 z-50 relative sm:hover:bg-gray-300 focus:bg-gray-300 z-50 relative text-gray-800 placeholder-gray-700 sm:hover:shadow-lg focus:shadow-lg focus:outline-none"
               />
             </div>
             <button
               onClick={this.redirect}
               disabled={!this.checkValid()}
               className={
-                "w-2/12 text-gray-900 bg-gray-300 disabled:bg-gray-400 disabled:cursor-not-allowed px-4 rounded-lg z-50 relative  focus:outline-none trans" +
+                "w-2/12 text-gray-900 bg-gray-300 disabled:bg-gray-400 disabled:cursor-not-allowed px-4 rounded-lg z-50 relative focus:outline-none trans" +
                 (this.checkValid()
                   ? " sm:hover:shadow-lg sm:hover:bg-gray-300"
                   : "")
