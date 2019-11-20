@@ -246,9 +246,9 @@ class Stop extends React.Component {
                 return (
                   <Departure
                     key={
-                      this.props.departure.line +
-                      this.props.departure.direction +
-                      this.props.departure.arrivalTimeRelative
+                      departure.line +
+                      departure.direction +
+                      departure.arrivalTimeRelative
                     }
                     modes={this.state.modes}
                     departure={departure}
