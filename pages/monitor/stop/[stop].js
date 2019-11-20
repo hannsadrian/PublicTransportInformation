@@ -8,10 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRedoAlt,
   faArrowLeft,
-  faMapMarkerAlt
+  faMapMarkerAlt,
+  faTimes
 } from "@fortawesome/free-solid-svg-icons";
-var moment = require("moment");
-require("moment-duration-format");
+import Departure from "../../../src/elements/general/departure";
 
 class Stop extends React.Component {
   constructor(props) {
@@ -54,7 +54,11 @@ class Stop extends React.Component {
         } else if (!departure.mode.title.includes("undefined")) {
           toPush = departure.mode.title;
         }
-        if (toPush !== "" && mot.indexOf(toPush) === -1) {
+        if (
+          toPush !== "" &&
+          mot.indexOf(toPush) === -1 &&
+          departure.arrivalTimeRelative > -1
+        ) {
           mot.push(toPush);
         }
       });
@@ -93,199 +97,167 @@ class Stop extends React.Component {
     this.findDepartures();
   };
 
+  componentWillReceiveProps = async nextProps => {
+    if (nextProps.stop !== "") {
+      await this.setState({
+        stopName: nextProps.stop
+      });
+      this.findDepartures();
+    } else {
+      this.setState({
+        stopName: "",
+        stop: [],
+        departures: [],
+        err: "",
+        loading: true,
+        latitude: "",
+        longitude: "",
+        modes: [],
+        allModes: []
+      });
+    }
+  };
+
   componentDidMount = async () => {
-    await this.setState({
-      stopName: decodeURI(
-        this.props.originalProps.router.asPath
-          .replace("/monitor/stop/", "")
-          .replace("%2F", "/")
-      )
-    });
-    this.findDepartures();
+    if (!this.props.embed) {
+      await this.setState({
+        stopName: decodeURI(
+          this.props.originalProps.router.asPath
+            .replace("/monitor/stop/", "")
+            .replace("%2F", "/")
+        )
+      });
+      this.findDepartures();
+    }
   };
 
   render() {
     return (
-      <div className="p-6 pt-12 sm:p-20 lg:pl-56">
-        <Head>
-          <title>
+      <div
+        className={
+          this.props.stop === "" ? "hidden" : "overflow-hidden max-h-screen"
+        }
+      >
+        <div
+          className={
+            !this.props.embed
+              ? "p-6 pt-12 sm:p-20 lg:pl-56"
+              : "p-6 hidden lg:block"
+          }
+          style={this.props.embed ? { paddingTop: "0.50rem" } : {}}
+        >
+          {!this.props.embed ? (
+            <Head>
+              <title>
+                {this.state.stop.length > 0
+                  ? this.state.stop[0].name + ", " + this.state.stop[0].city
+                  : "Loading"}
+              </title>
+            </Head>
+          ) : (
+            <></>
+          )}
+          <h1 className="trans font-semibold font-inter text-2xl text-black truncate">
             {this.state.stop.length > 0
               ? this.state.stop[0].name + ", " + this.state.stop[0].city
               : "Loading"}
-          </title>
-        </Head>
-        <h1 className="trans font-semibold font-inter text-2xl text-black truncate">
-          {this.state.stop.length > 0
-            ? this.state.stop[0].name + ", " + this.state.stop[0].city
-            : "Loading"}
-        </h1>
-        {this.state.err === "" && !this.state.loading ? (
-          <a
-            href={
-              "https://maps.apple.com/?dirflg=w&daddr=" +
-              this.state.latitude +
-              "," +
-              this.state.longitude
-            }
-            className="font-inter text-gray-700"
-          >
-            <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
-            {" " +
-              this.state.latitude.toString().substring(0, 10) +
-              ", " +
-              this.state.longitude.toString().substring(0, 10)}
-          </a>
-        ) : this.state.err === "" ? (
-          <div className="rounded-lg overflow-hidden max-w-xs pb-2 pt-3">
-            <BarLoader
-              heightUnit={"px"}
-              height={4}
-              widthUnit={"px"}
-              width={330}
-              color={"#1a202c"}
-              loading={this.state.loading}
-            />
-          </div>
-        ) : (
-          <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded-lg font-semibold">
-            {this.state.err}
-          </p>
-        )}
-
-        <div className="flex flex-wrap mt-5">
-          <Link href="/monitor" as="/monitor">
-            <button className="text-gray-900 bg-gray-300 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans">
-              <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
-            </button>
-          </Link>
-          {this.state.err === "" ? (
-            <>
-              <button
-                onClick={this.reloadDepartures}
-                className="text-gray-900 bg-gray-300 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans"
-              >
-                <FontAwesomeIcon icon={faRedoAlt}></FontAwesomeIcon>
-              </button>
-              {this.state.allModes.length > 1 ? (
-                this.state.allModes.map((mode, index) => {
-                  return (
-                    <button
-                      className="text-gray-900 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 mb-3 sm:hover:shadow-lg focus:outline-none trans"
-                      onClick={this.toggleMode}
-                    >
-                      {mode}
-                    </button>
-                  );
-                })
-              ) : (
-                <></>
-              )}
-            </>
+          </h1>
+          {this.state.err === "" && !this.state.loading ? (
+            <a
+              href={
+                "https://maps.apple.com/?dirflg=w&daddr=" +
+                this.state.latitude +
+                "," +
+                this.state.longitude
+              }
+              className="font-inter text-gray-700"
+            >
+              <FontAwesomeIcon icon={faMapMarkerAlt}></FontAwesomeIcon>
+              {" " +
+                this.state.latitude.toString().substring(0, 10) +
+                ", " +
+                this.state.longitude.toString().substring(0, 10)}
+            </a>
+          ) : this.state.err === "" ? (
+            <div className="rounded-lg overflow-hidden max-w-xs pb-2 pt-3">
+              <BarLoader
+                heightUnit={"px"}
+                height={4}
+                widthUnit={"px"}
+                width={330}
+                color={"#1a202c"}
+                loading={this.state.loading}
+              />
+            </div>
           ) : (
-            <></>
-          )}
-        </div>
-        <div className="w-full sm:w-auto sm:max-w-lg mb-6">
-          {this.state.departures.map((departure, index) => {
-            if (departure.arrivalTimeRelative > -1) {
-              return (
-                <div
-                  className={
-                    this.state.modes.includes(departure.mode.title) ||
-                    (departure.line.includes("U") &&
-                      this.state.modes.includes("U-Bahn")) ||
-                    this.state.modes.length < 1
-                      ? "trans w-full bg-gray-300 text-gray-900 font-medium font-inter rounded-lg overflow-hidden mb-2 sm:mb-3 p-2 pl-3 flex flex-shrink justify-between"
-                      : "hidden"
-                  }
-                  key={
-                    departure.line +
-                    departure.direction +
-                    departure.arrivalTimeRelative
-                  }
-                >
-                  <div className="w-3/4 sm:ml-1 my-auto">
-                    <p className="font-semibold text-2xl flex items-center leading-tight">
-                      <img
-                        style={
-                          this.state.imageError
-                            ? { display: "hidden", marginRight: "0" }
-                            : { height: "26px", marginRight: "0.5rem" }
-                        }
-                        src={
-                          departure.line.includes("U") &&
-                          departure.mode.title.includes("undefined")
-                            ? "https://upload.wikimedia.org/wikipedia/commons/a/a3/U-Bahn.svg"
-                            : departure.mode.iconUrl
-                        }
-                        onError={() => {
-                          this.setState({ imageError: true });
-                        }}
-                      />
-                      <span className="truncate pt-1">{departure.line}</span>
-                    </p>
-                    <p className="text-lg font-normal truncate text-gray-800">
-                      <Link
-                        href={"/monitor/stop/" + departure.direction}
-                        as={"/monitor/stop/" + departure.direction}
-                      >
-                        <span className="hover:underline cursor-pointer">
-                          {departure.direction}
-                        </span>
-                      </Link>
-                    </p>
-                  </div>
-                  <div className="w-1/4 sm:w-1/5 md:w-1/6 bg-gray-400 rounded-lg object-right p-2 sm:m-1 trans">
-                    <p className="text-center leading-tight">
-                      <span className="font-semibold text-2xl text-gray-800">
-                        {departure.arrivalTimeRelative < 60
-                          ? moment
-                              .duration(
-                                departure.arrivalTimeRelative,
-                                "minutes"
-                              )
-                              .format("d[d] h[h] m[m]")
-                          : moment
-                              .duration(
-                                departure.arrivalTimeRelative,
-                                "minutes"
-                              )
-                              .format("h[h]+")}
-                      </span>
-                      <br></br>
-                      <span className="font-thin text-gray-800 text-base">
-                        {new Date(Date.parse(departure.arrivalTime))
-                          .getHours()
-                          .toString()
-                          .padStart(2, "0") +
-                          ":" +
-                          new Date(Date.parse(departure.arrivalTime))
-                            .getMinutes()
-                            .toString()
-                            .padStart(2, "0")}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              );
-            }
-          })}
-          {!this.state.loading &&
-          !this.state.err &&
-          this.state.allModes.length > 1 ? (
-            <p className="text-gray-700">
-              Showing{" "}
-              {this.state.modes.length === 0 ||
-              this.state.modes.length === this.state.allModes.length
-                ? "all departures"
-                : "departures for" +
-                  this.state.modes.map((value, index) => {
-                    return " " + value;
-                  })}
+            <p className="p-1 pl-2 bg-red-600 text-gray-300 mt-4 mb-5 max-w-xs rounded-lg font-semibold">
+              {this.state.err}
             </p>
-          ) : (
-            <></>
           )}
+
+          <div className="flex mt-5 mb-3 overflow-scroll overflow-y-hidden scrolling-touch custom-scrollbar w-auto rounded-lg">
+            {!this.props.embed ? (
+              <Link href="/monitor" as="/monitor">
+                <button className="text-gray-900 bg-gray-300 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg focus:outline-none trans">
+                  <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+                </button>
+              </Link>
+            ) : (
+              <button
+                onClick={this.props.closeEmbed}
+                className="text-gray-900 bg-gray-300 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg focus:outline-none trans"
+              >
+                <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
+              </button>
+            )}
+            {this.state.err === "" ? (
+              <>
+                <button
+                  onClick={this.reloadDepartures}
+                  className="text-gray-900 bg-gray-300 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg focus:outline-none trans"
+                >
+                  <FontAwesomeIcon icon={faRedoAlt}></FontAwesomeIcon>
+                </button>
+                {this.state.allModes.length > 1 ? (
+                  this.state.allModes.map((mode, index) => {
+                    return (
+                      <button
+                        className="whitespace-no-wrap text-gray-900 bg-gray-300 sm:bg-gray-400 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg focus:outline-none trans"
+                        onClick={this.toggleMode}
+                      >
+                        {mode}
+                      </button>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div
+            style={{ height: "70vh" }}
+            className="w-full sm:w-auto sm:max-w-lg mb-3 overflow-scroll overflow-x-hidden custom-scrollbar scrolling-touch rounded-lg pb-40"
+          >
+            {this.state.departures.map((departure, index) => {
+              if (departure.arrivalTimeRelative > -1) {
+                return (
+                  <Departure
+                    key={
+                      this.props.departure.line +
+                      this.props.departure.direction +
+                      this.props.departure.arrivalTimeRelative
+                    }
+                    modes={this.state.modes}
+                    departure={departure}
+                    embed={this.props.embed}
+                  ></Departure>
+                );
+              }
+            })}
+          </div>
         </div>
       </div>
     );
