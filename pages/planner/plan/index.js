@@ -174,7 +174,7 @@ class Index extends React.Component {
             this.state.route.trips.length > 0 ? (
               <div
                 style={{ height: "80vh" }}
-                className="max-w-md overflow-x-hidden overflow-scroll custom-scrollbar mt-4 pb-32 rounded-lg"
+                className="max-w-md overflow-x-hidden overflow-scroll custom-scrollbar scrolling-touch mt-4 pb-32 rounded-lg"
               >
                 {this.state.route.trips.map((trip, index) => (
                   <div
