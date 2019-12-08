@@ -199,7 +199,7 @@ class Stop extends React.Component {
             </p>
           )}
 
-          <div className="flex mt-5 mb-3 overflow-scroll overflow-y-hidden scrolling-touch custom-scrollbar w-auto rounded-lg">
+          <div className="flex mt-5 mb-3 overflow-scroll overflow-y-hidden scrolling-touch sm:overflow-visible custom-scrollbar w-auto rounded-lg">
             {!this.props.embed ? (
               <Link href="/monitor" as="/monitor">
                 <button className="text-gray-900 bg-gray-300 sm:hover:bg-gray-300 px-4 py-3 rounded-lg mr-3 sm:hover:shadow-lg focus:outline-none trans">

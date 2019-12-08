@@ -48,8 +48,8 @@ class Departure extends Component {
           <p className="text-lg font-normal truncate text-gray-800">
             {!this.props.embed ? (
               <Link
-                href={"/monitor/stop/" + this.props.departure.direction}
-                as={"/monitor/stop/" + this.props.departure.direction}
+                href={"/monitor/stop/" + this.props.departure.direction.replace("/","%2F")}
+                as={"/monitor/stop/" + this.props.departure.direction.replace("/","%2F")}
               >
                 <span className="hover:underline cursor-pointer">
                   {this.props.departure.direction}

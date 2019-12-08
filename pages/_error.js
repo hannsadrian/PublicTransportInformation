@@ -9,7 +9,7 @@ function Error(statusCode) {
       <Head>
         <title>{code} - Error</title>
       </Head>
-      <h1 className="font-semibold font-inter text-6xl text-gray-200 leading-tight">
+      <h1 className="font-semibold font-inter text-6xl text-gray-900 leading-tight">
         {code}
       </h1>
       <p className="font-inter text-gray-500 leading-tight">
