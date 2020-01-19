@@ -1,5 +1,7 @@
 # 🚟 Public Transport Information
 
+🦜 _Discontinued! Newer version at **[Transportflow](https://github.com/Adwirawien/PublicTransportInformation)**_
+
 Webpage to view departures or plan a route in germany.
 
 ### ⛸ Getting started
